@@ -25,8 +25,11 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+    void updateCurve();
+
 private:
     DoubleSoftClipper& dsc;
+    Path curvePath;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonlinearityViewer)
 };

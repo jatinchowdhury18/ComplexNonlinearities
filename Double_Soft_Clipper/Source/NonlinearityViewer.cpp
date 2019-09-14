@@ -15,20 +15,15 @@
 NonlinearityViewer::NonlinearityViewer (DoubleSoftClipper& dsc) :
     dsc (dsc)
 {
-
 }
 
 NonlinearityViewer::~NonlinearityViewer()
 {
 }
 
-void NonlinearityViewer::paint (Graphics& g)
+void NonlinearityViewer::updateCurve()
 {
-    g.fillAll (Colours::white);
-
-    g.setColour (Colours::forestgreen);
-    Path drawPath;
-
+    curvePath.clear();
     for (int n = 0; n <= getWidth(); ++n)
     {
         auto x = (float) n / (float) getWidth() * 4.5f - 2.25f;
@@ -37,16 +32,22 @@ void NonlinearityViewer::paint (Graphics& g)
         auto yDraw = getHeight() * (0.5f - y);
 
         if (n == 0)
-            drawPath.startNewSubPath ((float) n, yDraw);
+            curvePath.startNewSubPath ((float) n, yDraw);
         else
-            drawPath.lineTo ((float) n, yDraw);
+            curvePath.lineTo ((float) n, yDraw);
     }
-    g.strokePath (drawPath, PathStrokeType (2.0f));
+
+    repaint();
+}
+
+void NonlinearityViewer::paint (Graphics& g)
+{
+    g.fillAll (Colours::white);
+
+    g.setColour (Colours::forestgreen);
+    g.strokePath (curvePath, PathStrokeType (2.0f));
 }
 
 void NonlinearityViewer::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
-
 }

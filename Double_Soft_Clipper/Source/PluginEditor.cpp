@@ -39,15 +39,17 @@ DoubleSoftClipperAudioProcessorEditor::DoubleSoftClipperAudioProcessorEditor (Do
         slider.onValueChange = onValueChange;
     };
 
-    setupSlider (upperLimSlider, vts, "upperlim", upperLimAttach, "Upper Lim", [this] { nlViewer.repaint(); });
-    setupSlider (lowerLimSlider, vts, "lowerlim", lowerLimAttach, "Lower Lim", [this] { nlViewer.repaint(); });
-    setupSlider (slopeSlider, vts, "slope", slopeAttach, "Slope", [this] { nlViewer.repaint(); },
+    setupSlider (upperLimSlider, vts, "upperlim", upperLimAttach, "Upper Lim", [this] { nlViewer.updateCurve(); });
+    setupSlider (lowerLimSlider, vts, "lowerlim", lowerLimAttach, "Lower Lim", [this] { nlViewer.updateCurve(); });
+    setupSlider (slopeSlider, vts, "slope", slopeAttach, "Slope", [this] { nlViewer.updateCurve(); },
                  [] (double x) { return String (DoubleSoftClipper::getSlopeFromParam ((float) x), 2); });
-    setupSlider (widthSlider, vts, "width", widthAttach, "Width", [this] { nlViewer.repaint(); });
-    setupSlider (upperSkewSlider, vts, "upperskew", upperSkewAttach, "Up Skew", [this] { nlViewer.repaint(); },
+    setupSlider (widthSlider, vts, "width", widthAttach, "Width", [this] { nlViewer.updateCurve(); });
+    setupSlider (upperSkewSlider, vts, "upperskew", upperSkewAttach, "Up Skew", [this] { nlViewer.updateCurve(); },
                  [] (double x) { return String (DoubleSoftClipper::getSkewFromParam ((float) x), 2); });
-    setupSlider (lowerSkewSlider, vts, "lowerskew", lowerSkewAttach, "Low Skew", [this] { nlViewer.repaint(); },
+    setupSlider (lowerSkewSlider, vts, "lowerskew", lowerSkewAttach, "Low Skew", [this] { nlViewer.updateCurve(); },
                  [] (double x) { return String (DoubleSoftClipper::getSkewFromParam ((float) x), 2); });
+
+    nlViewer.updateCurve();
 }
 
 DoubleSoftClipperAudioProcessorEditor::~DoubleSoftClipperAudioProcessorEditor()
