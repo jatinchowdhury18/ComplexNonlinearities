@@ -28,6 +28,7 @@ ExciterAudioProcessor::ExciterAudioProcessor()
     rectParameter = vts.getRawParameterValue ("rect");
     freqParameter = vts.getRawParameterValue ("freq");
     driveParameter = vts.getRawParameterValue ("drivegain");
+    satParameter = vts.getRawParameterValue ("sat");
 }
 
 ExciterAudioProcessor::~ExciterAudioProcessor()
@@ -40,7 +41,8 @@ AudioProcessorValueTreeState::ParameterLayout ExciterAudioProcessor::createParam
 
     params.push_back (std::make_unique<AudioParameterInt> ("rect", "Rectifier", RectifierType::FWR, RectifierType::Diode, RectifierType::HWR));
     params.push_back (std::make_unique<AudioParameterFloat> ("freq", "Freq", 1.0f, 30.0f, 10.0f));
-    params.push_back (std::make_unique<AudioParameterFloat> ("drivegain", "Drive", 1.0f, 12.0f, 8.0f)); // 0.01f, 0.12f, 0.08f));
+    params.push_back (std::make_unique<AudioParameterFloat> ("drivegain", "Drive", 1.0f, 12.0f, 8.0f));
+    params.push_back (std::make_unique<AudioParameterInt> ("sat", "Saturator", SaturatorType::HardClip, SaturatorType::Tanh, SaturatorType::SoftClip));
 
     return { params.begin(), params.end() };
 }
@@ -117,7 +119,8 @@ void ExciterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
         exciter[ch].setDrive (*driveParameter / 100.0f);
         exciter[ch].setControlGain (ExciterProcessor::getControlGainFromDrive (*driveParameter / 100.0f));
         exciter[ch].setDetectorFreq (*freqParameter);
-        exciter[ch].setRectifierType (static_cast<RectifierType> ((int) *rectParameter)); // (RectifierType::HWR);
+        exciter[ch].setRectifierType (static_cast<RectifierType> ((int) *rectParameter));
+        exciter[ch].setSaturator (static_cast<SaturatorType> ((int) *satParameter));
         exciter[ch].reset (oversampling.getOversamplingFactor() * (float) sampleRate);
     }
 }
@@ -167,7 +170,8 @@ void ExciterAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
         exciter[ch].setDrive (*driveParameter / 100.0f);
         exciter[ch].setControlGain (ExciterProcessor::getControlGainFromDrive (*driveParameter / 100.0f));
         exciter[ch].setDetectorFreq (*freqParameter);
-        exciter[ch].setRectifierType (static_cast<RectifierType> ((int) *rectParameter));   
+        exciter[ch].setRectifierType (static_cast<RectifierType> ((int) *rectParameter));
+        exciter[ch].setSaturator (static_cast<SaturatorType> ((int) *satParameter));
         exciter[ch].processBlock (osBuffer.getWritePointer (ch), osBuffer.getNumSamples());
     }
 

@@ -34,6 +34,7 @@ ExciterAudioProcessorEditor::ExciterAudioProcessorEditor (ExciterAudioProcessor&
     };
 
     setupBox (rectBox, vts, "rect", rectBoxAttach, rectChoices, [this] { nlViewer.updateCurve(); });
+    setupBox (satBox, vts,  "sat",  satBoxAttach,  satChoices,  [this] { nlViewer.updateCurve(); });
 
     auto setupSlider = [this] (Slider& slider, AudioProcessorValueTreeState& vts, String paramID,
         std::unique_ptr<SliderAttachment>& attachment, String name = {},
@@ -43,7 +44,7 @@ ExciterAudioProcessorEditor::ExciterAudioProcessorEditor (ExciterAudioProcessor&
         addAndMakeVisible (slider);
         attachment.reset (new SliderAttachment (vts, paramID, slider));
 
-        slider.setSliderStyle (Slider::RotaryVerticalDrag);
+        slider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
         slider.setName (name);
         slider.textFromValueFunction = textFromValue;
         slider.valueFromTextFunction = valueFromText;
@@ -65,13 +66,27 @@ ExciterAudioProcessorEditor::~ExciterAudioProcessorEditor()
 void ExciterAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colours::black);
+
+    g.setColour (Colours::white);
+    auto makeName = [this, &g] (Component& comp, String name)
+    {
+        const int height = 20;
+        Rectangle<int> nameBox (comp.getX(), 402, comp.getWidth(), height);
+        g.drawFittedText (name, nameBox, Justification::centred, 1);
+    };
+
+    makeName (rectBox,    "Rectifier");
+    makeName (freqSlide,  "Frequency");
+    makeName (driveSlide, "Drive");
+    makeName (satBox,     "Saturator");
 }
 
 void ExciterAudioProcessorEditor::resized()
 {
     nlViewer.setBounds (0, 0, getWidth(), getWidth());
 
-    rectBox.setBounds      (5,                       440, 80, 20);
-    freqSlide.setBounds    (rectBox.getRight(),      400, 67, 90);
-    driveSlide.setBounds   (freqSlide.getRight(),    400, 67, 90);
+    rectBox.setBounds      (5,                       440, 90, 20);
+    freqSlide.setBounds    (rectBox.getRight(),      415, 80, 80);
+    driveSlide.setBounds   (freqSlide.getRight(),    415, 80, 80);
+    satBox.setBounds       (driveSlide.getRight(),   440, 80, 20);
 }

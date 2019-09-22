@@ -61,12 +61,12 @@ public:
 
 private:
     AudioProcessorValueTreeState vts;
-    // LevelDetector detector[2];
     ExciterProcessor exciter[2];
 
     float* rectParameter;
     float* freqParameter;
     float* driveParameter;
+    float* satParameter;
 
     dsp::Oversampling<float> oversampling = dsp::Oversampling<float> (2, 3, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR);
 

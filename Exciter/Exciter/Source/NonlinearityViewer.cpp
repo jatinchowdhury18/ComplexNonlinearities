@@ -42,14 +42,15 @@ void NonlinearityViewer::updateCurve()
     
     auto rectType = static_cast<RectifierType> ((int) *vts.getRawParameterValue ("rect"));
     processor.setRectifierType (rectType);
+    processor.setSaturator (static_cast<SaturatorType> ((int) *vts.getRawParameterValue ("sat")));
 
-    auto yFactor = 1.0f;
+    auto yFactor = 0.9f;
     if (rectType == FWR)
-        yFactor = 0.2f;
+        yFactor *= 0.2f;
     else if (rectType == HWR)
-        yFactor = 0.15f;
+        yFactor *= 0.15f;
     else if (rectType == Diode)
-        yFactor = 0.04f;
+        yFactor *= 0.04f;
 
     wetBuffer.makeCopyOf (dryBuffer);
     processor.reset (fs);

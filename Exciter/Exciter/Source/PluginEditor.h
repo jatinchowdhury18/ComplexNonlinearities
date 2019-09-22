@@ -46,5 +46,9 @@ private:
     Slider driveSlide;
     std::unique_ptr<SliderAttachment> driveAttach;
 
+    ComboBox satBox;
+    std::unique_ptr<ComboBoxAttachment> satBoxAttach;
+    const StringArray satChoices = StringArray ({"Hard", "Soft", "Tanh" });
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExciterAudioProcessorEditor)
 };
