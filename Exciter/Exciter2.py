@@ -1,7 +1,9 @@
 #%%
 import numpy as np
 import scipy.signal as signal
+from scipy.io import wavfile
 import matplotlib.pyplot as plt
+from enum import Enum
 
 #%% [markdown]
 # In this article I'd like to examine a nonlinear architecture
@@ -119,6 +121,76 @@ plt.legend (['Input', 'Full Wave Rectifier', 'Half Wave Rectifier', 'Diode'])
 # cutoff frequency. I often use a cutoff frequency somewhere around 10 Hz.
 # I won't discuss the technicalities of creating a lowpass filter here, but
 # more information can be found in Julius Smith's [Introduction to Digital Filters](https://ccrma.stanford.edu/~jos/filters/).
+#
+# ### Level Detector Implemented
+#
+# Now let's take a lok at how the level detector handles a full signal.
+# Below we see the response of each level detection scheme for a drum sample.
+
+#%%
+class LPF:
+    def __init__ (self, fs):
+        wc = 2 * np.pi * 10 / fs
+        c = 1.0 / np.tan (wc / 2.0)
+
+        self.a = np.zeros (2)
+        self.b = np.zeros (2)
+        self.a[0] = c + 1.0
+
+        self.b[0] = 1.0 / self.a[0]
+        self.b[1] = self.b[0]
+        self.a[1] = (1.0 - c) / self.a[0]
+        self.z = 0
+
+    def process (self, x):
+        y = self.z + x * self.b[0]
+        self.z = x * self.b[1] - y * self.a[1]
+        return y
+
+class DetectorType (Enum):
+    FWR = 1
+    HWR = 2
+    DIODE = 3
+
+class Detector:
+    def __init__ (self, type, fs):
+        self.rect = lambda x : x
+        if type is DetectorType.FWR:
+            self.rect = lambda x : FWR (x)
+        elif type is DetectorType.HWR:
+            self.rect = lambda x : HWR (x)
+        elif type is DetectorType.DIODE:
+            self.rect = lambda x : Diode (x)
+
+        self.LPF = LPF (fs)
+    
+    def process (self, x):
+        x = self.rect (x)
+        return self.LPF.process (x)
+
+
+#%%
+fs, drums = wavfile.read ('DrumLoop.wav')
+
+drums = drums[:60040,0]
+drums = drums / (np.max (np.abs (drums)))
+plt.plot (drums, color='firebrick')
+
+types = [DetectorType.FWR, DetectorType.HWR, DetectorType.DIODE]
+colors = ['dodgerblue', 'gold', 'lightgreen']
+i = 0
+for type in types:
+    y = np.zeros (len(drums))
+    detector = Detector (type, fs)
+    for n in range (len (drums)):
+        y[n] =  detector.process (drums[n])
+    plt.plot (y / (np.max (np.abs (y))), color=colors[i])
+    i += 1
+
+plt.legend (['Signal', 'FWR', 'HWR', 'Diode'])
+plt.xlabel ('Time [Samples]')
+plt.ylabel ('Magnitude')
+plt.title ('Detector Response for Drum Sample')
 
 #%% [markdown]
 # ## Nonlinearity
