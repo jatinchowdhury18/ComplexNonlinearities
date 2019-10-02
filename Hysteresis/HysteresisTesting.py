@@ -44,5 +44,31 @@ n = np.linspace (0, 1)
 y = n**0.5
 plt.plot (n, y)
 
+#%%
+N = 2048
+x = np.linspace (-5, 5, N)
+table = 1.0 / np.tanh (x)
+
+# plt.plot (x, y)
+# plt.ylim (-1.1, 1.1)
+# plt.xlim (-5, 5)
+
+def cothLookup (x, table, N):
+    if x > 5:
+        return 1
+    
+    if x < -5:
+        return -1
+
+    index = int ((x + 5) * N / 10)
+    return table[index]
+
+xTest = np.linspace (-24, 24, 3000)
+yTest = np.zeros (3000)
+for n in range (3000):
+    yTest[n] = cothLookup (xTest[n], table, N)
+
+plt.plot (xTest, yTest)
+
 
 #%%
