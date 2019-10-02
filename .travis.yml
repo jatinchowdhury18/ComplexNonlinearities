@@ -22,7 +22,7 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then export PROJUCER_EXPORT="$TRAVIS_BUILD_DIR/JUCE/extras/Projucer/Builds/MacOSX/build/Debug/Projucer.app/Contents/MacOS/Projucer"; fi
 
   # windows setup msbuild path
-  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then export PATH=$MSBUILD_PATH:$PATH; fi
+  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then export PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin":$PATH; fi
   - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then export BUILD_FOLDER="VisualStudio2017"; fi
   - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then export PROJUCER_EXPORT="$TRAVIS_BUILD_DIR/JUCE/extras/Projucer/Builds/VisualStudio2017/x64/Debug/App/Projucer.exe"; fi
 
