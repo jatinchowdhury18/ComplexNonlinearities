@@ -7,9 +7,9 @@ Articles explaining the project in further detail can be found on [Medium](https
 
 Current nonlinearities include:
 
-1. [Double Soft Clipper](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-1-double-soft-clipper-5ce826fa82d6))
+1. [Double Soft Clipper](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-1-double-soft-clipper-5ce826fa82d6)
 
-<img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/Double_Soft_Clipper/Pics/Weird.png" alt="Pic" width="500" height="350">
+<img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/DoubleSoftClipper/Pics/Weird.png" alt="Pic" width="500" height="350">
 
 2. [Harmonic Exciter](https://medium.com/@jatinchowdhury18/complex-nonlinearities-epsiode-2-harmonic-exciter-cd883d888a43)
 
