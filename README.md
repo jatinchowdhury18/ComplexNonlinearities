@@ -1,5 +1,7 @@
 # Complex Nonlinearities
 
+[![Build Status](https://travis-ci.com/jatinchowdhury18/ComplexNonlinearities.svg?branch=master)](https://travis-ci.com/jatinchowdhury18/ComplexNonlinearities)
+
 This repository contains recent research exploring purely digital complex nonlinear signal processing.
 Articles explaining the project in further detail can be found on [Medium](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-0-why-4ad9b3eed60f).
 

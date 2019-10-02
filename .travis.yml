@@ -1,0 +1,67 @@
+notifications:
+  email: false
+
+language: cpp
+sudo: false
+
+# if pull request: always build
+# if push: only build for master branch
+if: (type != push) OR (type = push AND branch = master)
+
+os:
+  - osx
+  - windowns
+env:
+  - PLUGIN=DoubleSoftClipper
+
+before_install:
+  # mac installs
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then gem install xcpretty; fi
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then gem install xcpretty-travis-formatter; fi
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then export BUILD_FOLDER="MacOSX"; fi
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then export PROJUCER_EXPORT="$TRAVIS_BUILD_DIR/JUCE/extras/Projucer/Builds/VisualStudio2017/x64/Debug/App/Projucer.exe"; fi
+
+  # windows setup msbuild path
+  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then export PATH=$MSBUILD_PATH:$PATH; fi
+  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then export BUILD_FOLDER="VisualStudio2017"; fi
+  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then export PROJUCER_EXPORT="$TRAVIS_BUILD_DIR/JUCE/extras/Projucer/Builds/MacOSX/build/Debug/Projucer.app/Contents/MacOS/Projucer"; fi
+
+  # Build Projucer
+  - cd $TRAVIS_BUILD_DIR/
+  - git clone https://github.com/jatinchowdhury18/JUCE.git
+  - cd JUCE/extras/Projucer/Builds/$BUILD_FOLDER
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then xcodebuild -project Projucer.xcodeproj > /dev/null; fi
+  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then msbuild.exe -v:quiet Projucer.sln; fi
+
+script:
+  - cd $TRAVIS_BUILD_DIR/$PLUGIN/Plugin
+  - export PROJUCER=$PROJUCER_EXPORT
+  - $PROJUCER --set-global-search-path $TRAVIS_OS_NAME defaultJuceModulePath  $TRAVIS_BUILD_DIR/JUCE/modules
+  - $PROJUCER --set-global-search-path $TRAVIS_OS_NAME vstLegacyPath $TRAVIS_BUILD_DIR/JUCE/VST2_SDK
+  - $PROJUCER --resave $PLUGIN.jucer
+  - cd Builds/$BUILD_FOLDER/
+
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then xcodebuild -project $PLUGIN.xcodeproj/ clean; fi
+  - if [[ $TRAVIS_JOB_NAME == 'osx' ]]; then xcodebuild -project $PLUGIN.xcodeproj/ -configuration Release | xcpretty -s -f `xcpretty-travis-formatter`; fi
+  - if [[ $TRAVIS_JOB_NAME == 'win' ]]; then msbuild.exe -v:normal $PLUGIN.sln /p:Configuration=Release; fi
+
+  # Pluginval
+  - |
+    if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
+      echo "Validating plugin"
+      cd $TRAVIS_BUILD_DIR/
+      curl -L "https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_macOS.zip" -o pluginval.zip
+      unzip pluginval
+      pluginval.app/Contents/MacOS/pluginval --strictness-level 8 --validate-in-process --validate "$TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst3" || exit 1
+      pluginval.app/Contents/MacOS/pluginval --strictness-level 8 --validate-in-process --validate "$TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.component" || exit 1
+    fi
+  - |
+    if [[ $TRAVIS_OS_NAME == 'windows' ]]; then
+      echo "Validating plugin"
+      cd $TRAVIS_BUILD_DIR/
+      powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_Windows.zip -OutFile pluginval.zip"
+      powershell -Command "Expand-Archive pluginval.zip -DestinationPath ."
+      ./pluginval.exe --strictness-level 8 --validate-in-process --validate "$TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/VisualStudio2017/x64/Debug/VST3/$PLUGIN.vst3"
+    fi
+
+  - echo "SUCCESS"
