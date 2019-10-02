@@ -1,11 +1,5 @@
 #include "LevelDetector.h"
 
-namespace Consts
-{
-    constexpr float alpha = 0.05f / 0.0259f;
-    const float beta = 0.2f; // 1.0f / (std::expf (alpha) - 1.0f);
-}
-
 void LevelDetector::setFreq (float newFreq)
 {
     rawFreq = newFreq;
@@ -47,17 +41,6 @@ void LevelDetector::processBlock (float* buffer, int numSamples)
         buffer[n] = processSample (buffer[n]);
 }
 
-float LevelDetector::processSample (float x)
-{
-    if (freq.isSmoothing())
-        calcCoefs (freq.getNextValue());
-
-    x = rectifier (x);
-    auto y = z + x * b[0];
-    z = x * b[1] - y * a[1];
-    return y;
-}
-
 void LevelDetector::calcCoefs (float fc)
 {
     auto wc = MathConstants<float>::twoPi * fc / fs;
@@ -67,19 +50,4 @@ void LevelDetector::calcCoefs (float fc)
     b[0] = 1.0f / a[0];
     b[1] = b[0];
     a[1] = (1.0f - c) / a[0];
-}
-
-float LevelDetector::fullWaveRectifier (float x)
-{
-    return abs (x);
-}
-
-float LevelDetector::halfWaveRectifier (float x)
-{
-    return 2.0f * (x > 0.0f ? x : 0.0f);
-}
-
-float LevelDetector::diode (float x)
-{
-    return 25.0f * Consts::beta * (std::expf (Consts::alpha * x) - 1.0f);
 }

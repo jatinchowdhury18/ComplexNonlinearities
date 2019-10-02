@@ -3,6 +3,12 @@
 
 #include "JuceHeader.h"
 
+namespace Consts
+{
+    constexpr float alpha = 0.05f / 0.0259f;
+    const float beta = 0.2f; // 1.0f / (std::expf (alpha) - 1.0f);
+}
+
 enum RectifierType
 {
     FWR,
@@ -21,13 +27,35 @@ public:
 
     void reset (float sampleRate);
     void processBlock (float* buffer, int numSamples);
-    inline float processSample (float x);
+    
+    inline float processSample (float x)
+    {
+        if (freq.isSmoothing())
+            calcCoefs (freq.getNextValue());
+        
+        x = rectifier (x);
+        auto y = z + x * b[0];
+        z = x * b[1] - y * a[1];
+        return y;
+    }
 
 private:
     // Rectifier stuff
-    inline float diode (float x);
-    inline float fullWaveRectifier (float x);
-    inline float halfWaveRectifier (float x);
+    inline float diode (float x)
+    {
+        return 25.0f * Consts::beta * (std::expf (Consts::alpha * x) - 1.0f);
+    }
+    
+    inline float fullWaveRectifier (float x)
+    {
+        return abs (x);
+    }
+    
+    inline float halfWaveRectifier (float x)
+    {
+        return 2.0f * (x > 0.0f ? x : 0.0f);
+    }
+    
     std::function<float (float)> rectifier = [this] (float x) { return fullWaveRectifier (x); };
     RectifierType currentType = FWR;
     
