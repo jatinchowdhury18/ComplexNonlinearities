@@ -31,6 +31,7 @@ before_install:
   - git clone https://github.com/jatinchowdhury18/JUCE.git
   - cd JUCE/extras/Projucer/Builds/$BUILD_FOLDER
   - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then xcodebuild -project Projucer.xcodeproj > /dev/null; fi
+  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then ls; fi
   - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then msbuild.exe -v:quiet Projucer.sln; fi
 
 script:
@@ -42,8 +43,8 @@ script:
   - cd Builds/$BUILD_FOLDER/
 
   - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then xcodebuild -project $PLUGIN.xcodeproj/ clean; fi
-  - if [[ $TRAVIS_JOB_NAME == 'osx' ]]; then xcodebuild -project $PLUGIN.xcodeproj/ -configuration Release | xcpretty -s -f `xcpretty-travis-formatter`; fi
-  - if [[ $TRAVIS_JOB_NAME == 'win' ]]; then msbuild.exe -v:normal $PLUGIN.sln /p:Configuration=Release; fi
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then xcodebuild -project $PLUGIN.xcodeproj/ -configuration Release | xcpretty -s -f `xcpretty-travis-formatter`; fi
+  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then msbuild.exe -v:normal $PLUGIN.sln /p:Configuration=Release; fi
 
   # Pluginval
   - |
