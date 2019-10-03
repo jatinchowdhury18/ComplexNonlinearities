@@ -46,27 +46,15 @@ plt.title ('Stacked Soft Clippers')
 #%% [markdown]
 # Recall that for a normal soft clipper, the non-linearity function is something along the lines of
 # 
-# $$ f_{SC}(x) = \begin{cases}
-#                 1 & x \geq 1 \\
-#                 (3/2) * (x - x^3/3) & -1 < x < 1 \\
-#                 -1 & x \leq -1
-#             \end{cases}$$
+# $$ f_{SC}(x) = \begin{cases} 1 & x \geq 1 \\ (3/2) * (x - x^3/3) & -1 < x < 1 \\ -1 & x \leq -1 \end{cases}$$
 #             
 # The idea is to approximate an infinitely saturating function (for instance $\tanh(x)$), on the range $[-1,1]$, and then extend outwards horizontally. The key thing to note is that we choose to extend horizontally from the point where the derivative of the cubic function is 0. That allows us to give our nonlinearity a continuous first derivative which is useful for mitigating aliasing.
 # 
 # For the double soft clipper, we want both the positive and negative waveforms to saturate independently, and we can again keep the first derivative continuous again making our function piecewise from the point where the derivative of the cubic function is 0 for both the upper and lower cubic:
 # 
-# $$ f_{DSC}(x) = \begin{cases}
-#                 1 & u \geq 1 \\
-#                 (3/4) * (u - u^3/3) + 0.5 & 0 < u < 1 \\
-#                 (3/4) * (u - u^3/3) - 0.5 & -1 < u < 0 \\
-#                 -1 & u \leq -1
-#             \end{cases}$$
+# $$ f_{DSC}(x) = \begin{cases} 1 & u \geq 1 \\ (3/4) * (u - u^3/3) + 0.5 & 0 < u < 1 \\(3/4) * (u - u^3/3) - 0.5 & -1 < u < 0 \\ -1 & u \leq -1 \end{cases}$$
 # where
-# $$ u(x) = \begin{cases}
-#             x - 0.5 & x > 0 \\
-#             x + 0.5 & x < 0
-#           \end{cases}$$
+# $$ u(x) = \begin{cases} x - 0.5 & x > 0 \\ x + 0.5 & x < 0 \end{cases}$$
 # 
 # And in it's normal form, it looks something like this:
 
@@ -207,17 +195,13 @@ plt.ylabel ('Magnitude [dB]')
 # 
 # The implementation is super simple: For our nonlinear function $f(x(n))$, and the anti-derivative of that function $F(x(n))$, the ouput can be determined by
 # 
-# $$ y(n) = \begin{cases}
-#             \frac{F(x(n)) - F(x(n-1))}{x(n) - x(n-1)} & x(n) \neq x(n-1) \\
-#             f \left(\frac{1}{2}x(n) + \frac{1}{2}x(n-1) \right) & x(n) \approx x(n-1)
-#           \end{cases} $$
+# $$ y(n) = \begin{cases} \frac{F(x(n)) - F(x(n-1))}{x(n) - x(n-1)} & x(n) \neq x(n-1) \\ f \left(\frac{1}{2}x(n) + \frac{1}{2}x(n-1) \right) & x(n) \approx x(n-1) \end{cases} $$
 # 
-# With this implementation, no aliasing will occur! However, it is still recommended to run at 2x the sample rate or higher because of frequency response concerns. More information can be found in the papers below.
+# With this implementation, no aliasing will occur! However, it is still recommended to run at 2x the sample rate or higher because of frequency response concerns. More information can be found in the papers below:
 # 
-# Cite Parker
+# Julian Parker et. al, “ Reducing the aliasing of nonlinear waveshaping using continuous-time convolution”, DAFx 2016
 # 
-# Cite Holters
-
+# Martin Holters, “ Antiderivative Antialiasing for Stateful Systems”, DAFx 2019
 #%%
 
 

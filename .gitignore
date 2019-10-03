@@ -15,6 +15,7 @@ JuceLibraryCode
 
 #Extra folders
 .vscode/
+*.ipynb
 .ipynb_checkpoints
 __pycache__
 *.asd

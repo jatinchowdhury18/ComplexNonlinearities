@@ -170,7 +170,7 @@ class Detector:
 
 
 #%%
-fs, drums = wavfile.read ('DrumLoop.wav')
+fs, drums = wavfile.read ('D:/Documents/CCRMA/Research/Complex_Nonlinearities/Exciter/DrumLoop.wav')
 
 drums = drums[:60040,0]
 drums = drums / (np.max (np.abs (drums)))
@@ -326,11 +326,7 @@ plt.ylabel ('Magnitude [dB]')
 # discussed above, as well as a variable filter frequency for the level
 # detector, and drive level for the exciter overall. The source code for
 # the plugin is available on [GitHub](https://github.com/jatinchowdhury18/ComplexNonlinearities).
-# A video demo can be seen below.
-
-# @TODO: video
-
-#
+# A video demo can be seen on [YouTube](https://youtu.be/tAUPfSfTo4E).
 #
 # Finally, I'd like to take a moment to show how this type of nonlinearity is often
 # used in the context of an aural exciter. Exciter circuits often refer
