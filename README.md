@@ -13,15 +13,17 @@ Current nonlinearities include:
 
 <img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/DoubleSoftClipper/Pics/Weird.png" alt="Pic" width="500" height="350">
 
-1. Harmonic Exciter
+2. Harmonic Exciter
 [![Medium](https://img.shields.io/badge/Read%20on-Medium-blue)](https://medium.com/@jatinchowdhury18/complex-nonlinearities-epsiode-2-harmonic-exciter-cd883d888a43)
 [![Jupyter](https://img.shields.io/badge/Read%20as-Jupyter-orange)](https://ccrma.stanford.edu/~jatin/ComplexNonlinearities/Exciter.html)
 
 <img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/Exciter/Pics/exciter_static.png" alt="Pic" width="500" height="350">
 
-1. Hysteresis (article coming soon)
+3. Hysteresis
+[![Medium](https://img.shields.io/badge/Read%20on-Medium-blue)](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-3-hysteresis-fdeb2cd3e3f6)
+[![Jupyter](https://img.shields.io/badge/Read%20as-Jupyter-orange)](https://ccrma.stanford.edu/~jatin/ComplexNonlinearities/Hysteresis.html)
 
-<img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/Hysteresis/Pics/AllHysteresis.png" alt="Pic" width="500" height="350">
+<img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/Hysteresis/Pics/Extreme_Hysteresis.png" alt="Pic" width="500" height="350">
 
 ## Organization
 
