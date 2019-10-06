@@ -15,7 +15,7 @@ env:
   - PLUGIN=DoubleSoftClipper
   - PLUGIN=Exciter
   - PLUGIN=Hysteresis
-  = PLUGIN=NonlinearBiquad
+  - PLUGIN=NonlinearBiquad
 
 before_install:
   # mac installs
