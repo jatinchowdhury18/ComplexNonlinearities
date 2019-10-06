@@ -25,6 +25,10 @@ Current nonlinearities include:
 
 <img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/Hysteresis/Pics/Extreme_Hysteresis.png" alt="Pic" width="500" height="350">
 
+4. Nonlinear Biquad (Article coming soon)
+
+<img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/NonlinearBiquad/Pics/LowShelf.png" alt="Pic" width="500" height="350">
+
 ## Organization
 
 Each subfolder contains a specific nonlinearity, including Python simulations
