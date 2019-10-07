@@ -6,11 +6,11 @@ sudo: false
 
 # if pull request: always build
 # if push: only build for master branch
-if: (type != push) OR (type = push AND branch = linux)
+if: (type != push) OR (type = push AND branch = master)
 
 os:
-  # - osx
-  # - windows
+  - osx
+  - windows
   - linux
 env:
   - PLUGIN=DoubleSoftClipper
