@@ -23,7 +23,8 @@ DoubleSoftClipperAudioProcessor::DoubleSoftClipperAudioProcessor()
                      #endif
                        ),
 #endif
-    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout())
+    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout()),
+    oversampling (2, 3, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
 {
     upperLim = vts.getRawParameterValue ("upperlim");
     lowerLim = vts.getRawParameterValue ("lowerlim");

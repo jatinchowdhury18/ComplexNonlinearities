@@ -23,7 +23,8 @@ ExciterAudioProcessor::ExciterAudioProcessor()
                      #endif
                        ),
 #endif
-    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout())
+    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout()),
+    oversampling (2, 3, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
 {
     rectParameter = vts.getRawParameterValue ("rect");
     freqParameter = vts.getRawParameterValue ("freq");

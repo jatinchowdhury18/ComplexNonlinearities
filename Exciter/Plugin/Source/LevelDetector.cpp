@@ -44,7 +44,7 @@ void LevelDetector::processBlock (float* buffer, int numSamples)
 void LevelDetector::calcCoefs (float fc)
 {
     auto wc = MathConstants<float>::twoPi * fc / fs;
-    auto c = 1.0f / std::tanf (wc / 2.0f);
+    auto c = 1.0f / tanf (wc / 2.0f);
     a[0] = c + 1.0f;
 
     b[0] = 1.0f / a[0];

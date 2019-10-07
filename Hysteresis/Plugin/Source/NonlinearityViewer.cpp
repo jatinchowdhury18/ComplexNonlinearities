@@ -24,7 +24,7 @@ NonlinearityViewer::NonlinearityViewer (AudioProcessorValueTreeState& vts) :
 {
     dryBuffer.setSize (1, size);
     for (int n = 0; n < size; ++n)
-        dryBuffer.setSample (0, n, gain * std::sinf (MathConstants<float>::twoPi * n * freq / fs));
+        dryBuffer.setSample (0, n, gain * sinf (MathConstants<float>::twoPi * n * freq / fs));
 
     wetBuffer.setSize (1, size);
 

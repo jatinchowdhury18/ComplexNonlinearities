@@ -105,7 +105,7 @@ float HysteresisProcessing::process (float H)
 
     float M = M_n1 + k2;
 
-    if (isnan (M))
+    if (std::isnan (M))
     {
         M = 0.0f;
         H = 0.0f;
