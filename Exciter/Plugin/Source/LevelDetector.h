@@ -43,7 +43,7 @@ private:
     // Rectifier stuff
     inline float diode (float x)
     {
-        return 25.0f * Consts::beta * (std::expf (Consts::alpha * x) - 1.0f);
+        return 25.0f * Consts::beta * (expf (Consts::alpha * x) - 1.0f);
     }
     
     inline float fullWaveRectifier (float x)

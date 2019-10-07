@@ -67,7 +67,7 @@ private:
     float* driveParameter;
     float* satParameter;
 
-    dsp::Oversampling<float> oversampling = dsp::Oversampling<float> (2, 4, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR);
+    dsp::Oversampling<float> oversampling;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HysteresisAudioProcessor)

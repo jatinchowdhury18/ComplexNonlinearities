@@ -23,7 +23,8 @@ HysteresisAudioProcessor::HysteresisAudioProcessor()
                      #endif
                        ),
 #endif
-    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout())
+    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout()),
+    oversampling (2, 4, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
 {
     widthParameter = vts.getRawParameterValue ("width");
     driveParameter = vts.getRawParameterValue ("drivegain");
