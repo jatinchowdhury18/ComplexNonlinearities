@@ -2,6 +2,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "Viewer.h"
 
 using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 using ComboBoxAttachment = AudioProcessorValueTreeState::ComboBoxAttachment;
@@ -23,7 +24,7 @@ private:
     NonlinearBiquadAudioProcessor& processor;
     AudioProcessorValueTreeState& vts;
 
-    Rectangle<int> viewer;
+    Viewer viewer;
 
     ComboBox shapeBox;
     std::unique_ptr<ComboBoxAttachment> shapeBoxAttach;

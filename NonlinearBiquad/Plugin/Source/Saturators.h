@@ -31,7 +31,7 @@ public:
         return [] (float x) { return x; };
     }
 
-    static float hardClip (float x)
+    static inline float hardClip (float x)
     {
         if (x > 1.0f)
             return 1.0f;
@@ -42,7 +42,7 @@ public:
         return x;
     }
 
-    static float softClip (float x)
+    static inline float softClip (float x)
     {
         if (x > 1.0f)
             return 1.0f;
@@ -50,10 +50,10 @@ public:
         if (x < -1.0f)
             return -1.0f;
 
-        return 1.5f * (x - x*x*x/3.0f);
+        return x - x*x*x/3.0f;
     }
 
-    static float tanhClip (float x)
+    static inline float tanhClip (float x)
     {
         return tanhf (x);
     }

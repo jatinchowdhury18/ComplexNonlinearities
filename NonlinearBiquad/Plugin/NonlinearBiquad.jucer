@@ -4,6 +4,8 @@
               cppLanguageStandard="17" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3">
   <MAINGROUP id="KhgJEr" name="NonlinearBiquad">
     <GROUP id="{B1955946-BC85-E672-F42E-C77DB4D9F713}" name="Source">
+      <FILE id="aycAYM" name="Viewer.cpp" compile="1" resource="0" file="Source/Viewer.cpp"/>
+      <FILE id="W5ju43" name="Viewer.h" compile="0" resource="0" file="Source/Viewer.h"/>
       <FILE id="o9fOzl" name="Saturators.h" compile="0" resource="0" file="Source/Saturators.h"/>
       <FILE id="af0wSi" name="Gain.h" compile="0" resource="0" file="Source/Gain.h"/>
       <FILE id="BvX9ZW" name="Biquad.h" compile="0" resource="0" file="Source/Biquad.h"/>

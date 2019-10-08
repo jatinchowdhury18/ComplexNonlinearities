@@ -15,9 +15,11 @@
 NonlinearBiquadAudioProcessorEditor::NonlinearBiquadAudioProcessorEditor (NonlinearBiquadAudioProcessor& p) :
     AudioProcessorEditor (&p),
     processor (p),
-    vts (p.getVTS())
+    vts (p.getVTS()),
+    viewer (vts)
 {
     setSize (400, 500);
+    addAndMakeVisible (viewer);
 
     auto setupBox = [this] (ComboBox& box, AudioProcessorValueTreeState& vts, String paramID,
         std::unique_ptr<ComboBoxAttachment>& attachment, StringArray choices,
@@ -31,8 +33,8 @@ NonlinearBiquadAudioProcessorEditor::NonlinearBiquadAudioProcessorEditor (Nonlin
         attachment.reset (new ComboBoxAttachment (vts, paramID, box));
     };
 
-    setupBox (shapeBox, vts, "shape",  shapeBoxAttach, shapeChoices, [this] { });
-    setupBox (satBox,   vts, "sat", satBoxAttach,   satChoices,   [this] { });
+    setupBox (shapeBox, vts, "shape", shapeBoxAttach, shapeChoices, [this] { viewer.setNeedsCurveUpdate (true); });
+    setupBox (satBox,   vts, "sat",   satBoxAttach,   satChoices,   [this] { viewer.setNeedsCurveUpdate (true); });
 
     auto setupSlider = [this] (Slider& slider, AudioProcessorValueTreeState& vts, String paramID,
         std::unique_ptr<SliderAttachment>& attachment, String name = {},
@@ -52,10 +54,10 @@ NonlinearBiquadAudioProcessorEditor::NonlinearBiquadAudioProcessorEditor (Nonlin
         slider.onValueChange = onValueChange;
     };
 
-    setupSlider (freqSlide,  vts, "freq", freqAttach,  "Freq",  [this] { });
-    setupSlider (qSlide,     vts, "q", qAttach,     "Q",     [this] { });
-    setupSlider (gainSlide,  vts, "gain", gainAttach,  "Gain",  [this] { });
-    setupSlider (driveSlide, vts, "drivegain", driveAttach, "Drive", [this] { });
+    setupSlider (freqSlide,  vts, "freq",      freqAttach,  "Freq",  [this] { viewer.setNeedsCurveUpdate (true); });
+    setupSlider (qSlide,     vts, "q",         qAttach,     "Q",     [this] { viewer.setNeedsCurveUpdate (true); });
+    setupSlider (gainSlide,  vts, "gain",      gainAttach,  "Gain",  [this] { viewer.setNeedsCurveUpdate (true); });
+    setupSlider (driveSlide, vts, "drivegain", driveAttach, "Drive", [this] { viewer.setNeedsCurveUpdate (true); });
 
     freqSlide.setTextValueSuffix (" Hz");
     freqSlide.setNumDecimalPlacesToDisplay (0);
@@ -74,9 +76,6 @@ NonlinearBiquadAudioProcessorEditor::~NonlinearBiquadAudioProcessorEditor()
 void NonlinearBiquadAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colours::black);
-
-    g.setColour (Colours::white);
-    g.fillRect (viewer);
 
     g.setColour (Colours::white);
     auto makeName = [this, &g] (Component& comp, String name)

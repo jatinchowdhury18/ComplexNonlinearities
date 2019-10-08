@@ -30,7 +30,7 @@ NonlinearBiquadAudioProcessor::NonlinearBiquadAudioProcessor()
     eqQParameter        = vts.getRawParameterValue ("q");
     eqGainParameter     = vts.getRawParameterValue ("gain");
     driveParameter      = vts.getRawParameterValue ("drivegain");
-    satParameter         = vts.getRawParameterValue ("sat");
+    satParameter        = vts.getRawParameterValue ("sat");
 }
 
 NonlinearBiquadAudioProcessor::~NonlinearBiquadAudioProcessor()
@@ -47,12 +47,12 @@ AudioProcessorValueTreeState::ParameterLayout NonlinearBiquadAudioProcessor::cre
     NormalisableRange<float> qRange (0.1f, 18.0f);
     qRange.setSkewForCentre (0.707f);
 
-    params.push_back (std::make_unique<AudioParameterInt> ("shape", "Shape", EqShape::bell, EqShape::lowPass, EqShape::bell));
+    params.push_back (std::make_unique<AudioParameterInt> ("shape", "Shape", EqShape::bell, EqShape::lowPass, EqShape::lowPass));
     params.push_back (std::make_unique<AudioParameterFloat> ("freq", "Freq", freqRange, 1000.0f));
     params.push_back (std::make_unique<AudioParameterFloat> ("q", "Q", qRange, 0.707f));
     params.push_back (std::make_unique<AudioParameterFloat> ("gain", "Gain", -15.0f, 15.0f, 0.0f));
     params.push_back (std::make_unique<AudioParameterFloat> ("drivegain", "Drive", -30.0f, 6.0f, -12.0f));
-    params.push_back (std::make_unique<AudioParameterInt> ("sat", "Saturator", SatType::none, SatType::hyptan, SatType::soft));
+    params.push_back (std::make_unique<AudioParameterInt> ("sat", "Saturator", SatType::none, SatType::hyptan, SatType::none));
 
     return { params.begin(), params.end() };
 }
