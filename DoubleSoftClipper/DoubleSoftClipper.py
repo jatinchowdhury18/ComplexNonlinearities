@@ -7,8 +7,11 @@ import matplotlib.pyplot as plt
 # # Double Soft Clipping Nonlinearity
 # 
 # While measuring a tape machine the other day, I noticed that when overdriving the input gain circuit, I got back a pretty interesting non-linear response that looked something like this:
-# <img src="Gain Nonlinearity.png" width="60%">
-# 
+
+#%%
+from IPython.display import Image
+Image(filename='Gain Nonlinearity.png') 
+#%% [markdown] 
 # The nonlinearity looks likes a mix of two classic nonlinearities in audio signal processing, exhibiting a "saturating" characteristic for large input, and a "dropout" nonlinearity for small input. It's hard to say exactly why the circuit has this response. The tape machine does claim to have some sort of "automatic gain control" on the input to mitigate clipping, so that could be relevant, but the tape machine is also fairly old, and the odd response could simply be a result of age, or something being broken internally. Without taking the machine apart, it's difficult to know more.
 # 
 # Anyhow, this measurement gave me an idea for a new type of musical nonlinearity: the Double Soft Clipper.
