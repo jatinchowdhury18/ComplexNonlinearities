@@ -23,7 +23,8 @@ NonlinearBiquadAudioProcessor::NonlinearBiquadAudioProcessor()
                      #endif
                        ),
 #endif
-    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout())
+    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout()),
+    oversampling (2, 3, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
 {
     eqShapeParameter    = vts.getRawParameterValue ("shape");
     eqFreqParameter     = vts.getRawParameterValue ("freq");
@@ -51,7 +52,7 @@ AudioProcessorValueTreeState::ParameterLayout NonlinearBiquadAudioProcessor::cre
     params.push_back (std::make_unique<AudioParameterFloat> ("freq", "Freq", freqRange, 1000.0f));
     params.push_back (std::make_unique<AudioParameterFloat> ("q", "Q", qRange, 0.707f));
     params.push_back (std::make_unique<AudioParameterFloat> ("gain", "Gain", -15.0f, 15.0f, 0.0f));
-    params.push_back (std::make_unique<AudioParameterFloat> ("drivegain", "Drive", -30.0f, 6.0f, -12.0f));
+    params.push_back (std::make_unique<AudioParameterFloat> ("drivegain", "Drive", -30.0f, 30.0f, -12.0f));
     params.push_back (std::make_unique<AudioParameterInt> ("sat", "Saturator", SatType::none, SatType::hyptan, SatType::none));
 
     return { params.begin(), params.end() };
@@ -122,15 +123,20 @@ void NonlinearBiquadAudioProcessor::changeProgramName (int index, const String& 
 //==============================================================================
 void NonlinearBiquadAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    oversampling.initProcessing (samplesPerBlock);
+
     for (int ch = 0; ch < 2; ++ch)
     {
-        filter[ch].reset (sampleRate);
+        filter[ch].reset (sampleRate * oversampling.getOversamplingFactor());
         filter[ch].toggleOnOff (true);
+
+        inGain[ch].prepare();
     }
 }
 
 void NonlinearBiquadAudioProcessor::releaseResources()
 {
+    oversampling.reset();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -163,17 +169,30 @@ void NonlinearBiquadAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mi
 
     for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
     {
-        gain[ch].setGain (Decibels::decibelsToGain (*driveParameter));
+        inGain[ch].setGain (Decibels::decibelsToGain (*driveParameter));
+        inGain[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
+    }
 
+    dsp::AudioBlock<float> block (buffer);
+    dsp::AudioBlock<float> osBlock (buffer);
+
+    osBlock = oversampling.processSamplesUp (block);
+
+    float* ptrArray[] = {osBlock.getChannelPointer (0), osBlock.getChannelPointer (1)};
+    AudioBuffer<float> osBuffer (ptrArray, 2, static_cast<int> (osBlock.getNumSamples()));
+
+    for (int ch = 0; ch < osBuffer.getNumChannels(); ++ch)
+    {
         filter[ch].setEqShape (static_cast<EqShape> ((int) *eqShapeParameter));
         filter[ch].setFrequency (*eqFreqParameter);
         filter[ch].setQ (*eqQParameter);
         filter[ch].setGain (Decibels::decibelsToGain (*eqGainParameter));
         filter[ch].setSaturator (static_cast<SatType> ((int) *satParameter));
 
-        gain[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
-        filter[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
+        filter[ch].processBlock (osBuffer.getWritePointer (ch), osBuffer.getNumSamples());
     }
+
+    oversampling.processSamplesDown (block);
 }
 
 //==============================================================================

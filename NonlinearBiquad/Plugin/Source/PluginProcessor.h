@@ -70,8 +70,10 @@ private:
     float*  driveParameter;
     float*  satParameter;
 
-    Gain gain[2];
+    Gain inGain[2];
     EQFilter filter[2];
+
+    dsp::Oversampling<float> oversampling;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonlinearBiquadAudioProcessor)

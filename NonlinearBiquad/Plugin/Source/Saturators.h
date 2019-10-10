@@ -45,10 +45,10 @@ public:
     static inline float softClip (float x)
     {
         if (x > 1.0f)
-            return 1.0f;
+            return 2.0f / 3.0f;
 
         if (x < -1.0f)
-            return -1.0f;
+            return -2.0f / 3.0f;
 
         return x - x*x*x/3.0f;
     }
