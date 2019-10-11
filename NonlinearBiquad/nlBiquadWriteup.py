@@ -128,7 +128,7 @@ d.draw()
 # structure. In this article, I'm going to focus on 6 shapes: Highpass, Lowpass,
 # High Shelf, Low Shelf, Bell, and Notch. Plots of the frequency response for
 # each of these filters can be found below. For instructions on how to implement
-# these filters using a biquad filter, please check out Robert Bristow Johnson's
+# these filters using a biquad filter, please check out Robert Bristow-Johnson's
 # [Audio EQ Cookbook](https://www.w3.org/2011/audio/audio-eq-cookbook.html),
 # another indespensible resource for audio DSP engineers.
 
@@ -169,7 +169,7 @@ plotFilter (b, a, 'Notch Filter', ylim=(-30, 10))
 # In order to make any TDF-II filter exhibit nonlinear resonance, we can
 # simply saturate the states. In the following examples, I will demonstrate
 # three saturating nonlinearities: a soft clipper, a hard clipper, and a $\tanh$
-# clipper. The mathematics that describe why this works, and
+# clipper. The mathematics that describe why this works and
 # ensure that we don't accidentally make an unstable filter are a litle bit
 # complex, and I'm not going to explain them here, partly because I'm still
 # wrapping my head around them myself. The resulting signal flow diagram
@@ -234,12 +234,13 @@ d.draw()
 #
 # To get a sense of what this modified structure does to our filter, it would
 # be nice to look at the frequency response of the filter. Unfortunately, as
-# I mentioned in my [introductory article]() for this series, a nonlinear system
+# I mentioned in my [introductory article](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-0-why-4ad9b3eed60f)
+# for this series, a nonlinear system
 # does not have a frequency response the same way that a linear system does.
 # However, what we can do is choose some level (often called an "operating point"),
 # and see how our system reacts to various frequencies at that level. Below, we show
-# the "frequency response" for a low shelf filter with $\tanh$ nonlinearities
-# at various operating points.
+# the "frequency response" for a low shelf filter and a bell filter, each with
+# $\tanh$ nonlinearities, at various operating points.
 
 #%%
 def chirpLog (f0, f1, duration, fs):
@@ -287,24 +288,6 @@ class Biquad:
         return block
 
 #%%
-fs = 44100
-b, a = filters.calcCoefsLowShelf (1000, 0.707*2, 2, fs)
-
-normalBQ = Biquad()
-normalBQ.setCoefs (b, a)
-
-nlBQ = Biquad()
-nlBQ.setCoefs (b, a)
-nlBQ.saturator = lambda x : np.tanh (x)
-
-nlBQ2 = Biquad()
-nlBQ2.setCoefs (b, a)
-nlBQ2.saturator = lambda x : np.tanh (x)
-
-nlBQ3 = Biquad()
-nlBQ3.setCoefs (b, a)
-nlBQ3.saturator = lambda x : np.tanh (x)
-
 def plotFilterResponse (biquad, fs, gain=0.1):
     x = gain*chirpLog (20, 20000, 1, fs)
     y = biquad.processBlock (np.copy (x))
@@ -316,22 +299,40 @@ def plotFilterResponse (biquad, fs, gain=0.1):
     H = np.fft.rfft (h)
     plt.semilogx (f, 20 * np.log10 (np.abs (H)))
 
-plt.figure()
-plotFilterResponse (nlBQ3, fs, gain=0.5)
-plotFilterResponse (nlBQ2, fs, gain=0.25)
-plotFilterResponse (nlBQ, fs)
-plotFilterResponse (normalBQ, fs)
-plt.xlim (20, 20000)
-plt.gca().xaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
+def plotNonlinearFilterResponse (b, a, title, gains=[0.5, 0.25, 0.1]):
+    plt.figure()
+    legend = []
+    for gain in gains:
+        nlBQ = Biquad()
+        nlBQ.setCoefs (b, a)
+        nlBQ.saturator = lambda x : np.tanh (x)
+        plotFilterResponse (nlBQ, fs, gain=gain)
+        legend.append ('Nonlinear (gain={})'.format (gain))
 
-plt.title ('Nonlinear Low Shelf')
-plt.xlabel ('Frequency [Hz]')
-plt.ylabel ('Magnitude [dB]')
-plt.legend (['Nonlinear (gain  = 0.5)', 'Nonlinear (gain  = 0.25)', 'Nonlinear (gain  = 0.1)', 'Linear'])
+    normalBQ = Biquad()
+    normalBQ.setCoefs (b, a)
+    plotFilterResponse (normalBQ, fs)
+    legend.append ('Linear')
+
+    plt.xlim (20, 20000)
+    plt.gca().xaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
+
+    plt.title (title)
+    plt.xlabel ('Frequency [Hz]')
+    plt.ylabel ('Magnitude [dB]')
+    plt.legend (legend)
+
+fs = 44100
+b, a = filters.calcCoefsLowShelf (1000, 0.707*2, 2, fs)
+plotNonlinearFilterResponse (b, a, 'Nonlinear Low Shelf')
+
+b, a = filters.calcCoefsBell (1000, 0.707, 4, fs)
+plotNonlinearFilterResponse (b, a, 'Nonlinear Bell Filter', gains=[1.5, 0.4, 0.1])
+plt.ylim (-2, 15)
 
 #%% [markdown]
-# From the above plot, it may seem that all we're doing with our nonlinear bell filter
-# is creating a bell filter for which the resonance decreases as the input level
+# From the above plots, it may seem that all we're doing with our nonlinear filter
+# is creating a filter for which the resonance decreases as the input level
 # increases, almost like a voltage controlled filter (VCF).
 # To an extent this is true, but remember that the active ingredients
 # for this process of decreasing resonance are the saturating nonlinearities,
@@ -347,7 +348,6 @@ plt.legend (['Nonlinear (gain  = 0.5)', 'Nonlinear (gain  = 0.25)', 'Nonlinear (
 # same frequency, and a gain of 12 dB. We show this response
 # for three types of saturating nonlinearities: hard clipper,
 # soft clipper, and $\tanh$ clipper.
-
 
 #%%
 def plotHarmonicResponse (biquad, fs, gain=0.1, freq=100):
@@ -404,4 +404,10 @@ plt.title ('Tanh Clip Bell Filter Harmonic Response')
 # more. For my purposes, I've found that upsampling by a factor of 8 mitigates
 # aliasing artifacts down below -80 dB for the soft clipper and $\tanh$ clipper.
 
-#%%
+#%% [markdown]
+# ## Examples
+#
+# As usual, there an example implementation of this nonlinear biquad
+# filter available on [GitHub](https://github.com/jatinchowdhury18/ComplexNonlinearities)
+# as an audio plugin (VST, AU). Feel free to download and try it for
+# yourself! There is also a video demo available on [YouTube](https://youtu.be/BMzKdaZtmoU).
