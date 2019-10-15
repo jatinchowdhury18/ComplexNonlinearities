@@ -20,3 +20,14 @@ JuceLibraryCode
 __pycache__
 *.asd
 *.mp4
+
+# Tex artifacts
+*.synctex.gz
+*.aux
+*.bbl
+*.blg
+*.out
+*.log
+
+# SPICE
+SPICE
