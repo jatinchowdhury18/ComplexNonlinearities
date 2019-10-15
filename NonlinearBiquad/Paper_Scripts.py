@@ -123,15 +123,15 @@ def zplane (p, z):
     ticks = [-1, -.5, .5, 1]; plt.xticks(ticks); plt.yticks(ticks)
 
 def getPoles (b, a, g=1):
-    return np.roots ([g**2 * a[2], g * a[1], 1])
+    return np.roots ([1,  g * a[1], g**2 * a[2]])
 
 def getZeros (b, a, g=1):
-    return np.roots ([g**2 * b[2], g * b[1], b[0]])
+    return np.roots ([b[0], g * b[1], g**2 * b[2]])
 
 fs = 44100
 b, a = filters.calcCoefsLPF2 (1000, 10, fs)
 
-for g in [1, 1.25, 2.5, 5, 10]:
+for g in [1, 0.8, 0.6, 0.4, 0.2]:
     plt.figure()
     zplane (getPoles (b, a, g=g), getZeros (b, a, g=g))
     plt.title ('Poles/Zeros for g={}'.format (g))
