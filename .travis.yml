@@ -17,6 +17,7 @@ env:
   - PLUGIN=Exciter
   - PLUGIN=Hysteresis
   - PLUGIN=NonlinearBiquad
+  - PLUGIN=NonlinearFeedback
 
 stages:
   - name: addons

@@ -25,7 +25,7 @@ public:
         fs = (float) sampleRate;
     }
 
-    inline float process (float x)
+    virtual inline float process (float x)
     {
         // process input sample, direct form II transposed
         float y = z[1] + x*b[0];
@@ -47,12 +47,12 @@ protected:
     float fs = 48000.0f;
     std::unique_ptr<float[]> a; //IIR Coefficients
     std::unique_ptr<float[]> b; //FIR Coefficients
+    std::unique_ptr<float[]> z; // Filter state
 
     SatFunc saturator;
 
 private:
     const int order = 2;
-    std::unique_ptr<float[]> z; // Filter state
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Biquad)
 };

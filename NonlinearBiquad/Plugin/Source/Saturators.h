@@ -8,7 +8,8 @@ enum SatType
     none,
     hard,
     soft,
-    hyptan
+    hyptan,
+    ahypsin,
 };
 
 using SatFunc = std::function<float (float)>;
@@ -26,6 +27,9 @@ public:
 
         if (type == SatType::hyptan)
             return [] (float x) { return tanhClip (x); };
+
+        if (type == SatType::ahypsin)
+            return [] (float x) { return aSinhClip (x); };
 
         // None
         return [] (float x) { return x; };
@@ -56,6 +60,11 @@ public:
     static inline float tanhClip (float x)
     {
         return tanhf (x);
+    }
+
+    static inline float aSinhClip (float x)
+    {
+        return asinhf (x);
     }
 };
 
