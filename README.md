@@ -32,7 +32,7 @@ Current nonlinearities include:
 
 <img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/NonlinearBiquad/Pics/NL-LowShelf.png" alt="Pic" width="500" height="350">
 
-4. Nonlinear Biquad
+4. Nonlinear Feedback
 [![Medium](https://img.shields.io/badge/Read%20on-Medium-blue)](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-5-nonlinear-feedback-filters-115e65fc0402)
 [![Jupyter](https://img.shields.io/badge/Read%20as-Jupyter-orange)](https://ccrma.stanford.edu/~jatin/ComplexNonlinearities/NLFeedback.html)
 
