@@ -23,7 +23,8 @@ NonlinearFeedbackAudioProcessor::NonlinearFeedbackAudioProcessor()
                      #endif
                        ),
 #endif
-    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout())
+    vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout()),
+    oversampling (2, 3, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
 {
     shapeParameter = vts.getRawParameterValue ("shape");
     freqParameter  = vts.getRawParameterValue ("freq");
@@ -120,9 +121,11 @@ void NonlinearFeedbackAudioProcessor::changeProgramName (int index, const String
 //==============================================================================
 void NonlinearFeedbackAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    oversampling.initProcessing (samplesPerBlock);
+
     for (int ch = 0; ch < 2; ++ch)
     {
-        filter[ch].reset ((float) sampleRate);
+        filter[ch].reset ((float) sampleRate * oversampling.getOversamplingFactor());
         filter[ch].toggleOnOff (true);
 
         inGain[ch].prepare();
@@ -132,6 +135,7 @@ void NonlinearFeedbackAudioProcessor::prepareToPlay (double sampleRate, int samp
 
 void NonlinearFeedbackAudioProcessor::releaseResources()
 {
+    oversampling.reset();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -168,13 +172,29 @@ void NonlinearFeedbackAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     {
         inGain[ch].setGain (Decibels::decibelsToGain (*driveParameter));
         inGain[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
+    }
 
+    dsp::AudioBlock<float> block (buffer);
+    dsp::AudioBlock<float> osBlock (buffer);
+
+    osBlock = oversampling.processSamplesUp (block);
+
+    float* ptrArray[] = {osBlock.getChannelPointer (0), osBlock.getChannelPointer (1)};
+    AudioBuffer<float> osBuffer (ptrArray, 2, static_cast<int> (osBlock.getNumSamples()));
+
+    for (int ch = 0; ch < osBuffer.getNumChannels(); ++ch)
+    {
         filter[ch].setEqShape (EqShape::lowPass);
         filter[ch].setFrequency (*freqParameter);
         filter[ch].setQ (*qParameter);
         filter[ch].setSaturator (static_cast<SatType> ((int) *satParameter));
-        filter[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
+        filter[ch].processBlock (osBuffer.getWritePointer (ch), osBuffer.getNumSamples());
+    }
 
+    oversampling.processSamplesDown (block);
+
+    for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+    {
         outGain[ch].setGain (Decibels::decibelsToGain (-1.0f * *driveParameter));
         outGain[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
     }
