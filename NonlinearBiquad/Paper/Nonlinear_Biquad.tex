@@ -33,7 +33,7 @@
 %------------------------------------------------------------------------------------------
 %  !  !  !  !  !  !  !  !  !  !  !  ! user defined variables  !  !  !  !  !  !  !  !  !  !  !  !  !  !
 % Please use these commands to define title and author(s) of the paper:
-\def\papertitle{A Stable Structure for Nonlinear Biquad Filters}
+\def\papertitle{Stable Structures for Nonlinear Biquad Filters}
 \def\paperauthorA{Jatin Chowdhury}
 
 % Authors' affiliations have to be set below
@@ -145,10 +145,12 @@
 
 \begin{abstract}
 Biquad filters are a common tool for filter design. In this
-writing, we develop a structure for creating nonlinear biquad
-filters with guaranteed stability. We examine an example filter
-designed with this structure, and compare to a corresponding
-analog filter.
+writing, we develop two structures for creating biquad filters
+with nonlinear elements. We derive expressions for the instantaneous pole
+locations of each nonlinear filter, and provide conditions for
+their guaranteed stability. Finally, we examine example filters
+built with these nonlinear structures, and show how the first
+nonlinear structure can be used in the context of analog modelling.
 \end{abstract}
 
 \section{Introduction}
@@ -159,12 +161,14 @@ of biquad filters. While digital biquad filters are typically implemented
 as linear processors, for audio applications it can be useful to
 implement nonlinear filters. For example, in \cite{SKF} the authors
 use a passive model of operational amplifiers to model the nonlinear
-behaviour of a Sallen-Key lowpass filter. In this writing, we strive
-to develop a more general nonlinear filter structure, one that can be
-used for analog modelling, but does not necessarily depend on analog
+behaviour of a Sallen-Key lowpass filter. Meanwhile, in \cite{Vadim},
+the author proposes several methods for using nonlinear elements
+to enhance linear models of analog ladder filters. In this writing, we strive
+to develop more general nonlinear filter structures. While these structures
+may be used for analog modelling, they do not necessarily depend on analog
 modelling principles to be understood and implemented.
 
-\section{Developing the Structure}
+\section{Structural Elements}
 \subsection{Linear Filter}
 %
 We begin with the equation for a biquad filter:
@@ -195,14 +199,29 @@ equation.
     \label{eq:poles_lin}
 \end{equation}
 %
+Specifically, the pole magnitude is equal to:
+\begin{equation}
+    |p|^2 = \frac{-a_1 + \sqrt{a_1^2- 4a_2}}{2} \frac{-a_1 - \sqrt{a_1^2- 4a_2}}{2} = a_2
+    \label{eq:poles_lin_mag}
+\end{equation}
+%
+And the pole frequencies are equal to (assuming complex poles):
+\begin{equation}
+    \angle p = \arctan \left(\pm \frac{\sqrt{|a_1^2- 4a_2|}}{a_1} \right)
+    \label{eq:poles_lin_angle}
+\end{equation}
+%
+It is well known that a digital filter will be stable provided that
+the magnitudes of the poles are strictly less 1 \cite{JOSFilters}.
 
 \subsection{Nonlinear Elements}
 %
 We now propose adding nonlinear elements to the above filter structure.
 We will refer to these nonlinear elements as ``base nonlinearities''
 To keep the discussion as broad as possible, we consider any one-to-one
-nonlinear function $f_{NL}(x)$. It will often be convenient to consider
-the input-dependent ``gain'' of the nonlinear function:
+nonlinear function $f_{NL}(x)$. As seen in \cite{Vadim}, it will often
+be convenient to consider the input-dependent ``gain'' of the nonlinear
+function:
 %
 \begin{equation}
     g_{NL}(x) = \frac{f_{NL}(x)}{x}
@@ -229,17 +248,14 @@ Saturating nonlinearities satisfy the property that
     \label{eq:Sat_constraint}
 \end{equation}
 %
-\begin{figure}[ht]
+\begin{figure}[h]
     \center
     \includegraphics[width=3in]{../Pics/Sat-NLs.png}
     \caption{\label{Sats}{\it Saturating Nonlinearities}}
 \end{figure}
 %
 
-\subsection{Nonlinear Filter Structure}
-%
-We now propose adding nonlinear elements to the TDF-II strcuture in the
-following fashion (see \cref{NL-TDF-II}).
+\section{Nonlinear Filter Structure 1: Nonlinear Biquad}
 %
 \begin{figure}[ht]
     \center
@@ -248,6 +264,10 @@ following fashion (see \cref{NL-TDF-II}).
                                 The ``NL'' blocks refer to a generalized
                                 nonlinear element.}}
 \end{figure}
+%
+We now propose adding nonlinear elements to the TDF-II strcuture in the
+following fashion (see \cref{NL-TDF-II}). We will refer to this structure
+as the ``Nonlinear Biquad''.
 %
 The equation for the nonlinear biquad filter then becomes:
 %
@@ -295,7 +315,7 @@ Then \cref{eq:bq_NL} can be re-written:
 \end{equation}
 %
 Finally, we can re-write the filter coefficients as variables dependent on
-state variables:
+the state variables:
 %
 \begin{align}
 \begin{split}
@@ -327,7 +347,7 @@ the nonlinear biquad structure, we can adjust the formula from
 \cref{eq:poles_lin}.
 %
 \begin{equation}
-    p = \frac{-g_1 a_1 \pm \sqrt{g_l^2 a_1^2- 4 g_1 g_2 a_2}}{2}
+    p' = \frac{-g_1 a_1 \pm \sqrt{g_l^2 a_1^2- 4 g_1 g_2 a_2}}{2}
     \label{eq:poles_nl}
 \end{equation}
 %
@@ -340,66 +360,212 @@ stable, and that the constraint from \cref{eq:NL_constraint} is satisfied.
 \newline\newline
 For saturating base nonlinearities, we can see from \cref{eq:Sat_constraint}
 that as the state variables grow large, the poles will go to zero.
-
-\section{Example: Resonant Lowpass Filter}
-
-As an example of the nonlinear biquad structure developed in the
-previous section, we will now examine a resonant lowpass filter
-designed with the nonlinear structure, and compare to a corresponding
-analog filter.
-
-\subsection{Digital Nonlinear Filter}
-
-Our example filter will be a lowpass filter with a cutoff frequency at
-$f_c = 1\text{ kHz}$, and $Q = 10$. For our nonlinear elements we will
-use a hyperbolic tangent function $f_{NL}(x) = \tanh (x)$. Note that
-this nonlinear function belongs to the class of saturating nonlinearities
-described by \cref{eq:Sat_constraint}.
 \newline\newline
-In \cref{NL-LPF-freq} we show the response of this filter for sine sweeps of
-various amplitudes, compared to the frequency response of the corresponding
-linear filter.
+The pole magnitude and angle with move as follows.
+\begin{equation}
+    |p'|^2 = \frac{g_1^2 a_1^2 - (g_l^2 a_1^2- 4 g_1 g_2 a_2)}{4} = g_1 g_2 a_2 = g_1 g_2 |p|^2
+    \label{eq:poles_nl_mag}
+\end{equation}
+%
+\begin{equation}
+\begin{split}
+    \angle p' = \arctan \left(\pm \frac{\sqrt{|g_1^2 a_1^2- 4g_1g_2a_2|}}{g_1a_1} \right) \\
+    = \arctan \left(\pm \frac{\sqrt{|a_1^2- 4\frac{g_2}{g_1}a_2|}}{a_1} \right)
+\end{split}
+    \label{eq:poles_nl_angle}
+\end{equation}
+%
+Note that while the two gains are approximately the equal, the nonlinear
+pole will have the same angle as the corresponding linear pole. An example
+of this pole movement will be seen later for an example filter (see \cref{pzPlots}).
+
+\section{Nonlinear Filter Structure 2: Nonlinear Feedback Filter}
+%
+We now propose a different structure for adding elements to a TDF-II
+Biquad filter, this time adding nonlinear elements to the feedback
+paths (see \cref{NL2-TDF-II}). Note that though the two structures are developed
+separately here, they could certainly be combined into a third structure,
+which will also be stable under the same conditions as the two original
+structures.
 %
 \begin{figure}[ht]
     \center
+    \includegraphics[width=2.3in]{../../NonlinearFeedback/Pics/NL2-TDF-II-White.png}
+    \caption{\label{NL2-TDF-II}{\it Nonlinear Feedback Filter.}}
+\end{figure}
+%
+The equaton for the filter can now be written:
+%
+\begin{equation}
+    \begin{split}
+        y[n] = b_0 u[n] + b_1 u[n-1] + b_2 u[n-2] \\ - a_1 f_{NL}(y[n-1]) - a_2 f_{NL}(y[n-2])
+    \end{split}
+        \label{eq:nlbq2}
+\end{equation}
+%
+Again, we can replace the nonlinear elements with input-dependent
+gains:
+%
+\begin{equation}
+    \begin{split}
+        g_1 =  \frac{f_{NL}(y[n-1])}{y[n-1]} \\
+        g_2 =  \frac{f_{NL}(y[n-1])}{y[n-1]}
+    \end{split}
+        \label{eq:gs2}
+\end{equation}
+%
+And again, the filter equation can be re-written:
+%
+\begin{equation}
+    \begin{split}
+        y[n] = b_0 u[n] + b_1 u[n-1] + b_2 u[n-2] \\ - a_1 g_1 y[n-1] - a_2 g_2 y[n-2]
+    \end{split}
+        \label{eq:nlbq2_rewrite}
+\end{equation}
+%
+Or by re-writing the filter coefficients, we see:
+%
+\begin{align}
+    \begin{split}
+        b_0' &= b_0\\
+        b_1' &= b_1\\
+        b_2' &= b_2\\
+        a_1' &= g_1 a_1\\
+        a_2' &= g_2 a_2
+    \end{split}
+        \label{eq:bq2_coefs_re-write}
+\end{align}
+%
+
+\subsection{Guaranteed Stability}
+%
+We can now calculate the locations of the instantaneous poles for
+the nonlinear feedback filter, again by adjusting the formula from
+\cref{eq:poles_lin}.
+%
+\begin{equation}
+p' = \frac{-g_1 a_1 \pm \sqrt{g_1^2 a_1^2 - 4 g_2 a_2}}{2}
+    \label{eq:poles_nl2}
+\end{equation}
+%
+Again, we see that the nonlinear feedback filter will be stable, provided
+that the corresponding linear filter is stable, and the constraint from
+\cref{eq:NL_constraint} is satisfied.
+\newline\newline
+In this case the pole magnitude and angle will move as follows:
+\begin{equation}
+    |p'|^2 = \frac{g_1^2 a_1^2 - (g_l^2 a_1^2- 4 g_2 a_2)}{4} = g_2 a_2 = g_2 |p|^2
+    \label{eq:poles_nl2_mag}
+\end{equation}
+%
+\begin{equation}
+\begin{split}
+    \angle p' = \arctan \left(\pm \frac{\sqrt{\left|g_1^2 a_1^2- 4g_2a_2 \right|}}{g_1a_1} \right) \\
+    = \arctan \left(\pm \frac{\sqrt{\left|a_1^2- 4\frac{g_2}{g_1^2}a_2 \right|}}{a_1} \right)
+\end{split}
+    \label{eq:poles_nl2_angle}
+\end{equation}
+%
+Note that for saturating nonlinearities, the pole magnitude decays to
+zero more slowly than for the
+nonlinear biquad. More importantly, as the input gain increases,
+the pole angle increases as well. \cite{Vadim} describes this sort of
+pole movement as ``audio-rate modulation of the cutoff'' for the
+filter, which can be a useful way of thinking about this phenomenon.
+\newline\newline
+Finally, note that unlike the nonlinear biquad, the zeros of the
+filter are not affected by the nonlinear elements.
+While adding nonlinear elements to the feedforward path can introduce 
+a similar effect for the zeros, this would be
+functionally equivalent to processing the signal through a nonlinearity
+before passing it into the filter. Again, an example of this pole movement will be
+seen in a later section (see \cref{pzPlots2}).
+
+\section{Example: Resonant Lowpass Filter}
+
+As an example of the nonlinears structure developed above,
+we will now examine a resonant lowpass filter
+designed with both nonlinear structures. We will then show how the
+nonlinear biquad structure can be useful for analog modelling,
+and compare to an analog filter made with the same specifications.
+\newline\newline
+Our example filter will be a lowpass filter with a cutoff frequency
+at $f_c = 1\text{ kHz}$, and $Q=10$. For our nonlinear elements, we
+will use a hyperbolic tangent function $f_{NL}(x) = \tanh (x)$.
+Note that this nonlinear function belongs to the class of
+saturating nonlinearities described by \cref{eq:Sat_constraint}.
+%
+\begin{figure}[h]
+    \center
     \includegraphics[width=3in]{../Pics/NL-LPF.png}
-    \caption{\label{NL-LPF-freq}{\it Frequency responses of nonlinear lowpass
+    \caption{\label{NL-LPF-freq}{\it Frequency responses of nonlinear biquad lowpass
                                     filters at varying amplitudes.}}
 \end{figure}
 %
-In \cref{pzPlots} we show the movement of the poles and zeros of
-the filter for varying steady state inputs. We calculate the instantaneous
-poles using \cref{eq:poles_nl}, using $g_1 = g_2 = g$, as described in
-each figure.
-
 \begin{figure*}[!ht]
     % \center
     \includegraphics[width=1.7in]{../Pics/pz1.png}
     \includegraphics[width=1.7in]{../Pics/pz08.png}
     \includegraphics[width=1.7in]{../Pics/pz06.png}
     \includegraphics[width=1.7in]{../Pics/pz02.png}
-    \caption{\label{pzPlots}{\it Instantaneous poles for a nonlinear resonant
+    \caption{\label{pzPlots}{\it Instantaneous poles for a nonlinear biquad resonant
                                 lowpass filter at varying input levels.}}
 \end{figure*}
 %
 
-\subsection{Comparison with Analog Filter}
+\subsection{Digital Nonlinear Biquad}
 
-To show how the nonlinear filter structure can be useful
-for analog modelling purposes, we compare the behavior of
-the resonant lowpass filter with that of an analog Sallen-Key
-lowpass filter, similar to the comparison done in \cite{SKF}.
-\newline\newline
-First, we note that the input gain to the nonlinear biquad can be
-used as a tunable parameter (see \cref{50hz}).
+We first construct this filter using the nonlinear biquad structure.
+In \cref{NL-LPF-freq} we show the response of this filter for sine sweeps of
+various amplitudes, compared to the frequency response of the corresponding
+linear filter. In \cref{pzPlots} we show the movement of the poles and zeros of
+the filter for varying steady state inputs. We calculate the instantaneous
+poles using \cref{eq:poles_nl}, using $g_1 = g_2 = g$, as described in
+each figure.
 %
 \begin{figure}[ht]
+    \center
+    \includegraphics[width=3in]{../../NonlinearFeedback/Pics/LPF-NL.png}
+    \caption{\label{NL2-LPF-freq}{\it Frequency responses of lowpass
+                                    filters with nonlinear feedback
+                                    at varying amplitudes.}}
+\end{figure}
+%
+%
+\begin{figure}[h]
     \center
     \includegraphics[width=3in]{../Pics/50-Hz_Response.png}
     \caption{\label{50hz}{\it Response of the nonlinear resonant lowpass
                             filter to a 50 Hz square wave with varying input gain.}}
 \end{figure}
 %
+
+\subsection{Digital Nonlinear Feedback Filter}
+%
+\begin{figure*}[!ht]
+    % \center
+    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz1.png}
+    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz08.png}
+    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz06.png}
+    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz02.png}
+    \caption{\label{pzPlots2}{\it Instantaneous poles for a resonant
+                                lowpass filter with nonlinear at varying input levels.}}
+\end{figure*}
+%
+Next, we construct the same resonant lowpass filter
+using the nonlinear feedback structure. In \cref{NL2-LPF-freq},
+we show the frequency response of the filter for sine sweeps of
+various amplitudes. In \cref{pzPlots2} we show the movement of the
+poles and zeros of the filter for various steady state gains. The
+instantaneous poles are calculated using \cref{eq:poles_nl2}, again
+using $g_1 = g_2 = g$.
+
+\subsection{Using the Nonlinear Biquad for Analog Modelling}
+
+To show how the nonlinear biquad filter structure can be useful
+for analog modelling purposes, first note that the input gain to
+the nonlinear biquad can be used as a tunable parameter (see \cref{50hz}).
+\newline\newline
 By tuning the input gain, we can attempt to match the response of an
 arbitrary analog filter, either by tuning the parameters by ear
 or using some form of numerical optimisation. Note that the choice
@@ -408,9 +574,14 @@ role in the accuracy of the model. For example, if the output of the
 analog filter being modelled is asymmetric, then to accurately model
 that filter, the nonlinear biquad must be constructed using an
 asymmetric base nonlinearities.
-\newline\newline
+%
+
+\subsubsection{Comparison with Analog Filter}
+
 As an example, we can attempt to construct a naive model of Sallen-Key
-lowpass filter, a commonly used analog filter structure. We describe this
+lowpass filter, a commonly used analog filter structure, and compare
+with our results to the desired analog response similar to the
+comparison done in \cite{SKF}. We describe this
 as a naive model because we do not make any attempt to understand the physical
 properties of the analog filter when constructing this model. We construct
 a nonlinear biquad filter using $\tanh$ base nonlinearities, and design a
@@ -443,24 +614,27 @@ a more sophisticated optimisation scheme.
 
 \section{Conclusion}
 
-In this paper, we have developed a structure for stable nonlinear biquad
+In this paper, we have developed two structures for stable nonlinear biquad
 filters. We have introduced the new architecture as a modification of the
-Transposed Direct Form II filter form, and shown mathematically
+Transposed Direct Form II filter form, and shown
 how the changed architecture affects the pole locations depending on
 the amplitude of the input signal. We have also derived constraints under
 which the structure is guaranteed stable.
 \newline\newline
 As an example of the nonlinear biquad filter structure we have implemented
-a nonlinear resonant lowpass filter, and shown that the poles respond to
-the input as expected. We then show how the structure can be used to model
-an analog filter, using a Sallen-Key lowpass filter as an example. Note
+a resonant lowpass filter using both of structures, and shown that the
+poles respond to the input as expected. We then show how the nonlinear
+biquad structure can be used to model an analog filter,
+and comparing with a Sallen-Key lowpass filter as an example. Note
 that while the nonlinear biquad structure can be used for analog modelling
-it can also be used purely in the digital domain, as a tool for constructing
-filters that sound more harmonically rich.
+both structures can also be used purely in the digital domain, as a tool
+for constructing filters that sound more sonically interesting,
+and harmonically rich.
 \newline\newline
 To demonstrate this last point, we have also developed an open-source
-audio plugin (VST, AU) implentation of the nonlinear biquad filter,
-extending to several filter shapes, and several base nonlinearities.
+audio plugin (VST, AU) implentation of the both nonlinear biquad and
+nonlinear feedback filters, extending to several filter shapes, and
+several base nonlinearities.
 The source code for the plugin implementation is available on
 GitHub\footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}}.
 \newline\newline
