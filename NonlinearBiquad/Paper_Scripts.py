@@ -6,6 +6,23 @@ import matplotlib.ticker
 import audio_dspy as adsp
 import FilterShapes as filters
 
+
+#%%
+def lin(x, x_0):
+    slope = 1.0 / np.cosh (x_0)**2
+    correct_y = np.tanh (x_0)
+    off = correct_y - slope*x_0
+    return slope * x + off
+
+x = np.linspace (-5, 5)
+x0 = 2
+plt.plot (x, np.tanh (x))
+plt.plot (x, lin (x, 1))
+plt.plot (1, np.tanh (1), '-ro')
+plt.ylim (-1.5, 1.5)
+plt.title (r'$\tanh$ Nonlinearity, Linearized at $x=1$')
+plt.legend ([r'$f_{NL}(x)$', r'$\bar{f}_{NL}(x), x_0 = 1$'])
+
 #%%
 def chirpLog (f0, f1, duration, fs):
     N = int (duration * fs)
@@ -285,3 +302,31 @@ plt.legend (['Linear', 'LTSpice', 'NL Biquad'])
 plt.title ('Modelling an Analog Sallen-Key Filter')
 
 #%%
+import SchemDraw
+from SchemDraw import dsp
+import SchemDraw.elements as e
+
+d = SchemDraw.Drawing(fontsize=12)
+d.add (e.DOT_OPEN, label='x[n]', color='white')
+L1 = d.add (dsp.LINE, d='right', l=1, color='white')
+d.add (dsp.BOX, label='$f(x)$', color='white')
+d.add (dsp.LINE, d='right', l=1, color='white')
+y = d.add (e.DOT_OPEN, label='y[n]', color='white')
+
+d.draw()
+
+# %%
+d = SchemDraw.Drawing(fontsize=12)
+d.add (e.DOT_OPEN, label='x[n]', color='white')
+L1 = d.add (dsp.LINE, d='right', l=1, color='white')
+d.add (dsp.AMP, label='$f\'(x_0)$', color='white')
+d.add (dsp.LINE, d='right', l=1, color='white')
+sum = d.add (dsp.SUM, color='white')
+d.add (dsp.LINE, d='up', l=0.5, color='white', xy=sum.N)
+d.add (e.DOT_OPEN, label='$c(x_0)$', color='white')
+d.add (dsp.LINE, d='right', l=1, color='white', xy=sum.E)
+y = d.add (e.DOT_OPEN, label='y[n]', color='white')
+
+d.draw()
+
+# %%
