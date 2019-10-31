@@ -18,6 +18,7 @@ env:
   - PLUGIN=Hysteresis
   - PLUGIN=NonlinearBiquad
   - PLUGIN=NonlinearFeedback
+  - PLUGIN=Wavefolder
 
 stages:
   - name: addons
