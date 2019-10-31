@@ -6,7 +6,7 @@ sudo: false
 
 # if pull request: always build
 # if push: only build for master branch
-if: (type != push) OR (type = push AND branch = master)
+if: (type != push) OR (type = push AND branch = travis)
 
 os:
   - osx
@@ -52,6 +52,10 @@ addons:
 services:
         - xvfb
 
+cache:
+  directories:
+  - $TRAVIS_BUILD_DIR/JUCE/extras/Projucer/
+
 before_install:
   # mac installs
   - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then gem install xcpretty; fi
@@ -70,11 +74,9 @@ before_install:
 
   # Build Projucer
   - cd $TRAVIS_BUILD_DIR/
-  - git clone https://github.com/jatinchowdhury18/JUCE.git
-  - cd JUCE/extras/Projucer/Builds/$BUILD_FOLDER
-  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then xcodebuild -project Projucer.xcodeproj > /dev/null; fi
-  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then msbuild.exe -v:quiet Projucer.sln; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then make; fi
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then sh travis_scripts/build_projucer.sh $PROJUCER_EXPORT $BUILD_FOLDER $TRAVIS_OS_NAME; fi
+  - if [[ $TRAVIS_OS_NAME == 'windows' ]]; then sh travis_scripts/build_projucer.sh $PROJUCER_EXPORT $BUILD_FOLDER $TRAVIS_OS_NAME; fi
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then bash travis_scripts/build_projucer.sh $PROJUCER_EXPORT $BUILD_FOLDER $TRAVIS_OS_NAME; fi
 
 script:
   - cd $TRAVIS_BUILD_DIR/$PLUGIN/Plugin
