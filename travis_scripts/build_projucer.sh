@@ -4,6 +4,7 @@ if [ -f $1 ]
     echo "Projucer already built!"
 else
     echo "Building Projucer..."
+    rm -r JUCE
     git clone https://github.com/jatinchowdhury18/JUCE.git
     cd JUCE/extras/Projucer/Builds/$2
     if [ "$3" == "osx" ]
