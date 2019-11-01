@@ -29,9 +29,11 @@ void WavefolderProcessor::processBlock(float* buffer, int numSamples)
     for (int n = 0; n < numSamples; ++n)
     {
         auto curFF = feedforward.getNextValue();
+        auto curFB = feedback.getNextValue();
+
         float ff = curFF * ffSat (buffer[n]) + (1.0f - curFF) * buffer[n];
-        float fb = feedback.getNextValue() * ffSat (y1);
+        float fb = curFB * ffSat (y1);
         y1 = (ff + fb) - depth.getNextValue() * wave (buffer[n], jmax (freq.getNextValue(), 0.00001f)*fs/2, fs);
-        buffer[n] = y1;
+        buffer[n] = y1 / (1.0f + curFB);
     }
 }
