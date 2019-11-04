@@ -146,9 +146,9 @@
 \begin{abstract}
 Biquad filters are a common tool for filter design. In this
 writing, we develop two structures for creating biquad filters
-with nonlinear elements. We derive expressions for the instantaneous pole
-locations of each nonlinear filter, and provide conditions for
-their guaranteed stability. Finally, we examine example filters
+with nonlinear elements. We provide conditions for the guaranteed
+stability of the nonlinear filters, and derive expressions for
+instantaneous pole analysis. Finally, we examine example filters
 built with these nonlinear structures, and show how the first
 nonlinear structure can be used in the context of analog modelling.
 \end{abstract}
@@ -203,31 +203,70 @@ equation.
     \label{eq:poles_lin}
 \end{equation}
 %
-Specifically, the pole magnitude is equal to:
+Specifically, the pole magnitude is described by:
 \begin{equation}
-    |p|^2 = \frac{-a_1 + \sqrt{a_1^2- 4a_2}}{2} \frac{-a_1 - \sqrt{a_1^2- 4a_2}}{2} = |a_2|
+    |p|^2 = % \frac{-a_1 + \sqrt{a_1^2- 4a_2}}{2} \frac{-a_1 - \sqrt{a_1^2- 4a_2}}{2} =
+    \begin{cases}
+        a_2& a_1^2 > 4a_2 \\
+        \frac{1}{2} a_1^2 - a_2& \text{else}
+    \end{cases}
     \label{eq:poles_lin_mag}
 \end{equation}
 %
-And the angular frequencies of the poles are equal to
-(assuming complex poles):
+And the angular frequencies of the poles are equal to:
 \begin{equation}
-    \angle p = \arctan \left(\pm \frac{\sqrt{|a_1^2- 4a_2|}}{a_1} \right)
+    \angle p = \begin{cases}
+        \arctan \left( \pm \frac{\sqrt{4a_2 - a_1^2}}{a_1} \right)& 4a_2 > a_1^2 \\
+        0& \text{else}
+    \end{cases}
     \label{eq:poles_lin_angle}
 \end{equation}
 %
 It is well known that a digital filter will be stable provided that
 the magnitudes of the poles are strictly less 1 \cite{JOSFilters}.
 
+\subsubsection{State Space Formulation}
+
+Another reason TDF-II is useful for implementing biquad filters
+is that its behavior can easily be written in state space form.
+First we define two state variables, at the locations of the delay
+elements:
+%
+\begin{equation}
+    \begin{split}
+        x_1[n] = b_1 u[n] - a_1 y[n] + x_2[n-1] \\
+        x_2[n] = b_2 u[n] - a_2 y[n]
+    \end{split}
+    \label{eq:bq_lin_states}
+\end{equation}
+%
+Then the output of the filter can be written in terms of the states
+as
+%
+\begin{equation}
+    y[n] = b_0 u[n] + x_1[n-1]
+    \label{eq:state_output_lin}
+\end{equation}
+%
+Finally, we can write the filter equation in a state space form:
+%
+\begin{equation}
+    \begin{bmatrix} x_1[n+1] \\ x_2[n+1] \\ y[n+1] \end{bmatrix} =
+    \begin{bmatrix} 0& 1& -a_1\\ 0& 0& -a_2\\ 1& 0& 0 \end{bmatrix}
+    \begin{bmatrix} x_1[n] \\ x_2[n] \\ y[n] \end{bmatrix}
+    + \begin{bmatrix} b_1\\ b_2\\ b_0 \end{bmatrix} u[n]
+    \label{eq:bq_lin_state_spaces}
+\end{equation}
+
 \subsection{Nonlinear Elements}
 %
 We now propose adding nonlinear elements to the above filter structure.
-We will refer to these nonlinear elements as ``base nonlinearities''
+We will refer to these nonlinear elements as ``base nonlinearities''.
 To keep the discussion as broad as possible, we consider any one-to-one
 nonlinear function $f_{NL}(x)$.
 \newline\newline
-In analog modelling literature, it is
-common to "linearize" a nonlinear function around a certain operating
+In analog modelling literature, it is typical to analyze a nonlinear
+system by "linearizing" the system about a certain operating
 point. This process is typically done by constructing a Thevenin or
 Norton equivalent circuit that represents the nonlinear function at
 that operating point, where the resistance of the equivalent circuit
@@ -284,7 +323,13 @@ nonlinearities used to construct nonlinear filters:
 In other words, the nonlinearities must be monotonic and may never have
 a slope greater than 1. Many typical musical nonlinearities satisfy
 this constraint, including saturating, dropout, and half-wave rectifying
-nonlinearities. Of particular interest to us will be saturating
+nonlinearities. Note that this property is not satisfied by
+nonlinear functions that have discontinuous derivatives, such as
+$f_{NL}(x) = |x|$. For functions of this type, we recommend using a
+smoothing scheme, such as BLAMP \cite{BLAMP}, to achieve a continuous
+first derivative.
+\newline\newline
+Of particular interest to us will be saturating
 nonlinearities, including hard-clippers, soft-clippers, and sigmoid-like
 functions (see \cref{Sats}).
 Saturating nonlinearities satisfy the property that
@@ -300,18 +345,25 @@ Saturating nonlinearities satisfy the property that
     \caption{\label{Sats}{\it Saturating Nonlinearities}}
 \end{figure}
 %
+\subsection{Lyapunov Stability}
+%
+As mentioned earlier, we can easily tell if a linear system is stable
+by analyzing the pole locations. For nonlinear systems, we need a
+more robust tool for analyzing stability; in this writing, we use
+Lyapunov stability \cite{Lyapunov}. To demonstrate that a system is
+Lyapunov stable, we must form the discrete time state space equation of
+the system:
+%
+\begin{equation}
+    \mathbf{x}[n+1] = \mathbf{f}(\mathbf{x}[n])
+    \label{eq:lyapunov_general}
+\end{equation}
+%
+If every element of the Jacobian matrix of $\mathbf{f}$ is less than 1,
+at some operating point of the system, then the system is considered
+Lyapunov stable about that point.
 
 \section{Nonlinear Filter Structure 1: Nonlinear Biquad}
-%
-\begin{figure*}[ht]
-    % \center
-    \includegraphics[width=1.7in]{../Pics/pz1.png}
-    \includegraphics[width=1.7in]{../Pics/pz08.png}
-    \includegraphics[width=1.7in]{../Pics/pz06.png}
-    \includegraphics[width=1.7in]{../Pics/pz02.png}
-    \caption{\label{pzPlots}{\it Instantaneous poles for a nonlinear biquad resonant
-                                lowpass filter at varying input levels.}}
-\end{figure*}
 %
 \begin{figure}[ht]
     \center
@@ -336,13 +388,13 @@ The equation for the nonlinear biquad filter then becomes:
     \label{eq:bq_NL}
 \end{equation}
 %
-Here it can be useful to define filter ``state variables''
-as the inputs to the nonlinearities.
+Here it can be useful to define the inputs to the
+nonlinearities.
 %
 \begin{equation}
 \begin{split}
-    x_1 &= f_{NL} (x_2) + b_1 u[n-1] - a_1 y[n-1] \\
-    x_2 &= b_2 u[n-2] - a_2 y[n-2]
+    \chi_1 &= f_{NL} (\chi_2) + b_1 u[n-1] - a_1 y[n-1] \\
+    \chi_2 &= b_2 u[n-2] - a_2 y[n-2]
 \end{split}
     \label{eq:states}
 \end{equation}
@@ -357,7 +409,7 @@ output of the nonlinear functions as follows:
 \begin{equation}
 \begin{split}
     & \bar{f}_{NL_k}(x) = g_k x + \gamma_k \\
-    & g_k = f'_{NL}(x_k), \; \gamma_k = c(x_k)
+    & g_k = f'_{NL}(\chi_k), \; \gamma_k = c(\chi_k)
 \end{split}
     \label{eq:linearized_bqnls}
 \end{equation}
@@ -400,7 +452,52 @@ Note that the two $\gamma$ terms in \cref{eq:bq_re-write2} are simple
 offsets as defined by our linearized model, and as such will not
 affect the pole locations, nor the filter stability.
 
-\subsection{Guaranteed Stability}
+\subsection{Stability}
+%
+Recall that the linear biquad filter equation can be written
+in state space form as in \cref{eq:bq_lin_state_spaces}. By
+writing the nonlinear biquad equation \cref{eq:bq_NL}, in
+the state space form defined by \cref{eq:lyapunov_general},
+we find
+%
+\begin{equation}
+    \begin{bmatrix} x_1[n+1] \\ x_2[n+1] \\ y[n+1] \end{bmatrix} =
+    \mathbf{h} \left( \begin{bmatrix} x_1[n] \\ x_2[n] \\ y[n] \end{bmatrix}
+    \right) + \begin{bmatrix} b_1\\ b_2\\ b_0 \end{bmatrix} u[n]
+    \label{eq:nlbq_states}
+\end{equation}
+%
+where
+%
+\begin{equation}
+    \begin{split}
+        h_1(x_1[n], x_2[n], y[n]) =& f_{NL}(x_2[n]) - a_1y[n] \\
+        h_2(x_1[n], x_2[n], y[n]) =& -a_2y[n] \\
+        h_3(x_1[n], x_2[n], y[n]) =& f_{NL}(x_1[n])
+    \end{split}
+    \label{eq:nlbq_state_eqns}
+\end{equation}
+%
+Then the Jacobian matrix of $\mathbf{h}$ can be written as:
+%
+\begin{equation}
+    J = \begin{bmatrix}
+        0& f'_{NL}(x_2[n])& -a_1 \\
+        0& 0& -a_2 \\
+        f'_{NL}(x_1[n])& 0& 0
+    \end{bmatrix}
+    \label{eq:nlbq_Jacobian}
+\end{equation}
+%
+From this analysis, we see that the nonlinear biquad filter will be
+stable, provided that the constraint from \cref{eq:NL_constraint}
+is satisfied, and all the $a$ coefficients are less than 1. However,
+note that the constraint on the $a$ coefficients is required
+anyway for the corresponding linear filter to be stable, so the
+only "new" constraint that arises from adding the nonlinear
+elements is that of \cref{eq:NL_constraint}.
+
+\subsection{Pole Analysis}
 %
 Since the coefficients of the biquad filter will be dependent on the
 state of the filter, the instantaneous poles of the filter will be
@@ -413,47 +510,42 @@ the nonlinear biquad structure, we can adjust the formula from
     \label{eq:poles_nl}
 \end{equation}
 %
-From the constraint in \cref{eq:NL_constraint}, we can see that the
-magnitude of the instantaneous pole will always be less than or equal to
-the magnitude of the original pole from the corresponding linear filter.
-Therefore, we know that any nonlinear biquad filter designed with the above
-structure will be stable provided that the corresponding linear filter is
-stable, and that the constraint from \cref{eq:NL_constraint} is satisfied.
-\newline\newline
 For saturating base nonlinearities, we can see from \cref{eq:Sat_constraint}
 that as the state variables grow large, the poles will go to zero.
 \newline\newline
 The pole magnitude and angle with move as follows.
 \begin{equation}
-    |p'|^2 = \frac{g_1^2 a_1^2 - (g_l^2 a_1^2- 4 g_1 g_2 a_2)}{4} = g_1 g_2 a_2 = g_1 g_2 |p|^2
+    |p|^2 = \begin{cases}
+        g_1g_2a_2& g_1a_1^2 > 4g_2a_2 \\
+        \frac{1}{2} g_1^2a_1^2 - g_1g_2a_2& \text{else}
+    \end{cases}
     \label{eq:poles_nl_mag}
 \end{equation}
 %
 \begin{equation}
-\begin{split}
-    \angle p' = \arctan \left(\pm \frac{\sqrt{|g_1^2 a_1^2- 4g_1g_2a_2|}}{g_1a_1} \right) \\
-    = \arctan \left(\pm \frac{\sqrt{\left|a_1^2- 4\frac{g_2}{g_1}a_2 \right|}}{a_1} \right)
-\end{split}
+    \angle p = \begin{cases}
+        \arctan \left( \pm \frac{\sqrt{4\frac{g_2}{g_1}a_2 - a_1^2}}{a_1} \right)& 4g_2a_2 > g_1a_1^2 \\
+        0& \text{else}
+    \end{cases}
     \label{eq:poles_nl_angle}
 \end{equation}
 %
-Note that while the two gains are approximately the equal, the nonlinear
-pole will have the same angle as the corresponding linear pole. An example
-of this pole movement can be seen in \cref{pzPlots}.
-
+Note that while the two gain elements ($g_1, g_2$) are approximately
+equal, the nonlinear pole will have the same angle as the
+corresponding linear pole. An example of this pole movement
+can be seen in \cref{pzPlots}.
+%
 
 \section{Nonlinear Filter Structure 2: Nonlinear Feedback Filter}
 %
-%
-\begin{figure*}[!ht]
+\begin{figure*}[ht]
     % \center
-    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz1.png}
-    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz08.png}
-    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz06.png}
-    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz02.png}
-    \caption{\label{pzPlots2}{\it Instantaneous poles for a resonant
-                                lowpass filter with nonlinear feedback
-                                at varying input levels.}}
+    \includegraphics[width=1.7in]{../Pics/pz1.png}
+    \includegraphics[width=1.7in]{../Pics/pz08.png}
+    \includegraphics[width=1.7in]{../Pics/pz06.png}
+    \includegraphics[width=1.7in]{../Pics/pz02.png}
+    \caption{\label{pzPlots}{\it Instantaneous poles for a nonlinear biquad resonant
+                                lowpass filter at varying input levels.}}
 \end{figure*}
 %
 We now propose a different structure for adding elements to a TDF-II
@@ -526,7 +618,58 @@ Or by re-writing the filter coefficients, we see:
 %
 Again, the $\gamma$ offset terms will not affect the filter stability.
 
-\subsection{Guaranteed Stability}
+\subsection{Stability}
+%
+Again, we can update \cref{eq:bq_lin_state_spaces} for the nonlinear
+feedback filter described by \cref{eq:nlbq2}, and writing it in the form
+of \cref{eq:lyapunov_general}, we see
+%
+\begin{equation}
+    \begin{bmatrix} x_1[n+1] \\ x_2[n+1] \\ y[n+1] \end{bmatrix} =
+    \mathbf{h} \left( \begin{bmatrix} x_1[n] \\ x_2[n] \\ y[n] \end{bmatrix}
+    \right) + \begin{bmatrix} b_1\\ b_2\\ b_0 \end{bmatrix} u[n]
+    \label{eq:nlbq2_states}
+\end{equation}
+%
+where
+%
+\begin{equation}
+    \begin{split}
+        h_1(x_1[n], x_2[n], y[n]) =& x_2[n] - a_1f_{NL}(y[n]) \\
+        h_2(x_1[n], x_2[n], y[n]) =& -a_2f_{NL}(y[n]) \\
+        h_3(x_1[n], x_2[n], y[n]) =& x_1[n]
+    \end{split}
+    \label{eq:nlbq2_state_eqns2}
+\end{equation}
+%
+Then the Jacobian matrix can be written as:
+%
+\begin{equation}
+    J = \begin{bmatrix}
+        0& 1& -a_1f'_{NL}(y[n]) \\
+        0& 0& -a_2f'_{NL}(y[n]) \\
+        1& 0& 0
+    \end{bmatrix}
+    \label{eq:nlbq2_Jacobian}
+\end{equation}
+%
+Again, assuming that the corresponding linear filter is stable, the
+nonlinear feedback filter will be stable provided the constraint
+from \cref{eq:NL_constraint} is satisfied.
+%
+\begin{figure*}[!ht]
+    % \center
+    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz1.png}
+    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz08.png}
+    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz06.png}
+    \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz02.png}
+    \caption{\label{pzPlots2}{\it Instantaneous poles for a resonant
+                                lowpass filter with nonlinear feedback
+                                at varying input levels.}}
+\end{figure*}
+%
+
+\subsection{Pole Analysis}
 %
 We can now calculate the locations of the instantaneous poles for
 the nonlinear feedback filter, again by adjusting the formula from
@@ -537,21 +680,20 @@ p' = \frac{-g_1 a_1 \pm \sqrt{g_1^2 a_1^2 - 4 g_2 a_2}}{2}
     \label{eq:poles_nl2}
 \end{equation}
 %
-Again, we see that the nonlinear feedback filter will be stable, provided
-that the corresponding linear filter is stable, and the constraint from
-\cref{eq:NL_constraint} is satisfied.
-\newline\newline
 In this case the pole magnitude and angle will move as follows:
 \begin{equation}
-    |p'|^2 = \frac{g_1^2 a_1^2 - (g_l^2 a_1^2- 4 g_2 a_2)}{4} = g_2 a_2 = g_2 |p|^2
+    |p|^2 = \begin{cases}
+        g_2a_2& g_1^2a_1^2 > 4g_2a_2 \\
+        \frac{1}{2} g_1a_1^2 - g_2a_2& \text{else}
+    \end{cases}
     \label{eq:poles_nl2_mag}
 \end{equation}
 %
 \begin{equation}
-\begin{split}
-    \angle p' = \arctan \left(\pm \frac{\sqrt{\left|g_1^2 a_1^2- 4g_2a_2 \right|}}{g_1a_1} \right) \\
-    = \arctan \left(\pm \frac{\sqrt{\left|a_1^2- 4\frac{g_2}{g_1^2}a_2 \right|}}{a_1} \right)
-\end{split}
+    \angle p = \begin{cases}
+        \arctan \left( \pm \frac{\sqrt{4\frac{g_2}{g_1^2}a_2 - a_1^2}}{a_1} \right)& 4g_2a_2 > g_1^2a_1^2 \\
+        0& \text{else}
+    \end{cases}
     \label{eq:poles_nl2_angle}
 \end{equation}
 %
@@ -642,13 +784,13 @@ or using some form of numerical optimisation. Note that the choice
 of base nonlinearities used by the nonlinear biquad will also play a
 role in the accuracy of the model. For example, if the output of the
 analog filter being modelled is asymmetric, then to accurately model
-that filter, the nonlinear biquad must be constructed using an
+that filter, the nonlinear biquad must be constructed using
 asymmetric base nonlinearities.
 %
 
 \subsubsection{Comparison with Analog Filter}
 
-As an example, we can attempt to construct a naive model of Sallen-Key
+As an example, we can attempt to construct a naive model of a Sallen-Key
 lowpass filter, a commonly used analog filter structure, and compare
 with our results to the desired analog response similar to the
 comparison done in \cite{SKF}. We describe this
@@ -659,11 +801,13 @@ resonant lowpass filter with cutoff frequency $f_c = 1 \text{ kHz}$,
 and $Q=10$, as well as a simulation of the corresponding Sallen-Key
 filter using LTSpice. To accentuate the nonlinear behavior of the analog
 filter, we choose $\pm 4 \text{ V}$ as the source voltages for the analog
-filter circuit. We then compare the outputs of the two filters
+filter circuit.
+\newline\newline
+We then compare the outputs of the two filters
 for square waves at different frequencies, and use a simple staircase
 optimisation scheme to find the input gain for the nonlinear biquad
 that best matches the analog simulation. The results for the $250 \text{ Hz}$
-square wave can be seen in \cref{SPICE}. While nonlinear biquad model
+square wave can be seen in \cref{SPICE}. While the nonlinear biquad model
 is not perfect, it does capture the damping effects of the analog filter
 much more accurately than the corresponding linear filter, and can be greatly
 improved with a more well-informed choice of base nonlinear functions, and
@@ -686,35 +830,36 @@ a more sophisticated optimisation scheme.
 
 In this paper, we have developed two structures for stable nonlinear biquad
 filters. We have introduced the new architecture as a modification of the
-Transposed Direct Form II filter form, and shown
+Transposed Direct Form II filter structure, and shown
 how the changed architecture affects the pole locations depending on
 the amplitude of the input signal. We have also derived constraints under
 which the structure is guaranteed stable.
 \newline\newline
-As an example of the nonlinear biquad filter structure we have implemented
-a resonant lowpass filter using both structures, and shown that the
-poles respond to the input as expected. We then show how the nonlinear
-biquad structure can be used to model an analog filter,
-and comparing with a Sallen-Key lowpass filter as an example. Note
-that while the nonlinear biquad structure can be used for analog modelling
-both structures can also be used purely in the digital domain, as a tool
-for constructing filters that sound more sonically interesting
-and harmonically rich.
+As a case study, we have implemented
+a resonant lowpass filter using both nonlinear
+structures, and shown that the
+poles respond to the input as expected. We then show how the
+nonlinear biquad structure can be used to model an analog
+filter, comparing with a Sallen-Key lowpass filter as
+an example. Note that while the nonlinear biquad structure
+can be used for analog modelling both structures can also be
+used purely in the digital domain, as a tool for constructing
+filters that sound more sonically interesting and harmonically
+rich.
 \newline\newline
 To demonstrate this last point, we have also developed an open-source
 audio plugin (VST, AU) implentation of the both nonlinear biquad and
 nonlinear feedback filters, extending to several filter shapes, and
 several base nonlinearities.
 The source code for the plugin implementation is available on
-GitHub\footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}}.
+GitHub,\footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}}
+and video demonstrations are available on YouTube.\footnote{\url{https://youtu.be/BMzKdaZtmoU}}
+\footnote{\url{https://youtu.be/T0AsIX5oL9A}}
 \newline\newline
 Future research concerning nonlinear filtering will center around making a
 more informed choice of base nonlinearities, focusing on both the desired
 harmonic response of the filter, as well as physically meaningful base
-nonlinearities for use in analog modelling. Additionally, we would like
-to investigate possible conditions under which the monotonicity
-constraint from \cref{eq:NL_constraint} can be relaxed, allowing for
-non-monotonic base nonlinearities such as wavefolders.
+nonlinearities for use in analog modelling.
 
 %\newpage
 \nocite{*}
