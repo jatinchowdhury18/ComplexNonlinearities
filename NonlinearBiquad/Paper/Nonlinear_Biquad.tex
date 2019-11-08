@@ -350,9 +350,11 @@ Saturating nonlinearities satisfy the property that
 As mentioned earlier, we can easily tell if a linear system is stable
 by analyzing the pole locations. For nonlinear systems, we need a
 more robust tool for analyzing stability; in this writing, we use
-Lyapunov stability \cite{Lyapunov}. To demonstrate that a system is
-Lyapunov stable, we must form the discrete time state space equation of
-the system:
+Lyapunov stability \cite{Lyapunov}, as has previously been applied
+to nonlinear digital waveguide networks \cite{JOS-Waveguide}, and
+fixed-point direct form filters \cite{LyapunovFixedPointFilters}. To
+demonstrate that a system is Lyapunov stable, we must form the discrete
+time state space equation of the system:
 %
 \begin{equation}
     \mathbf{x}[n+1] = \mathbf{f}(\mathbf{x}[n])
