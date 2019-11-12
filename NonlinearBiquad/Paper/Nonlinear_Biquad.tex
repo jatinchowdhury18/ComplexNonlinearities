@@ -310,14 +310,14 @@ will be stable, we propose the following constraint on the base
 nonlinearities used to construct nonlinear filters:
 %
 \begin{equation}
-    0 \leq f'_{NL}(x) \leq 1
+    \left| f'_{NL}(x) \right| \leq 1
     \label{eq:NL_constraint}
 \end{equation}
 %
-In other words, the nonlinearities must be monotonic and may never have
+In other words, the nonlinearities must never have
 a slope greater than 1. Many typical musical nonlinearities satisfy
-this constraint, including saturating, dropout, and half-wave rectifying
-nonlinearities. Note that this property is not satisfied by
+this constraint, including many saturating, dropout, rectifying,
+and wavefolding nonlinearities. Note that this property is not satisfied by
 nonlinear functions that have discontinuous derivatives, such as
 $f_{NL}(x) = |x|$. For functions of this type, we recommend using a
 smoothing scheme, such as BLAMP \cite{BLAMP}, to achieve a continuous
@@ -535,7 +535,8 @@ can be seen in \cref{pzPlots}.
     \includegraphics[width=1.7in]{../Pics/pz06.png}
     \includegraphics[width=1.7in]{../Pics/pz02.png}
     \caption{\label{pzPlots}{\it Instantaneous poles for a nonlinear biquad resonant
-                                lowpass filter at varying input levels.}}
+                                lowpass filter calculated from \cref{eq:poles_nl}, with
+                                $g_1 = g_2 = g$.}}
 \end{figure*}
 %
 We now propose a different structure for adding elements to a TDF-II
@@ -654,8 +655,9 @@ from \cref{eq:NL_constraint} is satisfied.
     \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz06.png}
     \includegraphics[width=1.7in]{../../NonlinearFeedback/Pics/pz02.png}
     \caption{\label{pzPlots2}{\it Instantaneous poles for a resonant
-                                lowpass filter with nonlinear feedback
-                                at varying input levels.}}
+                                lowpass filter with nonlinear feedback,
+                                calculated from \cref{eq:poles_nl2},
+                                with $g_1 = g_2 = g$.}}
 \end{figure*}
 %
 
