@@ -154,7 +154,7 @@ void DoubleSoftClipperAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     ScopedNoDenormals noDenormals;
     
     // update params
-    for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+    for (int ch = 0; ch < 3; ++ch)
     {
         dsc[ch].setUpperLim (*upperLim);
         dsc[ch].setLowerLim (*lowerLim);
@@ -192,15 +192,26 @@ AudioProcessorEditor* DoubleSoftClipperAudioProcessor::createEditor()
 //==============================================================================
 void DoubleSoftClipperAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    auto state = vts.copyState();
+    std::unique_ptr<XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void DoubleSoftClipperAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName (vts.state.getType()))
+            vts.replaceState (ValueTree::fromXml (*xmlState));
+
+    // Update params for visualizer
+    dsc[2].setUpperLim (*upperLim);
+    dsc[2].setLowerLim (*lowerLim);
+    dsc[2].setSlope (*slope);
+    dsc[2].setWidth (*width);
+    dsc[2].setUpperSkew (*upperSkew);
+    dsc[2].setLowerSkew (*lowerSkew);
 }
 
 //==============================================================================

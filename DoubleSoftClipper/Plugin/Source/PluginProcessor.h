@@ -56,7 +56,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    DoubleSoftClipper& getDSC() { return dsc[0]; }
+    DoubleSoftClipper& getDSC() { return dsc[2]; }
 
     AudioProcessorValueTreeState& getVTS() { return vts; }
     static AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
@@ -71,7 +71,7 @@ private:
     float* upperSkew;
     float* lowerSkew;
 
-    DoubleSoftClipper dsc[2];
+    DoubleSoftClipper dsc[3];
 
     dsp::Oversampling<float> oversampling;
 
