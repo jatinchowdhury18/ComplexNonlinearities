@@ -13,6 +13,7 @@ os:
   - windows
   - linux
 env:
+  - PLUGIN=CopyEQ
   - PLUGIN=DoubleSoftClipper
   - PLUGIN=Exciter
   - PLUGIN=Hysteresis
