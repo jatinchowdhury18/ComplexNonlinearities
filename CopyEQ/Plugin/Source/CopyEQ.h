@@ -4,9 +4,6 @@
 #include "FIRFilter.h"
 #include "APF1.h"
 
-// #include "EQFilter.h"
-// #include "BPF4.h"
-
 class CopyEQ
 {
 public:
@@ -14,6 +11,7 @@ public:
 
     void setNabla (float newNabla) { nabla = newNabla; }
     void setRho (float newRho);
+    void setFlip (bool shouldBeFlip) { flip = shouldBeFlip; }
 
     void reset (double sampleRate);
 
@@ -26,10 +24,12 @@ private:
     int fsFactor = (int) (fs / 44100.0f);
 
     float nabla = (float) 1.0e-6; // 0.0001f;
-    float xSqSum = 0.0f;
     
     APF1 inWarp;
     APF1 outWarp;
+
+    bool flip = false;
+    Random random;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CopyEQ)
 };

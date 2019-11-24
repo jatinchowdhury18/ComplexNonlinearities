@@ -9,7 +9,6 @@
 */
 
 #include "PluginProcessor.h"
-#include "PluginEditor.h"
 
 //==============================================================================
 CopyEqAudioProcessor::CopyEqAudioProcessor() : 
@@ -19,9 +18,10 @@ CopyEqAudioProcessor::CopyEqAudioProcessor() :
     vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout())
 {
     nablaParam = vts.getRawParameterValue ("nabla");
-    rhoParam = vts.getRawParameterValue ("rho");
+    rhoParam   = vts.getRawParameterValue ("rho");
     driveParam = vts.getRawParameterValue ("drive");
-    satParam = vts.getRawParameterValue ("sat");
+    satParam   = vts.getRawParameterValue ("sat");
+    flipParam  = vts.getRawParameterValue ("flip");
 }
 
 CopyEqAudioProcessor::~CopyEqAudioProcessor()
@@ -36,6 +36,7 @@ AudioProcessorValueTreeState::ParameterLayout CopyEqAudioProcessor::createParame
     params.push_back (std::make_unique<AudioParameterFloat> ("rho", "Warping Factor", -1.0f, 1.0f, 0.0f));
     params.push_back (std::make_unique<AudioParameterFloat> ("drive", "Drive [dB]", 0.0f, 36.0f, 0.0f));
     params.push_back (std::make_unique<AudioParameterChoice> ("sat", "Saturator", Saturators::getSatChoices(), 0));
+    params.push_back (std::make_unique<AudioParameterBool>   ("flip", "Flip", false));
 
     return { params.begin(), params.end() };
 }
@@ -143,6 +144,7 @@ void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     {
         eqs[ch].setNabla (*nablaParam * *nablaParam * 0.1f);
         eqs[ch].setRho (0.9f * *rhoParam);
+        eqs[ch].setFlip ((bool) *flipParam);
     
         eqs[ch].processBlock (mainInputOutput.getWritePointer (ch), sidechainInput.getWritePointer (ch), buffer.getNumSamples());
     }

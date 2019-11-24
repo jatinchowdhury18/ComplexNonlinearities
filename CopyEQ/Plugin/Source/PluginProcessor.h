@@ -66,6 +66,7 @@ private:
     float* rhoParam;
     float* satParam;
     float* driveParam;
+    float* flipParam;
 
     CopyEQ eqs[2];
 
