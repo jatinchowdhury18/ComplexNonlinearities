@@ -8,11 +8,11 @@ do
 done
 
 # Copy papers
-for f in */Paper/*.pdf
-do
-    echo "Copying $f"
-    scp $f jatin@ccrma-gate.stanford.edu:~/Library/Web/ComplexNonlinearities/
-done
+# for f in */Paper/*.pdf
+# do
+#     echo "Copying $f"
+#     scp $f jatin@ccrma-gate.stanford.edu:~/Library/Web/ComplexNonlinearities/
+# done
 
 # Deploy notebooks as html
 echo "SSH-ing to server..."
