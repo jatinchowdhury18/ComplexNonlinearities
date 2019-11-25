@@ -22,6 +22,7 @@ CopyEqAudioProcessor::CopyEqAudioProcessor() :
     driveParam = vts.getRawParameterValue ("drive");
     satParam   = vts.getRawParameterValue ("sat");
     flipParam  = vts.getRawParameterValue ("flip");
+    warpSideParam = vts.getRawParameterValue ("warpside");
 }
 
 CopyEqAudioProcessor::~CopyEqAudioProcessor()
@@ -37,6 +38,7 @@ AudioProcessorValueTreeState::ParameterLayout CopyEqAudioProcessor::createParame
     params.push_back (std::make_unique<AudioParameterFloat> ("drive", "Drive [dB]", 0.0f, 36.0f, 0.0f));
     params.push_back (std::make_unique<AudioParameterChoice> ("sat", "Saturator", Saturators::getSatChoices(), 0));
     params.push_back (std::make_unique<AudioParameterBool>   ("flip", "Flip", false));
+    params.push_back (std::make_unique<AudioParameterBool>   ("warpside", "Warp Sidechain", true));
 
     return { params.begin(), params.end() };
 }
@@ -145,6 +147,7 @@ void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
         eqs[ch].setNabla (*nablaParam * *nablaParam * 0.1f);
         eqs[ch].setRho (0.9f * *rhoParam);
         eqs[ch].setFlip ((bool) *flipParam);
+        eqs[ch].setWarpSide ((bool) *warpSideParam);
     
         eqs[ch].processBlock (mainInputOutput.getWritePointer (ch), sidechainInput.getWritePointer (ch), buffer.getNumSamples());
     }

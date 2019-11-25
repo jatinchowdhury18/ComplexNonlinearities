@@ -12,6 +12,7 @@ public:
     void setNabla (float newNabla) { nabla = newNabla; }
     void setRho (float newRho);
     void setFlip (bool shouldBeFlip) { flip = shouldBeFlip; }
+    void setWarpSide (bool shouldWarpSide) { warpSide = shouldWarpSide; }
 
     void reset (double sampleRate);
 
@@ -27,6 +28,8 @@ private:
     
     APF1 inWarp;
     APF1 outWarp;
+    APF1 sideWarp;
+    bool warpSide = true;
 
     bool flip = false;
     Random random;

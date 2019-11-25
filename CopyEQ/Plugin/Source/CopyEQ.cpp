@@ -9,6 +9,7 @@ void CopyEQ::setRho (float newRho)
 {
     inWarp.setRho (newRho);
     outWarp.setRho (-newRho);
+    sideWarp.setRho (newRho);
 }
 
 void CopyEQ::reset (double sampleRate)
@@ -23,6 +24,7 @@ void CopyEQ::reset (double sampleRate)
 
     inWarp.reset();
     outWarp.reset();
+    sideWarp.reset();
 
     random.setSeedRandomly();
 }
@@ -40,8 +42,8 @@ void CopyEQ::processBlock (float* mainBuffer, float* sideBuffer, const int numSa
             y += filter->h[m] * filter->z[negativeAwareModulo<int> (filter->zPtr - m, filter->order)];
         
         // calculate error
-        float desSamp = flip ? 2.0f * (random.nextFloat() - 0.5f) - sideBuffer[n]
-                             : sideBuffer[n];
+        float sideSamp = warpSide ? sideWarp.process (sideBuffer[n]) : sideBuffer[n];
+        float desSamp = flip ? 2.0f * (random.nextFloat() - 0.5f) - sideSamp : sideSamp;
         float err = desSamp - y;
 
         // Update coefficients
