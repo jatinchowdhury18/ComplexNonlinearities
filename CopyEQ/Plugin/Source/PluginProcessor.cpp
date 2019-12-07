@@ -23,6 +23,7 @@ CopyEqAudioProcessor::CopyEqAudioProcessor() :
     satParam   = vts.getRawParameterValue ("sat");
     flipParam  = vts.getRawParameterValue ("flip");
     warpSideParam = vts.getRawParameterValue ("warpside");
+    bypassParam   = vts.getRawParameterValue ("bypass");
 }
 
 CopyEqAudioProcessor::~CopyEqAudioProcessor()
@@ -39,6 +40,7 @@ AudioProcessorValueTreeState::ParameterLayout CopyEqAudioProcessor::createParame
     params.push_back (std::make_unique<AudioParameterChoice> ("sat", "Saturator", Saturators::getSatChoices(), 0));
     params.push_back (std::make_unique<AudioParameterBool>   ("flip", "Flip", false));
     params.push_back (std::make_unique<AudioParameterBool>   ("warpside", "Warp Sidechain", true));
+    params.push_back (std::make_unique<AudioParameterBool>   ("bypass", "Bypass", false));
 
     return { params.begin(), params.end() };
 }
@@ -128,6 +130,9 @@ bool CopyEqAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) c
 void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
+
+    if (*bypassParam)
+        return;
     
     auto mainInputOutput = getBusBuffer (buffer, true, 0);
     auto sidechainInput  = getBusBuffer (buffer, true, 1);

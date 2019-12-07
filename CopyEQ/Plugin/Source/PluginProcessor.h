@@ -68,6 +68,7 @@ private:
     float* driveParam;
     float* flipParam;
     float* warpSideParam;
+    float* bypassParam;
 
     CopyEQ eqs[2];
 
