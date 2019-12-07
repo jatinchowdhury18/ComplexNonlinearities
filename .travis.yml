@@ -20,6 +20,7 @@ env:
   - PLUGIN=NonlinearBiquad
   - PLUGIN=NonlinearFeedback
   - PLUGIN=Wavefolder
+  - PLUGIN=NonlinearAllpass
 
 stages:
   - name: addons
