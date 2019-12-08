@@ -48,8 +48,9 @@ public:
 
     inline void setCoefs (float theta) override
     {
-        s =  dsp::FastMathApproximations::sin (theta);
-        c =  dsp::FastMathApproximations::cos (theta);
+        s =  sinf (theta);
+        c =  cosf (theta);
+
         delay->setCoefs (theta);
     }
 
