@@ -208,7 +208,7 @@ void NonlienarAllpassAudioProcessor::processBlock (AudioBuffer<float>& buffer, M
     oversampling.processSamplesDown (block);
 
     filter.state->setCutOffFrequency (getSampleRate(), *freqParam);
-    dsp::ProcessContextReplacing context (block);
+    dsp::ProcessContextReplacing<float> context (block);
     filter.process (context);
 
     dcBlocker.process (context);
