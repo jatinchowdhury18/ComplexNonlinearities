@@ -26,10 +26,10 @@ NonlienarAllpassAudioProcessor::NonlienarAllpassAudioProcessor()
     vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout()),
     oversampling (2, 3, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
 {
-    gainParam = vts.getRawParameterValue ("gain");
+    gainParam = vts.getRawParameterValue ("gain_");
     orderParam = vts.getRawParameterValue ("order");
     satParam = vts.getRawParameterValue ("sat");
-    freqParam = vts.getRawParameterValue ("freq");
+    freqParam = vts.getRawParameterValue ("freq_Hz");
 
     for (int ch = 0; ch < 2; ++ch)
     {
@@ -59,10 +59,10 @@ AudioProcessorValueTreeState::ParameterLayout NonlienarAllpassAudioProcessor::cr
     NormalisableRange<float> freqRange (20.0f, 20000.0f);
     freqRange.setSkewForCentre (1000.0f);
 
-    params.push_back (std::make_unique<AudioParameterFloat> ("gain", "Gain", gainRange, 0.5f));
+    params.push_back (std::make_unique<AudioParameterFloat> ("gain_", "Gain", gainRange, 0.5f));
     params.push_back (std::make_unique<AudioParameterChoice> ("order", "Order", orderChoices, 0));
     params.push_back (std::make_unique<AudioParameterChoice> ("sat", "Saturator", Saturators::getSatChoices(), 0));
-    params.push_back (std::make_unique<AudioParameterFloat> ("freq", "Cutoff", freqRange, 20000.0f));
+    params.push_back (std::make_unique<AudioParameterFloat> ("freq_Hz", "Cutoff", freqRange, 20000.0f));
 
     return { params.begin(), params.end() };
 }
@@ -132,6 +132,7 @@ void NonlienarAllpassAudioProcessor::changeProgramName (int index, const String&
 //==============================================================================
 void NonlienarAllpassAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    setRateAndBufferSizeDetails (sampleRate, samplesPerBlock);
     oversampling.initProcessing (samplesPerBlock);
 
     for (int ch = 0; ch < 2; ++ch)
@@ -200,7 +201,7 @@ void NonlienarAllpassAudioProcessor::processBlock (AudioBuffer<float>& buffer, M
 
         for (int n = 0; n < osBuffer.getNumSamples(); ++n)
         {
-            thisAPF->setCoefs (saturator (*gainParam * x[n]));
+            thisAPF->setCoefs (MathConstants<float>::pi * saturator (*gainParam * x[n]));
             x[n] = thisAPF->process (x[n]);
         }
     }
@@ -222,7 +223,7 @@ bool NonlienarAllpassAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* NonlienarAllpassAudioProcessor::createEditor()
 {
-    return new GenericAudioProcessorEditor (*this); // NonlienarAllpassAudioProcessorEditor (*this);
+    return new NonlienarAllpassAudioProcessorEditor (*this); // NonlienarAllpassAudioProcessorEditor (*this);
 }
 
 //==============================================================================

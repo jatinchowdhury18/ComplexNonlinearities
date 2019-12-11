@@ -12,12 +12,16 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-NonlienarAllpassAudioProcessorEditor::NonlienarAllpassAudioProcessorEditor (NonlienarAllpassAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+NonlienarAllpassAudioProcessorEditor::NonlienarAllpassAudioProcessorEditor (NonlienarAllpassAudioProcessor& p) :
+    AudioProcessorEditor (&p),
+    processor (p),
+    viewer (p.getVTS()),
+    knobs (p, p.getVTS(), [this] { viewer.setNeedsUpdateCurve(); })
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (400, 500);
+
+    addAndMakeVisible (knobs);
+    addAndMakeVisible (viewer);
 }
 
 NonlienarAllpassAudioProcessorEditor::~NonlienarAllpassAudioProcessorEditor()
@@ -29,14 +33,10 @@ void NonlienarAllpassAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
-    g.setColour (Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 }
 
 void NonlienarAllpassAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    viewer.setBounds (0, 0, getWidth(), getWidth());
+    knobs.setBounds (0, getHeight() - 100, getWidth(), 100);
 }

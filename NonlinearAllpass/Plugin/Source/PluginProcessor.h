@@ -81,6 +81,8 @@ private:
 
     dsp::Oversampling<float> oversampling;
 
+    friend class Viewer;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonlienarAllpassAudioProcessor)
 };

@@ -12,6 +12,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "Viewer.h"
+#include "KnobsComponent.h"
 
 //==============================================================================
 /**
@@ -27,9 +29,10 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     NonlienarAllpassAudioProcessor& processor;
+
+    Viewer viewer;
+    KnobsComponent knobs;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NonlienarAllpassAudioProcessorEditor)
 };
