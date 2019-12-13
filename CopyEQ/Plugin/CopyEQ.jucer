@@ -4,6 +4,9 @@
               pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" cppLanguageStandard="17">
   <MAINGROUP id="KIlksY" name="CopyEQ">
     <GROUP id="{03F12A9B-9B0C-6EE3-A765-848EEB764AF2}" name="Source">
+      <FILE id="sFoPEn" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="iVrUwn" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="w69KAa" name="Saturators.h" compile="0" resource="0" file="Source/Saturators.h"/>
       <FILE id="Olc8S3" name="APF1.h" compile="0" resource="0" file="Source/APF1.h"/>
       <FILE id="N9PwHz" name="FIRFilter.h" compile="0" resource="0" file="Source/FIRFilter.h"/>

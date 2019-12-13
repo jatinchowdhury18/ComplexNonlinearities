@@ -1,7 +1,3 @@
-// FIRFIlter.h
-// Author:  Jatin Chowdhury
-// Copyright (c) 2019 Destroy All Circuits  All rights reserved.
-
 #ifndef FIRFILTER_H_INCLUDED
 #define FIRFILTER_H_INCLUDED
 

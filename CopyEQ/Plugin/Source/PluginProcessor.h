@@ -14,9 +14,18 @@
 #include "CopyEQ.h"
 #include "Saturators.h"
 
-//==============================================================================
-/**
-*/
+namespace Tags
+{
+    const String nablaID  = "nabla";
+    const String continID = "continuous";
+    const String rhoID    = "rho";
+    const String flipID   = "flip";
+    const String lpfID    = "lpf";
+    const String bypassID = "bypass";
+    const String dwID     = "drywet";
+    const String stID     = "stereo";
+}
+
 class CopyEqAudioProcessor  : public AudioProcessor
 {
 public:
@@ -58,21 +67,33 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    AudioProcessorValueTreeState& getVTS() { return vts; }
+    
+    void triggerLearn() { learn = true; }
+    bool getLearnState() const noexcept { return learn; }
+    void setLearnLength (float newLength) { lengthLearnSeconds = newLength; }
+    float getLearnLength() const noexcept { return lengthLearnSeconds; }
 
 private:
     AudioProcessorValueTreeState vts;
 
+    float* contParam;
     float* nablaParam;
     float* rhoParam;
-    float* satParam;
-    float* driveParam;
     float* flipParam;
-    float* warpSideParam;
     float* bypassParam;
+    float* dwParam;
+    float* lpfParam;
+    float* stParam;
 
-    CopyEQ eqs[2];
+    bool learn = false;
+    float lengthLearnSeconds = 1.0f;
+    int samplesLearned = 0;
 
-    SatFunc saturator = Saturators::getSaturator (SatType::none);
+    std::unique_ptr<FIRFilter> filter[2];
+    std::unique_ptr<CopyEQ> eqs[2];
+
+    AudioBuffer<float> dryBuffer;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CopyEqAudioProcessor)

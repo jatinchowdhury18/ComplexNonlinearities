@@ -9,6 +9,7 @@
 */
 
 #include "PluginProcessor.h"
+#include "PluginEditor.h"
 
 //==============================================================================
 CopyEqAudioProcessor::CopyEqAudioProcessor() : 
@@ -17,13 +18,17 @@ CopyEqAudioProcessor::CopyEqAudioProcessor() :
                                      .withInput  ("Sidechain",  AudioChannelSet::stereo(), true)),
     vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout())
 {
-    nablaParam = vts.getRawParameterValue ("nabla");
-    rhoParam   = vts.getRawParameterValue ("rho");
-    driveParam = vts.getRawParameterValue ("drive");
-    satParam   = vts.getRawParameterValue ("sat");
-    flipParam  = vts.getRawParameterValue ("flip");
-    warpSideParam = vts.getRawParameterValue ("warpside");
-    bypassParam   = vts.getRawParameterValue ("bypass");
+    eqs[0].reset (new CopyEQ (filter[0], filter[1]));
+    eqs[1].reset (new CopyEQ (filter[1], filter[0]));
+
+    contParam   = vts.getRawParameterValue (Tags::continID);
+    nablaParam  = vts.getRawParameterValue (Tags::nablaID);
+    rhoParam    = vts.getRawParameterValue (Tags::rhoID);
+    flipParam   = vts.getRawParameterValue (Tags::flipID);
+    lpfParam    = vts.getRawParameterValue (Tags::lpfID);
+    bypassParam = vts.getRawParameterValue (Tags::bypassID);
+    dwParam     = vts.getRawParameterValue (Tags::dwID);
+    stParam     = vts.getRawParameterValue (Tags::stID);
 }
 
 CopyEqAudioProcessor::~CopyEqAudioProcessor()
@@ -34,13 +39,18 @@ AudioProcessorValueTreeState::ParameterLayout CopyEqAudioProcessor::createParame
 {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
 
-    params.push_back (std::make_unique<AudioParameterFloat> ("nabla", "Learning Rate", 0.0f, 1.0f, 0.0f));
-    params.push_back (std::make_unique<AudioParameterFloat> ("rho", "Warping Factor", -1.0f, 1.0f, 0.0f));
-    params.push_back (std::make_unique<AudioParameterFloat> ("drive", "Drive [dB]", 0.0f, 36.0f, 0.0f));
-    params.push_back (std::make_unique<AudioParameterChoice> ("sat", "Saturator", Saturators::getSatChoices(), 0));
-    params.push_back (std::make_unique<AudioParameterBool>   ("flip", "Flip", false));
-    params.push_back (std::make_unique<AudioParameterBool>   ("warpside", "Warp Sidechain", true));
-    params.push_back (std::make_unique<AudioParameterBool>   ("bypass", "Bypass", false));
+    NormalisableRange<float> filtRange (20.0f, 22000.0f);
+    filtRange.setSkewForCentre (1000.0f);
+
+    params.push_back (std::make_unique<AudioParameterBool> (Tags::continID, "Continuous", false));
+    params.push_back (std::make_unique<AudioParameterBool> (Tags::flipID,   "Flip",       false));
+    params.push_back (std::make_unique<AudioParameterBool> (Tags::bypassID, "Bypass",     false));
+                                                            
+    params.push_back (std::make_unique<AudioParameterFloat> (Tags::nablaID, "Learning Rate",   0.0f, 1.0f, 0.5f));
+    params.push_back (std::make_unique<AudioParameterFloat> (Tags::rhoID,   "Warping Factor", -1.0f, 1.0f, 0.0f));
+    params.push_back (std::make_unique<AudioParameterFloat> (Tags::lpfID,   "Side Filter",     filtRange,  22000.0f));
+    params.push_back (std::make_unique<AudioParameterFloat> (Tags::dwID,    "Dry/Wet",         0.0f, 1.0f, 1.0f));
+    params.push_back (std::make_unique<AudioParameterFloat> (Tags::stID,    "Stereo",          0.0f, 1.0f, 1.0f));
 
     return { params.begin(), params.end() };
 }
@@ -111,7 +121,11 @@ void CopyEqAudioProcessor::changeProgramName (int index, const String& newName)
 void CopyEqAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     for (int ch = 0; ch < 2; ++ch)
-        eqs[ch].reset (sampleRate);
+        eqs[ch]->reset (sampleRate, samplesPerBlock);
+
+    samplesLearned = 0;
+
+    dryBuffer.setSize (2, samplesPerBlock);
 }
 
 void CopyEqAudioProcessor::releaseResources()
@@ -133,29 +147,45 @@ void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
 
     if (*bypassParam)
         return;
-    
+
     auto mainInputOutput = getBusBuffer (buffer, true, 0);
     auto sidechainInput  = getBusBuffer (buffer, true, 1);
 
-    // apply saturation
-    saturator = Saturators::getSaturator (static_cast<SatType> ((int) *satParam));
-    float driveGain = Decibels::decibelsToGain (*driveParam);
-
-    buffer.applyGain (driveGain);
     for (int ch = 0; ch < mainInputOutput.getNumChannels(); ++ch)
-        for (int n = 0; n <  buffer.getNumSamples(); ++n)
-            buffer.setSample (ch, n, saturator (buffer.getSample (ch, n)));
-    buffer.applyGain (1.0f / driveGain);
+        dryBuffer.copyFrom (ch, 0, mainInputOutput, ch, 0, buffer.getNumSamples());
 
+    // set EQ params
     for (int ch = 0; ch < mainInputOutput.getNumChannels(); ++ch)
     {
-        eqs[ch].setNabla (*nablaParam * *nablaParam * 0.1f);
-        eqs[ch].setRho (0.9f * *rhoParam);
-        eqs[ch].setFlip ((bool) *flipParam);
-        eqs[ch].setWarpSide ((bool) *warpSideParam);
+        eqs[ch]->setNabla (*nablaParam * *nablaParam * 0.1f);
+        eqs[ch]->setRho (0.9f * *rhoParam);
+        eqs[ch]->setFlip ((bool) *flipParam);
+        eqs[ch]->setSideCutoff (*lpfParam);
+        eqs[ch]->setStereoFactor (*stParam);
     
-        eqs[ch].processBlock (mainInputOutput.getWritePointer (ch), sidechainInput.getWritePointer (ch), buffer.getNumSamples());
+        if (*contParam || learn) // learning mode
+            eqs[ch]->processBlockLearn (mainInputOutput.getWritePointer (ch), 
+                sidechainInput.getWritePointer (ch), buffer.getNumSamples());
+        else
+            eqs[ch]->processBlock (mainInputOutput.getWritePointer (ch), buffer.getNumSamples());
     }
+
+    // update whether or not to keep training
+    if (learn)
+    {
+        samplesLearned += buffer.getNumSamples();
+
+        if (samplesLearned > (int) (lengthLearnSeconds * (float) getSampleRate()))
+        {
+            samplesLearned = 0;
+            learn = false;
+        }
+    }
+
+    // apply dry/wet
+    mainInputOutput.applyGain (*dwParam);
+    for (int ch = 0; ch < mainInputOutput.getNumChannels(); ++ch)
+        mainInputOutput.addFrom (ch, 0, dryBuffer, ch, 0, buffer.getNumSamples(), 1.0f - *dwParam);
 }
 
 //==============================================================================
@@ -166,21 +196,24 @@ bool CopyEqAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* CopyEqAudioProcessor::createEditor()
 {
-    return new GenericAudioProcessorEditor (*this);
+    return new PluginEditor (*this);
 }
 
 //==============================================================================
 void CopyEqAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    auto state = vts.copyState();
+    std::unique_ptr<XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void CopyEqAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName (vts.state.getType()))
+            vts.replaceState (ValueTree::fromXml (*xmlState));
 }
 
 //==============================================================================
