@@ -186,7 +186,7 @@ We begin with the equation for a biquad filter:
 %
 Where $y$ is the output signal, $u$ is the input signal, and $a_n$ and $b_n$
 are the feed-back and feed-forward filter coefficients, respectively.
-There are several convenient "direct forms" for implementing biquad filters.
+There are several convenient ``direct forms'' for implementing biquad filters.
 In this writing we will focus on the ``Transposed Direct Form II'' (TDF-II),
 which is popular for its numerical properties \cite{JOSFilters}.
 %
@@ -218,7 +218,8 @@ And the angular frequencies of the poles are equal to:
 %
 It is well known that a digital filter will be stable provided that
 the magnitudes of the poles are strictly less 1 \cite{JOSFilters}.
-
+\newline
+%
 \subsubsection{State Space Formulation}
 
 Another reason TDF-II is useful for implementing biquad filters
@@ -228,8 +229,8 @@ elements:
 %
 \begin{equation}
     \begin{split}
-        x_1[n] = b_1 u[n] - a_1 y[n] + x_2[n-1] \\
-        x_2[n] = b_2 u[n] - a_2 y[n]
+        x_1[n] &= b_1 u[n] - a_1 y[n] + x_2[n-1] \\
+        x_2[n] &= b_2 u[n] - a_2 y[n]
     \end{split}
     \label{eq:bq_lin_states}
 \end{equation}
@@ -378,8 +379,8 @@ The equation for the nonlinear biquad filter then becomes:
 \begin{equation}
 \begin{split}
     y[n] = b_0 u[n]
-         + f_{NL} (b_1 u[n-1] - a_1 y[n-1] \\
-         + f_{NL} (b_2 u[n-2] - a_2 y[n-2]))
+         &+ f_{NL} (b_1 u[n-1] - a_1 y[n-1] \\
+         &+ f_{NL} (b_2 u[n-2] - a_2 y[n-2]))
 \end{split}
     \label{eq:bq_NL}
 \end{equation}
@@ -413,9 +414,9 @@ Then \cref{eq:bq_NL} can be re-written:
 %
 \begin{equation}
 \begin{split}
-    y[n] = b_0 u[n]
+    y[n] &= b_0 u[n]
          + g_1 (b_1 u[n-1] - a_1 y[n-1] \\
-         + g_2 (b_2 u[n-2] - a_2 y[n-2]) + \gamma_2) + \gamma_1
+         &+ g_2 (b_2 u[n-2] - a_2 y[n-2]) + \gamma_2) + \gamma_1
 \end{split}
     \label{eq:bq_re-write}
 \end{equation}
@@ -477,7 +478,7 @@ where
 Then the Jacobian matrix of $\mathbf{h}$ can be written as:
 %
 \begin{equation}
-    J = \begin{bmatrix}
+    \mathbf{J} = \begin{bmatrix}
         0& f'_{NL}(x_2[n])& -a_1 \\
         0& 0& -a_2 \\
         f'_{NL}(x_1[n])& 0& 0
@@ -490,7 +491,7 @@ stable, provided that the constraint from \cref{eq:NL_constraint}
 is satisfied, and all the $a$ coefficients are less than 1. However,
 note that the constraint on the $a$ coefficients is required
 anyway for the corresponding linear filter to be stable, so the
-only "new" constraint that arises from adding the nonlinear
+only ``new'' constraint that arises from adding the nonlinear
 elements is that of \cref{eq:NL_constraint}.
 
 \subsection{Pole Analysis}
@@ -556,7 +557,8 @@ The equaton for the filter can now be written:
 %
 \begin{equation}
     \begin{split}
-        y[n] = b_0 u[n] + b_1 u[n-1] + b_2 u[n-2] \\ - a_1 f_{NL}(y[n-1]) - a_2 f_{NL}(y[n-2])
+        y[n] &= b_0 u[n] + b_1 u[n-1] + b_2 u[n-2] \\
+             &- a_1 f_{NL}(y[n-1]) - a_2 f_{NL}(y[n-2])
     \end{split}
         \label{eq:nlbq2}
 \end{equation}
@@ -611,8 +613,8 @@ Again, the $\gamma$ offset terms will not affect the filter stability.
 
 \subsection{Stability}
 %
-Again, we can update \cref{eq:bq_lin_state_spaces} for the nonlinear
-feedback filter described by \cref{eq:nlbq2}, and writing it in the form
+We can now update \cref{eq:bq_lin_state_spaces} for the nonlinear
+feedback filter described by \cref{eq:nlbq2}, and by writing it in the form
 of \cref{eq:lyapunov_general}, we see
 %
 \begin{equation}
@@ -636,7 +638,7 @@ where
 Then the Jacobian matrix can be written as:
 %
 \begin{equation}
-    J = \begin{bmatrix}
+    \mathbf{J} = \begin{bmatrix}
         0& 1& -a_1f'_{NL}(y[n]) \\
         0& 0& -a_2f'_{NL}(y[n]) \\
         1& 0& 0
@@ -664,7 +666,7 @@ from \cref{eq:NL_constraint} is satisfied.
 \subsection{Pole Analysis}
 %
 We can now calculate the locations of the instantaneous poles for
-the nonlinear feedback filter, again by adjusting the formula from
+the nonlinear feedback filter, by adjusting the formula from
 \cref{eq:poles_lin}.
 %
 \begin{equation}
@@ -778,7 +780,7 @@ asymmetric base nonlinearities.
 
 As an example, we can attempt to construct a naive model of a Sallen-Key
 lowpass filter, a commonly used analog filter structure, and compare
-with our results to the desired analog response similar to the
+our results to the desired analog response, similar to the
 comparison done in \cite{SKF}. We describe this
 as a naive model because we do not make any attempt to understand the physical
 properties of the analog filter when constructing this model. We construct
@@ -828,13 +830,13 @@ poles respond to the input as expected. We then show how the
 nonlinear biquad structure can be used to model an analog
 filter, comparing with a Sallen-Key lowpass filter as
 an example. Note that while the nonlinear biquad structure
-can be used for analog modelling both structures can also be
-used purely in the digital domain, as a tool for constructing
+can be used for analog modelling, both structures can also be
+used purely in the digital domain as a tool for constructing
 filters that sound more sonically interesting and harmonically
 rich.
 \newline\newline
 To demonstrate this last point, we have also developed an open-source
-audio plugin (VST, AU) implentation of the both nonlinear biquad and
+audio plugin (VST, AU) implentation of both the nonlinear biquad and
 nonlinear feedback filters, extending to several filter shapes, and
 several base nonlinearities.
 The source code for the plugin implementation is available on
@@ -846,6 +848,12 @@ Future research concerning nonlinear filtering will center around making a
 more informed choice of base nonlinearities, focusing on both the desired
 harmonic response of the filter, as well as physically meaningful base
 nonlinearities for use in analog modelling.
+
+\section{Acknowledgments}
+
+The author would like to thank Kurt Werner for providing sound advice and
+guidance on this topic, Viraga Perera and Dave Berners for informative
+discussions, as well as the GASP working group at CCRMA.
 
 %\newpage
 \nocite{*}
