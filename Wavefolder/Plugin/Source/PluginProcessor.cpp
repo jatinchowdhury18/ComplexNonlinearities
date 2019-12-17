@@ -102,16 +102,16 @@ int WavefolderAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void WavefolderAudioProcessor::setCurrentProgram (int index)
+void WavefolderAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String WavefolderAudioProcessor::getProgramName (int index)
+const String WavefolderAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void WavefolderAudioProcessor::changeProgramName (int index, const String& newName)
+void WavefolderAudioProcessor::changeProgramName (int /*index*/, const String& /*newName*/)
 {
 }
 
@@ -153,7 +153,7 @@ bool WavefolderAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 }
 #endif
 
-void WavefolderAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void WavefolderAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
     ScopedNoDenormals noDenormals;
 

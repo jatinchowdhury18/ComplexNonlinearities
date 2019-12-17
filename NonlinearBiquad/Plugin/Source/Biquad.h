@@ -14,7 +14,7 @@ public:
 
         z.reset (new float[order+1]);
     }
-    ~Biquad() {}
+    virtual ~Biquad() {}
 
     virtual void reset (double sampleRate)
     {

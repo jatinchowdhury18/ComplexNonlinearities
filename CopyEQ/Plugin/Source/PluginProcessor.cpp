@@ -104,16 +104,16 @@ int CopyEqAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void CopyEqAudioProcessor::setCurrentProgram (int index)
+void CopyEqAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String CopyEqAudioProcessor::getProgramName (int index)
+const String CopyEqAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void CopyEqAudioProcessor::changeProgramName (int index, const String& newName)
+void CopyEqAudioProcessor::changeProgramName (int /*index*/, const String& /*newName*/)
 {
 }
 
@@ -141,7 +141,7 @@ bool CopyEqAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) c
         && ! layouts.getMainInputChannelSet().isDisabled();
 }
 
-void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
     ScopedNoDenormals noDenormals;
 

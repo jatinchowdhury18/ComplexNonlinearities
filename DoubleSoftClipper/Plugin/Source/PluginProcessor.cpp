@@ -101,21 +101,21 @@ int DoubleSoftClipperAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void DoubleSoftClipperAudioProcessor::setCurrentProgram (int index)
+void DoubleSoftClipperAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String DoubleSoftClipperAudioProcessor::getProgramName (int index)
+const String DoubleSoftClipperAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void DoubleSoftClipperAudioProcessor::changeProgramName (int index, const String& newName)
+void DoubleSoftClipperAudioProcessor::changeProgramName (int /*index*/, const String& /*newName*/)
 {
 }
 
 //==============================================================================
-void DoubleSoftClipperAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void DoubleSoftClipperAudioProcessor::prepareToPlay (double /*sampleRate*/, int samplesPerBlock)
 {
     oversampling.initProcessing (samplesPerBlock);
 }
@@ -149,7 +149,7 @@ bool DoubleSoftClipperAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 }
 #endif
 
-void DoubleSoftClipperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void DoubleSoftClipperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
     ScopedNoDenormals noDenormals;
     

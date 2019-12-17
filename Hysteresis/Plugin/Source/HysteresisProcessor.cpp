@@ -158,15 +158,15 @@ void HysteresisProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
             buffer.addFromWithRamp (ch, 0, fadeBuffer.getReadPointer (ch), buffer.getNumSamples(), 0.0f, 1.0f);
     }
 
-    for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
-    {
-        auto* x = buffer.getWritePointer (channel);
-        for (int samp = 0; samp < buffer.getNumSamples(); samp++)
-        {
-            // x[samp] = dcBlocker[channel].processSample (x[samp]);
-            // x[samp] = dcLower[channel].processSample (x[samp]);
-        }
-    }
+    // for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+    // {
+    //     auto* x = buffer.getWritePointer (channel);
+    //     for (int samp = 0; samp < buffer.getNumSamples(); samp++)
+    //     {
+    //         // x[samp] = dcBlocker[channel].processSample (x[samp]);
+    //         // x[samp] = dcLower[channel].processSample (x[samp]);
+    //     }
+    // }
 
     if (isChanging)
     {

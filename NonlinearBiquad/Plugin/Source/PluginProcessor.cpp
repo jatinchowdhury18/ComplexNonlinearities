@@ -107,16 +107,16 @@ int NonlinearBiquadAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void NonlinearBiquadAudioProcessor::setCurrentProgram (int index)
+void NonlinearBiquadAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String NonlinearBiquadAudioProcessor::getProgramName (int index)
+const String NonlinearBiquadAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void NonlinearBiquadAudioProcessor::changeProgramName (int index, const String& newName)
+void NonlinearBiquadAudioProcessor::changeProgramName (int /*index*/, const String& /*newName*/)
 {
 }
 
@@ -163,7 +163,7 @@ bool NonlinearBiquadAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 }
 #endif
 
-void NonlinearBiquadAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void NonlinearBiquadAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
     ScopedNoDenormals noDenormals;
 

@@ -105,16 +105,16 @@ int NonlinearFeedbackAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void NonlinearFeedbackAudioProcessor::setCurrentProgram (int index)
+void NonlinearFeedbackAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String NonlinearFeedbackAudioProcessor::getProgramName (int index)
+const String NonlinearFeedbackAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void NonlinearFeedbackAudioProcessor::changeProgramName (int index, const String& newName)
+void NonlinearFeedbackAudioProcessor::changeProgramName (int /*index*/, const String& /*newName*/)
 {
 }
 
@@ -162,11 +162,9 @@ bool NonlinearFeedbackAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 }
 #endif
 
-void NonlinearFeedbackAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void NonlinearFeedbackAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
     ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
     {

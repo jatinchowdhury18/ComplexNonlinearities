@@ -18,6 +18,7 @@ class EQFilter : public Biquad
 {
 public:
     EQFilter();
+    virtual ~EQFilter() {}
 
     void setFrequency (float newFreq);
     void setQ (float newQ);

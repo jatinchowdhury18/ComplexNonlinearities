@@ -8,6 +8,7 @@ class FBFilter : public EQFilter
 {
 public:
     FBFilter() {}
+    virtual ~FBFilter() {}
 
     inline float process (float x) override
     {

@@ -97,16 +97,16 @@ int ExciterAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void ExciterAudioProcessor::setCurrentProgram (int index)
+void ExciterAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String ExciterAudioProcessor::getProgramName (int index)
+const String ExciterAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void ExciterAudioProcessor::changeProgramName (int index, const String& newName)
+void ExciterAudioProcessor::changeProgramName (int /*index*/, const String& /*newName*/)
 {
 }
 
@@ -154,7 +154,7 @@ bool ExciterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 }
 #endif
 
-void ExciterAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void ExciterAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
     ScopedNoDenormals noDenormals;
 

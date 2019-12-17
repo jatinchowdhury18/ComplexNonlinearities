@@ -95,16 +95,16 @@ int HysteresisAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void HysteresisAudioProcessor::setCurrentProgram (int index)
+void HysteresisAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String HysteresisAudioProcessor::getProgramName (int index)
+const String HysteresisAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void HysteresisAudioProcessor::changeProgramName (int index, const String& newName)
+void HysteresisAudioProcessor::changeProgramName (int /*index*/, const String& /*newName*/)
 {
 }
 
