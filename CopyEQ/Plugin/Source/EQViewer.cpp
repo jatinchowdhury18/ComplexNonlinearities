@@ -1,4 +1,5 @@
 #include "EQViewer.h"
+#include "Spline.h"
 
 namespace
 {
@@ -42,6 +43,9 @@ void EQViewer::doFFT()
     auto* filtL = proc.getFilter (0).get();
     auto* filtR = proc.getFilter (1).get();
 
+    if (filtL == nullptr || filtR == nullptr)
+        return;
+
     if (filtL->h.get() == nullptr || filtR->h.get() == nullptr)
         return;
 
@@ -78,24 +82,42 @@ void EQViewer::updateCurve()
 {
     doFFT();
 
-    curvePath.clear();
-    bool started = false;
+    Array<Point<double>> points;
+
+    const auto sr = proc.getSampleRate() == 0.0 ? proc.getSampleRate() : 44100.0;
+    const auto binWidth = (float) sr / (float) size;
     const float scaleFactor = ((getHeight() / 2) - (getHeight()) / (8)) / 3.0f;
-    for (float xPos = 0.0f; xPos < (float) getWidth(); xPos += 1.0f)
+    for (int k = 0; k < size / 2; ++k)
     {
-        auto traceMag = Decibels::gainToDecibels (getMagForX (xPos));
+        auto freq = k * binWidth;
+        float xPos = 0.0f;
+
+        if (freq > fLow)
+        {
+            auto exp = logf (freq / fLow) / logf (fHigh / fLow);
+            xPos = exp * ((float) getWidth() - 5.0f) + 2.5f;
+        }
+        else if (freq > fHigh)
+        {
+            break;
+        }
+
+        auto traceMag = Decibels::gainToDecibels (H[k]);
         auto traceY = (getHeight() / 4) - (traceMag * scaleFactor);
 
-        if (! started)
-        {
-            curvePath.startNewSubPath (xPos, traceY);
-            started = true;
-        }
-        else
-        {
-            curvePath.lineTo (xPos, traceY);
-        }
+        points.add (Point<double> ((double) xPos, (double) traceY));
     }
+
+    Spline spline (points);
+
+    curvePath.clear();
+    curvePath.startNewSubPath (points.getFirst().toFloat());
+    for (int x = (int) points.getFirst().getX(); x < (int) points.getLast().getX(); ++x)
+    {
+        float y = (float) spline.interpolate ((double) x);
+        curvePath.lineTo ((float) x, (float) y);
+    }
+    curvePath.lineTo (points.getLast().toFloat());
 
     repaint();
 }
