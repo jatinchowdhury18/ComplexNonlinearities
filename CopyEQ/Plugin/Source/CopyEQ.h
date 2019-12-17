@@ -27,7 +27,7 @@ private:
     std::unique_ptr<FIRFilter>& filter;
     std::unique_ptr<FIRFilter>& otherFilter;
     float fs = 44100.0f;
-    const int order = 128;
+    const int order = 256;
     int fsFactor = (int) (fs / 44100.0f);
 
     float nabla = (float) 1.0e-6; // 0.0001f;

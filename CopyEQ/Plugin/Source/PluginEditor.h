@@ -2,6 +2,7 @@
 #define PLUGINEDITOR_H_INCLUDED
 
 #include "PluginProcessor.h"
+#include "EQViewer.h"
 
 using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 using ButtonAttachment = AudioProcessorValueTreeState::ButtonAttachment;
@@ -44,6 +45,8 @@ private:
     SliderWithAttach warpSlider;
     SliderWithAttach dryWetSlider;
     SliderWithAttach stereoSlider;
+
+    EQViewer viewer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };

@@ -3,10 +3,13 @@
 //==============================================================================
 PluginEditor::PluginEditor (CopyEqAudioProcessor& proc) :
     AudioProcessorEditor (proc),
-    proc (proc)
+    proc (proc),
+    viewer (proc)
 {
-    setSize (290, 300);
+    setSize (290, 400);
     startTimerHz (10);
+
+    addAndMakeVisible (viewer);
 
     auto setupSlider = [=] (SliderWithAttach& slider, String name,
                             AudioProcessorValueTreeState& vts, String paramID,
@@ -104,21 +107,23 @@ void PluginEditor::resized()
     const int buttonHeight = 25;
     const int pad = 5;
 
-    learnButton.b.setBounds  (pad, 25,                              buttonWidth, buttonHeight);
-    contButton.b.setBounds   (pad, learnButton.b.getBottom() + pad, buttonWidth, buttonHeight);
-    flipButton.b.setBounds   (pad, contButton.b.getBottom()  + pad, buttonWidth, buttonHeight);
-    bypassButton.b.setBounds (pad, flipButton.b.getBottom()  + pad, buttonWidth, buttonHeight);
+    learnButton.b.setBounds  (60,  30, buttonWidth, buttonHeight);
+    contButton.b.setBounds   (150, 30, buttonWidth, buttonHeight);
+    flipButton.b.setBounds   (60,  learnButton.b.getBottom() + pad, buttonWidth, buttonHeight);
+    bypassButton.b.setBounds (150, contButton.b.getBottom()  + pad, buttonWidth, buttonHeight);
 
-    const int x1 = 100;
+    const int x1 = 110;
     const int x2 = 200;
+    const int y1 = 105;
     const int sliderDim = 80;
-    const int pad2 = 12;
+    const int pad2 = 15;
 
-    lengthSlider.s.setBounds (x1, 30, sliderDim, sliderDim);
-    rateSlider.s.setBounds   (x2, 30, sliderDim, sliderDim);
-    
-    filtSlider.s.setBounds   (x1, lengthSlider.s.getBottom() + pad2, sliderDim, sliderDim);
-    warpSlider.s.setBounds   (x2, rateSlider.s.getBottom()   + pad2, sliderDim, sliderDim);
+    lengthSlider.s.setBounds (10, y1, sliderDim, sliderDim);    
+    filtSlider.s.setBounds   (x1, y1, sliderDim, sliderDim);
+    warpSlider.s.setBounds   (x2, y1, sliderDim, sliderDim);
+    rateSlider.s.setBounds   (10, lengthSlider.s.getBottom() + pad2, sliderDim, sliderDim);
     stereoSlider.s.setBounds (x1, filtSlider.s.getBottom()   + pad2, sliderDim, sliderDim);
     dryWetSlider.s.setBounds (x2, warpSlider.s.getBottom()   + pad2, sliderDim, sliderDim);
+
+    viewer.setBounds (0, getHeight() - 105, getWidth(), 105);
 }

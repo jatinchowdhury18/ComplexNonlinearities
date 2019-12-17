@@ -73,6 +73,7 @@ public:
     bool getLearnState() const noexcept { return learn; }
     void setLearnLength (float newLength) { lengthLearnSeconds = newLength; }
     float getLearnLength() const noexcept { return lengthLearnSeconds; }
+    std::unique_ptr<FIRFilter>& getFilter (int ch) { return filter[ch]; }
 
 private:
     AudioProcessorValueTreeState vts;

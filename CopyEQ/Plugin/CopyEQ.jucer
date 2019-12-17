@@ -4,6 +4,8 @@
               pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" cppLanguageStandard="17">
   <MAINGROUP id="KIlksY" name="CopyEQ">
     <GROUP id="{03F12A9B-9B0C-6EE3-A765-848EEB764AF2}" name="Source">
+      <FILE id="DYT7mP" name="EQViewer.cpp" compile="1" resource="0" file="Source/EQViewer.cpp"/>
+      <FILE id="jStsZx" name="EQViewer.h" compile="0" resource="0" file="Source/EQViewer.h"/>
       <FILE id="sFoPEn" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="iVrUwn" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
