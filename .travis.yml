@@ -27,6 +27,8 @@ stages:
     if: os == linux
   - name: services
     if: os == linux
+  - name: cache
+    if: NOT (os == linux)
 
 addons:
   apt:
