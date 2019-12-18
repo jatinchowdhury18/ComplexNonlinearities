@@ -123,3 +123,26 @@ script:
     fi
 
   - echo "SUCCESS"
+
+# after_success: # upload mac bins
+#   - |
+#     if [[ $TRAVIS_OS_NAME == 'osx' && type != push ]]; then
+#       echo "Copying Files..."
+#       cd $TRAVIS_BUILD_DIR/
+#       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.app       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.app
+#       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.component $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.component
+#       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.vst
+#       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst3      $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.vst3
+
+#       echo "Setting Up Git..."
+#       git config --global user.email "travis@travis-ci.org"
+#       git config --global user.name "Travis CI"
+
+#       echo "Committing Files..."
+#       git checkout -b builds
+#       git add $TRAVIS_BUILD_DIR/Bin/
+#       git commit -m "Travis build- $TRAVIS_BUILD_NUMBER"
+
+#       echo "Pushing to branch..."
+#       git push https://${GH_TOKEN}@github.com/jatinchowdhury18/ComplexNonlinearities.git
+#     fi

@@ -61,6 +61,9 @@ Current nonlinearities include:
 Each subfolder contains a specific nonlinearity, including Python simulations
 and a real-time implementation in JUCE/C++.
 
+Binary files for each plugin can be found in the `Bin/` folder. Currently only Windows
+builds and **unsigned** Mac builds are available.
+
 ## License
 
 The code in this repository is freely available under the GNU General Public License
