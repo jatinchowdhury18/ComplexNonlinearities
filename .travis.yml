@@ -8,10 +8,6 @@ sudo: false
 # if push: only build for master branch
 if: (type != push) OR (type = push AND branch = master)
 
-env:
-  global:
-    - secure: dCb30oqp5InBZdk3e/t0mJ0+zaW4HdyzV5/C/NKR/Si5OcwDAMmoLWY9vbu+C0a2gdKzyh1e0Tic+JYvMGgtdTZLI61YlKmlkWxWxH5FOQgjmj9I3BVpX3oKLi9GLoSMdI/jGaNmUZTn+8xa8Wj8OTHHobLQSY/RNzXTxwyxvmUqoED6sP/Fl86+er5r4qg8lyr/mwnP9q2e1GBJqciUId5g9jZcUHOBKDP30c/E3zlydQuY7L4hU7rb9JePuX0HDngj8jpwlVRMi94vyOMCKH771JKZazxUwVbm4W5E35mQnFcowRhmnhWIJp0IBamPt0Cwv0rucX90nPMGlNzX8VwkteQBlN0F7DJqnfa4ew//TjZ+qax9312SONqYx/7Gnq0mn2BYqXOKXeD9BKMCpv9ubbDQEMs+suJBq2zH0rPOF/Q1Tpg1nXvp/UbMZeu9BtUicPM+ehyVS2LxNLVemNwy3spgZaAdcDFtKQVb+CRMjGZa6PErmhIqU36f46g8W9LRnd0u9gBXSkxWLy3Xb/lhNYH2KWM0mzu0pGWejwIJ9RO6inXj1ryhUvo00F+DSXPxekgk/1zxk7VVXSgrpiJ7lPC92fSZLDaH4N9KHMHEV331cTyIyo3Ni8R64RT7sj7O2dV9kGlMZgxp7/RhG8XYHQ4a7b12MRZC26L4F1U=
-
 os:
   - osx
   - windows
@@ -128,25 +124,25 @@ script:
 
   - echo "SUCCESS"
 
-after_success: # upload mac bins
-  - |
-    if [[ $TRAVIS_OS_NAME == 'osx' && type != push ]]; then
-      echo "Copying Files..."
-      cd $TRAVIS_BUILD_DIR/
-      cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.app       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.app
-      cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.component $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.component
-      cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.vst
-      cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst3      $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.vst3
+# after_success: # upload mac bins
+#   - |
+#     if [[ $TRAVIS_OS_NAME == 'osx' && type != push ]]; then
+#       echo "Copying Files..."
+#       cd $TRAVIS_BUILD_DIR/
+#       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.app       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.app
+#       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.component $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.component
+#       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.vst
+#       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst3      $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.vst3
 
-      echo "Setting Up Git..."
-      git config --global user.email "travis@travis-ci.org"
-      git config --global user.name "Travis CI"
+#       echo "Setting Up Git..."
+#       git config --global user.email "travis@travis-ci.org"
+#       git config --global user.name "Travis CI"
 
-      echo "Committing Files..."
-      git checkout -b builds
-      git add $TRAVIS_BUILD_DIR/Bin/
-      git commit -m "Travis build- $TRAVIS_BUILD_NUMBER"
+#       echo "Committing Files..."
+#       git checkout -b builds
+#       git add $TRAVIS_BUILD_DIR/Bin/
+#       git commit -m "Travis build- $TRAVIS_BUILD_NUMBER"
 
-      echo "Pushing to branch..."
-      git push https://${GH_TOKEN}@github.com/jatinchowdhury18/ComplexNonlinearities.git
-    fi
+#       echo "Pushing to branch..."
+#       git push https://${GH_TOKEN}@github.com/jatinchowdhury18/ComplexNonlinearities.git
+#     fi
