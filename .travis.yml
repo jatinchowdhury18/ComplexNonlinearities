@@ -130,7 +130,7 @@ script:
 
 after_success: # upload mac bins
   - |
-    if [[ $TRAVIS_JOB_NAME == 'osx' && type != push ]]; then
+    if [[ $TRAVIS_OS_NAME == 'osx' && type != push ]]; then
       echo "Copying Files..."
       cd $TRAVIS_BUILD_DIR/
       cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.app       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.app
