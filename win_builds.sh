@@ -10,7 +10,7 @@ do
 
         echo "Building $name..."
         cd $Dir/Plugin/Builds/VisualStudio2017/
-        # MSBuild.exe -v:quiet -t:rebuild -p:Configuration=RELEASE -p:Platform=x64 $name.sln
+        MSBuild.exe -v:quiet -t:rebuild -p:Configuration=RELEASE -p:Platform=x64 $name.sln
 
         echo "Copying $name ..."
         cd ../../../../

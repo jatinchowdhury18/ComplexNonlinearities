@@ -8,6 +8,10 @@ sudo: false
 # if push: only build for master branch
 if: (type != push) OR (type = push AND branch = master)
 
+env:
+  global:
+    - secure: VjjlWj4TxFpDrbKDKkhkbsAMZs8sf3QAhD5BcPZAyYkaTmP7RdW77z56c5hpucK01hGNZxLhrlc/0ziNOJqGNwO0tJwR4KYSfZ7xhgljC4NKdTfb5vlBseqvWXNQfIurfYjh2m95/XbAYM+v42i7N+Htf+G/DBmjVgsLGDILt4pV2BojAXVxywrenzlM4khcG8g3Q+TxuaVop5zgT6vmF4F0/HOFRIlOiancDHXHKMeyC9ms6+M/k2FjTW6k96n2JRtI3y7Gzhbs1o3BG+dtN6le3pmSaGmRjqzMuwiC2TZg612tb9FA7+2XdsRavjkKzEHmHvYPrlu7OwwQJ9v2Am6PNn7oPnIk6a8EIUnaj3PXOvE99SdF7xNUN40IR5dqoan0p7hecZGktMeoWkWRnMNGrGRR2X827NnxFTEE2N87djRJ9UT2I4kCfRjqHNePQEl1RVGajLJGiZL2ZiHY7SRYv2apv2e8ovSEZhbQs9euZXhkujCVFtsKep5139WHVXuB+iGDKrYRfkTiAZeRs5aZ4os2C2CHH6rffHZTGXl2e4NW23PEejueXuJof6svVL0Jc50MnVY/F1Hl5Tcp471VOFTM5SXQm3ApL655rdKr07RKIf9YzE3eb1VrHmiL0CH7LxN09Z63/M0s+RlkEvxHlQFsy5Ph66FfuPW24bc=
+
 os:
   - osx
   - windows
@@ -123,3 +127,26 @@ script:
     fi
 
   - echo "SUCCESS"
+
+after_success: # upload mac bins
+  - |
+    if [[ $TRAVIS_JOB_NAME == 'osx' && type != push ]]; then
+      echo "Copying Files..."
+      cd $TRAVIS_BUILD_DIR/
+      cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.app       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.app
+      cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.component $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.component
+      cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst       $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.vst
+      cp -R $TRAVIS_BUILD_DIR/$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst3      $TRAVIS_BUILD_DIR/Bin/$PLUGIN/Mac/$PLUGIN.vst3
+
+      echo "Setting Up Git..."
+      git config --global user.email "travis@travis-ci.org"
+      git config --global user.name "Travis CI"
+
+      echo "Committing Files..."
+      git checkout -b builds
+      git add $TRAVIS_BUILD_DIR/Bin/
+      git commit -m "Travis build- $TRAVIS_BUILD_NUMBER"
+
+      echo "Pushing to branch..."
+      git push https://${GH_TOKEN}@github.com/jatinchowdhury18/ComplexNonlinearities.git
+    fi
