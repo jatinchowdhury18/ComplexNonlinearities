@@ -24,6 +24,7 @@ __pycache__
 
 # Tex artifacts
 *.synctex.gz
+*.synctex(busy)
 *.aux
 *.bbl
 *.blg
