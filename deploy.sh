@@ -8,7 +8,7 @@ do
 done
 
 # Copy papers
-for f in */Paper/*.pdf
+for f in */Paper/*.pdf Paper/*.pdf
 do
     echo "Copying $f"
     scp $f jatin@ccrma-gate.stanford.edu:~/Library/Web/papers/
