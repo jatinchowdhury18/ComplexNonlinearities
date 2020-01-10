@@ -64,11 +64,11 @@
 \fi
 
 % My packages
-\usepackage{cleveref}
 \usepackage{tikz}
 \usetikzlibrary{dsp,chains}
 \usepackage{tkz-euclide}
 \usetkzobj{all}
+\usepackage{cleveref}
 
 \usepackage{listings}
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -117,8 +117,8 @@
 %
 \begin{abstract}
 In this writing, we present an ongoing study of new and interesting
-nonlinear structures for audio signal processing, with the intention
-of use for audio effects and synthesis. We give a brief discussion of
+nonlinear structures for audio signal processing, intended to be
+used for audio effects and synthesis. We give a brief discussion of
 each structure, and present a series of open-source audio plugins that
 implement the structures.
 \end{abstract}
@@ -126,22 +126,25 @@ implement the structures.
 \section{Introduction} \label{sec:intro}
 %
 In digital audio signal processing it is common to find audio effects
-that use nonlinear elements add harmonic content to the signal being
-processed. Typically, this is done either as part of an analog model,
-or using a static memoryless nonlinear element.
+that use nonlinear elements to add harmonic content to the signal being
+processed, or to achieve a ``distortion'' type of effect. Typically, this
+is done either as part of an analog model, or using a static memoryless
+nonlinear element.
 \newline\newline
 %
 The goal of this research project is to develop structures for nonlinear
 audio signal processing that go beyond the traditionally used simple
 nonlinearities. While the structures developed here may be used for
 analog modelling and may be inspired by analog effects, they do not
-come about from direct physical modelling of an analog system.
+come about from direct physical modelling of an analog system, nor
+do they require knowledge of analog systems such as circuits to be
+understood and implemented.
 
 \subsection{Simple Nonlinearities} \label{sec:simple}
 %
 We refer to the desired nonlinear structures as ``Complex
-Nonlinearities'', therefore we should take a moment to define what
-constitutes a ``simple'' nonlinearity, particularly as these will
+Nonlinearities'', as such we should take a moment to define what
+constitutes a ``simple'' nonlinearity, particularly since these will
 make up the building blocks of the complex nonlinearities that follow.
 
 \subsubsection{Saturators} \label{sec:sat}
@@ -150,7 +153,7 @@ The most commonly used nonlinearity in audio signal processing is
 the saturating nonlinearity, where the input ``clips'' to a constant
 value as the input gain increases. This class of nonlinearity includes
 functions such as the hard clipper, cubic soft clipper, and $tanh$
-nonlinearities \cite{Yeh}, which have the following transfer functions:
+nonlinearities \cite{Yeh}, which are described by the following functions:
 %
 \begin{equation}
     f_{\text{hard clip}}(x) = \begin{cases}
@@ -204,9 +207,9 @@ are the full-wave rectifier and the half-wave rectifier:
     \label{eq:hwr}
 \end{equation}
 %
-The above rectifier equations have a downside that they don't have
+The above rectifier equations have a downside in that they don't have
 continuous derivatives. As a substitute we present an alternate
-half-wave rectifier equation loosely modelled off a Shockley diode
+half-wave rectifier equation loosely modelled from a Shockley diode
 rectifier:
 \begin{equation}
     f_{\text{Diode}}(x) = \beta \left(e^{\alpha x} - 1 \right)
@@ -220,6 +223,12 @@ where $\alpha$ and $\beta$ are tunable parameters.
     \includegraphics[width=3in]{../Exciter/Pics/rect_static.png}
     \caption{\label{Rects}{\it Rectifying Nonlinearities. For the diode nonlinearity,
     we use $\beta = 0.2$, $\alpha = 1.93$.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{Pics/dropout.png}
+    \caption{\label{Drops}{\it Dropout nonlinearity with $a = 0.6$.}}
 \end{figure}
 %
 
@@ -240,12 +249,6 @@ are snapped to zero. Here we present a simple cubic dropout function:
 \end{equation}
 %
 where $a$ is a tunable parameter, and $B = \sqrt{\frac{a^3}{3}}$.
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{Pics/dropout.png}
-    \caption{\label{Drops}{\it Dropout nonlinearity with $a = 0.6$.}}
-\end{figure}
 %
 
 \section{Double Soft Clipper} \label{sec:DSC}
@@ -274,7 +277,7 @@ where
     \label{eq:double-soft-clip_u}
 \end{equation}
 %
-The resulting transfer function is essentially two cubic soft
+The resulting static curve is essentially two cubic soft
 clipping functions stacked on top of each other (see \cref{DSC-stack}).
 %
 \begin{figure}[h]
@@ -306,14 +309,13 @@ limit, linear slope, upper/lower skew,  and dropout width (see
 \section{Harmonic Exciter} \label{sec:exciter}
 %
 A harmonic exciter is an audio effect often used by mixing
-engineers to add ``brightness'' to a track, often a vocal
-track in particular, for example the Aphex Aural Exciter
-\cite{aphex}. Typically, digital exciter effects are implemented
-as circuit models of an original analog effect (e.g. \cite{exciter-model}).
-The goal of the work in this study is to create a generalized exciter
-model that can be implemented without knowledge of circuit theory,
-much in the way that \cite{giannoulis2012digital} describes a
-generalized model of a dynamic range compressor.
+engineers to add ``brightness'' to a track or a mix, for example
+the Aphex Aural Exciter \cite{aphex}. Typically, digital exciter effects
+are implemented as circuit models of an original analog effect (e.g.
+\cite{exciter-model}). The goal of this work is to create a
+generalized exciter model that can be implemented without knowledge of
+circuit theory, much in the way that \cite{giannoulis2012digital} describes
+a generalized model of a dynamic range compressor.
 \newline\newline
 Based loosly on the Aphex Aural Exciter, we propose the
 exciter architecture shown in \cref{exc}. For the generator
@@ -325,8 +327,8 @@ nonlinearity followed by a lowpass filter. \Cref{detect} shows the
 output of a level detector with the rectifying nonlinearities described
 in \S\ref{sec:rect} and a first-order lowpass filter with a cutoff
 frequency of 10 Hz. For the nonlinearity component, any saturating
-nonlinearity of the type described in \S\ref{sec:sat}. The output
-of the generator is very harmonically rich, with both even and odd
+nonlinearity of the type described in \S\ref{sec:sat} will suffice. The
+output of the generator is very harmonically rich, with both even and odd
 harmonics, as seen in \cref{exc-harm}.
 \newline\newline
 %
@@ -365,17 +367,17 @@ harmonics, as seen in \cref{exc-harm}.
 %
 \section{Hysteresis} \label{sec:hysteresis}
 %
-Hysteresis is an interesting complex nonlinearity that describes
-behavior that occurs in the magnetising of magnetic materials, as
-well as in other fields including chemistry, structural engineering,
+Hysteresis is an interesting complex nonlinear behavior
+that describes the magnetising of magnetic materials, as
+well as concepts in other fields including chemistry, structural engineering,
 even economics. \cite{DAFX-tape} uses an adaptation of the Jiles-Atherton
-magnetic hysteresis model as part of a model of an analog tape machine.
-In this study, we attempt to generalize this hysteresis to be used
+magnetic hysteresis model to recreate the sound of an analog tape machine.
+In this study, we attempt to generalize this hysteresis model to be used
 and implemented without understanding of electromagnetic physics,
 as well as adding useful parameters to the hysteresis nonlinearity.
 \newline\newline
 %
-The hysteresis modelfor input $x$ is defined by the differential equation:
+The hysteresis model for input $x$ is defined by the differential equation:
 %
 \begin{equation}
     \dot{y} = \frac{\frac{(1-c)\delta_y(SL(Q) - y)}{(1-c)\delta_xk - \alpha(SL(Q) - y)}\dot{x} + c \frac{S}{a} \dot{x} L'(Q)}{1 - c\alpha \frac{S}{a} L'(Q)}
@@ -419,9 +421,9 @@ these parameters.
 
 \section{Nonlinear Biquads} \label{sec:nlbq}
 %
-Transposed Direct Form II (see \cref{tdf2}) is a standard method for
+Transposed Direct Form II (TDF-II) (see \cref{tdf2}) is a standard method for
 implementing biquad filters in signal processing. We present two
-methods for adding nonlinear elements to the biquad filters that
+methods for adding nonlinear elements to the TDF-II structure that
 can create interesting sonic effects without affecting the filter's
 stability.
 \newline\newline
@@ -448,7 +450,7 @@ potential use of these structures for analog modelling, is given in
 \begin{figure}[h]
     \center
     \includegraphics[width=3in]{../NonlinearBiquad/Pics/TDF-II-White.png}
-    \caption{\label{tdf2}{\it Transposed direct form II.}}
+    \caption{\label{tdf2}{\it Transposed direct form II filter structure.}}
 \end{figure}
 %
 \begin{figure}[h]
@@ -484,20 +486,20 @@ The work done in this study was designed to be informative and inspiring
 both to recording engineers and musicians, as well as programmers and
 aspiring DSP engineers looking to design audio effects. With this audience
 in mind, it was determined that the results of this work should be written
-and presented for a lay-person audience, and published in a location where
-this audience would most easily find it. To that end, the results of this
-work have been published as a series of articles on the popular blog website
-Medium \footnote{https://medium.com/@jatinchowdhury18}. According to
-statistics on the site, the articles have been read approximately 300 times
-at the time of this writing. Additionally, the structures developed in this
-study have been implemented as a series of audio plugins using JUCE/C++.
+and presented for a relatively non-technical reader, and published in a
+location where these readers would most easily find it. To that end, the
+results of this work have been published as a series of articles on the
+popular blog website Medium \footnote{https://medium.com/@jatinchowdhury18}.
+According to statistics on the site, the articles have been read approximately
+300 times as of this writing. Additionally, the structures developed
+in this study have been implemented as a series of audio plugins using JUCE/C++.
 The plugins and their source code are freely available on GitHub
 \footnote{https://github.com/jatinchowdhury18/ComplexNonlinearities}.
 
 \section{Conclusion} \label{sec:conclusion}
 %
 In this paper, we have presented a series of complex nonlinear signal
-processing structure, with the intention of being used for audio effects
+processing structures, with the intention of being used for audio effects
 and synthesis software. While this work has developed a number of useful
 and sonically rich structures, there is great potential for many more
 developements in this area of audio signal processing. We look forward
