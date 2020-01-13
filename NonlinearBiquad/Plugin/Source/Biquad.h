@@ -49,7 +49,7 @@ protected:
     std::unique_ptr<float[]> b; //FIR Coefficients
     std::unique_ptr<float[]> z; // Filter state
 
-    SatFunc saturator;
+    SatFunc saturator = Saturators::getSaturator (SatType::none);
 
 private:
     const int order = 2;

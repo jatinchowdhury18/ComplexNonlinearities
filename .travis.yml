@@ -21,6 +21,7 @@ env:
   - PLUGIN=NonlinearFeedback
   - PLUGIN=Wavefolder
   - PLUGIN=NonlinearAllpass
+  - PLUGIN=Subharmonics
 
 stages:
   - name: addons
