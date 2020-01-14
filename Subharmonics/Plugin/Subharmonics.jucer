@@ -13,9 +13,11 @@
             file="../../shared_code/KnobsComponent.cpp"/>
       <FILE id="CDqEge" name="KnobsComponent.h" compile="0" resource="0"
             file="../../shared_code/KnobsComponent.h"/>
-      <FILE id="tUMuhp" name="Saturators.h" compile="0" resource="0" file="../../NonlinearBiquad/Plugin/Source/Saturators.h"/>
     </GROUP>
     <GROUP id="{352EE212-0985-8ABE-AFDF-A1DDD03FCE6A}" name="Source">
+      <FILE id="IpOkD5" name="LevelDetector.cpp" compile="1" resource="0"
+            file="Source/LevelDetector.cpp"/>
+      <FILE id="d2c9PT" name="LevelDetector.h" compile="0" resource="0" file="Source/LevelDetector.h"/>
       <FILE id="lhqjm4" name="SubharmonicProcessor.h" compile="0" resource="0"
             file="Source/SubharmonicProcessor.h"/>
       <FILE id="cgyhfu" name="PluginProcessor.cpp" compile="1" resource="0"

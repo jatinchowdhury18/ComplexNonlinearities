@@ -26,6 +26,8 @@ SubharmonicsAudioProcessor::SubharmonicsAudioProcessor()
     vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout())
 {
     preCutoffParam  = vts.getRawParameterValue ("prefreq_Hz");
+    attackParam     = vts.getRawParameterValue ("attack_Ms");
+    releaseParam    = vts.getRawParameterValue ("release_Ms");
     postCutoffParam = vts.getRawParameterValue ("postfreq_Hz");
     mainGainParam   = vts.getRawParameterValue ("maingain_dB");
     sideGainParam   = vts.getRawParameterValue ("sidegain_dB");
@@ -42,8 +44,16 @@ AudioProcessorValueTreeState::ParameterLayout SubharmonicsAudioProcessor::create
     NormalisableRange<float> freqRange (20.0f, 20000.0f);
     freqRange.setSkewForCentre (1000.0f);
 
-    params.push_back (std::make_unique<AudioParameterFloat> ("prefreq_Hz",  "Pre Cutoff",  freqRange, 500.0f));
-    params.push_back (std::make_unique<AudioParameterFloat> ("postfreq_Hz", "Post Cutoff", freqRange, 500.0f));
+    NormalisableRange<float> attackRange (0.1f, 1000.0f);
+    attackRange.setSkewForCentre (10.0f);
+
+    NormalisableRange<float> releaseRange (1.0f, 3000.0f);
+    releaseRange.setSkewForCentre (100.0f);
+
+    params.push_back (std::make_unique<AudioParameterFloat> ("prefreq_Hz",  "Pre Filter",  freqRange, 500.0f));
+    params.push_back (std::make_unique<AudioParameterFloat> ("attack_Ms",   "Attack",      attackRange, 10.0f));
+    params.push_back (std::make_unique<AudioParameterFloat> ("release_Ms",  "Release",     releaseRange, 100.0f));
+    params.push_back (std::make_unique<AudioParameterFloat> ("postfreq_Hz", "Post Filter", freqRange, 500.0f));
     params.push_back (std::make_unique<AudioParameterFloat> ("maingain_dB", "Main Gain", -60.0f, 30.0f, 0.0f));
     params.push_back (std::make_unique<AudioParameterFloat> ("sidegain_dB", "Side Gain", -60.0f, 30.0f, 0.0f));
 
@@ -117,7 +127,7 @@ void SubharmonicsAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 {
     for (int ch = 0; ch < 2; ++ch)
     {
-        sub[ch].reset();
+        sub[ch].reset ((float) sampleRate);
 
         mainGain[ch].prepare();
         sideGain[ch].prepare();
@@ -125,6 +135,11 @@ void SubharmonicsAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
         preEQ[ch].reset (sampleRate);
         preEQ[ch].setEqShape (EqShape::lowPass);
         preEQ[ch].toggleOnOff (true);
+
+        dcBlocker[ch].reset (sampleRate);
+        dcBlocker[ch].setEqShape (EqShape::highPass);
+        dcBlocker[ch].setFrequency (35.0f);
+        dcBlocker[ch].setQ (0.7071f);
 
         for (int i = 0; i < 3; ++i)
         {
@@ -172,6 +187,8 @@ void SubharmonicsAudioProcessor::updateParams()
         mainGain[ch].setGain (Decibels::decibelsToGain (*mainGainParam));
         sideGain[ch].setGain (Decibels::decibelsToGain (*sideGainParam));
 
+        sub[ch].setDetector (*attackParam, *releaseParam);
+
         preEQ[ch].setFrequency (*preCutoffParam);
         preEQ[ch].setQ (0.7071f);
 
@@ -201,6 +218,8 @@ void SubharmonicsAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
         sub[ch].processBlock (side, numSamples);
         for (int i = 0; i < 3; ++i)
             postEQ[i][ch].processBlock (side, numSamples);
+
+        dcBlocker[ch].processBlock (side, numSamples);
 
         mainGain[ch].processBlock (main, numSamples);
         sideGain[ch].processBlock (side, numSamples);

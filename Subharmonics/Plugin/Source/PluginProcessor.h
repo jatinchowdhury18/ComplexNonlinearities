@@ -71,6 +71,7 @@ private:
     SubharmonicProcessor sub[2];
     EQFilter preEQ[2];
     EQFilter postEQ[3][2];
+    EQFilter dcBlocker[2];
     Gain mainGain[2];
     Gain sideGain[2];
 
@@ -78,6 +79,8 @@ private:
     float* postCutoffParam;
     float* mainGainParam;
     float* sideGainParam;
+    float* attackParam;
+    float* releaseParam;
 
     const float butterQs[3] = { 0.51763809f, 0.70710678f, 1.93185165f };
 

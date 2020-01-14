@@ -17,7 +17,7 @@ SubharmonicsAudioProcessorEditor::SubharmonicsAudioProcessorEditor (Subharmonics
     processor (p),
     knobs (p, p.getVTS(), [&p] { p.updateParams(); })
 {
-    setSize (400, 400);
+    setSize (450, 100);
     addAndMakeVisible (knobs);
 }
 

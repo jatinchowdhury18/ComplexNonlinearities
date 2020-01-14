@@ -2,18 +2,27 @@
 #define SUBHARMONICPROCESSOR_H_INCLUDED
 
 #include "JuceHeader.h"
+#include "LevelDetector.h"
 
 class SubharmonicProcessor
 {
 public:
     SubharmonicProcessor() {}
 
-    void reset()
+    void reset (float sampleRate)
     {
         rising = true;
         switchCount = 0;
         output = 1.0f;
         lastX = 0.0f;
+
+        detector.reset (sampleRate);
+    }
+
+    void setDetector (float attackMs, float releaseMs)
+    {
+        detector.setAttack (attackMs);
+        detector.setRelease (releaseMs);
     }
 
     void processBlock (float* buffer, const int numSamples)
@@ -24,6 +33,8 @@ public:
 
     inline float processSample (float x)
     {
+        float level = detector.processSample (x);
+
         if (rising == true && x < lastX)
         {
             switchCount++;
@@ -42,7 +53,7 @@ public:
         }
 
         lastX = x;
-        return output;
+        return output * level;
     }
 
 private:
@@ -50,6 +61,8 @@ private:
     int switchCount = 0;
     float output = 1.0f;
     float lastX = 0.0f;
+
+    LevelDetector detector;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubharmonicProcessor)
 };
