@@ -480,6 +480,156 @@ potential use of these structures for analog modelling, is given in
 \end{figure}
 %
 
+\section{Wavefolding} \label{sec:wavefold}
+%
+Wavefolding is a sonically interesting nonlinear effect, where
+as the input level of the waveform increases, the wave seems to
+``fold over'' on itself. This effect is especially popular in
+certain analog synthesizers. Circuit models of wavefolding effects
+have previously been developed in \cite{DAFX-wavefold,appl_sci-wavefold}.
+In this work we attempt to create a purely digital wavefolder, with
+some intruiging extensions on the traditional wavefolding effect.
+\newline\newline
+We begin with a well-known oversimplified wavefolding nonlinearity:
+$f_{NL}(x) = \sin(x)$ (other waveforms could replace the $\sin$ wave
+used in this formula, e.g. a triangle wave). The output of a sine
+and triangle wavefolder are shown in \cref{simple_fold}.
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/simple_fold.png}
+    \caption{\label{simple_fold}{\it The output of simple sine and triangle wavefolders.}}
+\end{figure}
+%
+\subsubsection{Saturating Wavefolder}
+%
+We can make a simple modification to the simple wavefolder, by summing
+its output with the output of a saturating nonlinearity, with the gain
+of the wavefolder output smaller than the gain of the saturator output.
+This architecture (including a variable gain $G$ after the wavefolder) is
+shown in \cref{sat_wave}; the static curve of the saturating wavefolder
+nonlinearity with $G=-0.2$ is shown in \cref{sat_static}. Finally, in
+\cref{sat_wave_large} we show the response of the simple sine wavefolder
+and the saturating wavefolder for a very large input signal. Note that
+while the simple wavefolder allows the signal to flip all the way from
+positive to negative within a half cycle of the dry signal, while the
+saturating wavefolder does not. In this way, the saturating wavefolder
+exhibits behavior more similar to traditional analog wavefolders, and
+is sonically less ``harsh''.
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/sat_arch.png}
+    \caption{\label{sat_wave}{\it Architecture for a saturating wavefolder.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/sat_static.png}
+    \caption{\label{sat_static}{\it Static curve for a saturating wavefolder.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/sat_wave_large.png}
+    \caption{\label{sat_wave_large}{\it Comparison of wavefolder outputs for large input.}}
+\end{figure}
+%
+\subsubsection{Saturating Feedback Wavefolder}
+%
+We can modify our wavefolder architecture further, by adding a
+feedback path with another saturating nonlinearity, as shown in
+\cref{fb_wave}. The resulting nonlinear function has an interesting
+textural characteristic, almost a sonic ``squishiness'' caused by the
+feeding back of the already folded wave. This behavior is hinted at by
+the dynamic curve of saturating feedback wavefolder (see \cref{fb_dyn}),
+but for a better understanding, we recommend listening to the audio
+examples presented in \S\ref{sec:pres}.
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/fb_arch.png}
+    \caption{\label{fb_wave}{\it Architecture for a saturating feedback wavefolder.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/fb_dyn.png}
+    \caption{\label{fb_dyn}{\it Dynamic curve response of saturating feedback wavefolder.}}
+\end{figure}
+%
+\section{Subharmonics Generator} \label{sec:subharm}
+%
+From a frequency-domain perspective, most of the nonlinear processors
+discussed thus far serve to create higher frequency content than that
+of the input signal, often a useful aspect of many distortion and exciter
+effects. In this section, we look at developing a nonlinear system for
+generating lower frequency content, or subharmonics. Most existing
+methods for generating subharmonics often rely on spectral domain
+processing (e.g. \cite{sub_spectral}), which can be difficult to use
+as a real-time effect, or rely on isolation of the fundamental frequency
+for which to generate the subharmonic as in \cite{sub_sqrt}. Here we
+strive to develop a simpler, yet more general technique that can run in
+real-time, and be useful on  variety of input signals (i.e. even when
+we are not able to isolate the fundamental).
+\newline\newline
+First, we develop a simple switching detector, that can detect when the
+input signal switches directions. If we have our switch detector output
+a $1$ when the signal is increasing, and a $-1$ when the signal is
+decreasing, we can generate a square wave of the same frequency as the
+input, as shown in \cref{square_full}. Next we can adjust our generator to
+only flip the signal every {\it other} time a switch is detected in the
+incoming signal, thereby generating a square wave with half the frequency
+of the original signal (see \cref{square_half}). Finally, we can use a
+lowpass filter to smooth our output signal into something more like a
+sine wave (see \cref{sine_half}). To verify our subharmonic generator
+we show the frequency spectra of the input and output signals in
+\cref{freq_compare}.
+\newline\newline
+To make our subharmonic generator more usable as an audio effect, we can
+attach a level detector and an input lowpass filter as shown in
+\cref{sub_arch}. The level detector ensures that the generator output
+follows a similar amplitude envelope to the input signal, although in
+practice adjusting the attack and release of the level detector (similar
+to a dynamic range compressor) can create an interesting effect where the
+subharmonic outlasts the original signal, adding a ``boomy'' quality to
+the overall sound. The input lowpass filter is meant to limit any high
+frequency noise that might cause the switching detector to generate
+signal above the desired subharmonic frequency. In practice,
+this effect can be used to add low frequency content to signals
+including drum sets, bass guitars, keyboards/synthesizers, and more.
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/rise_fall.png}
+    \caption{\label{square_full}{\it Output of switching detector for an input sine wave.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/half_square.png}
+    \caption{\label{square_half}{\it Output of half frequency square wave generator for an input sine wave.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/half_sine.png}
+    \caption{\label{sine_half}{\it Output of half frequency sine wave generator for an input sine wave.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/freq_compare.png}
+    \caption{\label{freq_compare}{\it Comparison of input and output sine waves.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/full_arch.png}
+    \caption{\label{sub_arch}{\it Full architecture of a subharmonic generator effect.}}
+\end{figure}
+%
+
 \section{Implementation and Presentation} \label{sec:pres}
 %
 The work done in this study was designed to be informative and inspiring
@@ -489,12 +639,16 @@ in mind, it was determined that the results of this work should be written
 and presented for a relatively non-technical reader, and published in a
 location where these readers would most easily find it. To that end, the
 results of this work have been published as a series of articles on the
-popular blog website Medium \footnote{https://medium.com/@jatinchowdhury18}.
+popular blog website Medium \footnote{\url{https://medium.com/@jatinchowdhury18}}.
 According to statistics on the site, the articles have been read approximately
 300 times as of this writing. Additionally, the structures developed
 in this study have been implemented as a series of audio plugins using JUCE/C++.
 The plugins and their source code are freely available on GitHub
-\footnote{https://github.com/jatinchowdhury18/ComplexNonlinearities}.
+\footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}}.
+Finally, video and audio demos of the plugins are published on YouTube, to
+demonstrate the sonic characteristics and practical usefulness of the
+effects created in this study
+\footnote{\url{https://www.youtube.com/playlist?list=PLrcXtWXbPsj1SS-3zfcaiRpuETqMYy6Hw}}.
 
 \section{Conclusion} \label{sec:conclusion}
 %
