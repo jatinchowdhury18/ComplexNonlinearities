@@ -276,5 +276,15 @@ d.add (e.LINE, d='up', l=0.5)
 d.draw()
 
 
+# %% [markdown]
+# ## Implementation
+#
+# As an example of how this type of "bass enhancer" effect can work,
+# I've implemented the architecture described above as an audio plugin
+# (VST, AU), using the JUCE C++ framework. To demonstrate the usefulness
+# of the effect, I've also recorded a short video demo, trying it out
+# on a pure sine wave signal, as well as a more realistic audio clip.
+# The source code is available on [GitHub](https://github.com/jatinchowdhury18/ComplexNonlinearities),
+# and the video demo can be found on [YouTube](https://youtu.be/CS3LgC0CVgc).
+
 # %%
-# @TODO: Implementation section
