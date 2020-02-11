@@ -1,46 +1,19 @@
 % !TeX program = pdflatex
 % !BIB program = bibtex
 % Template LaTeX file for DAFx-19 papers
-%
-% To generate the correct references using BibTeX, run
-%     latex, bibtex, latex, latex
-% modified...
-% - from DAFx-00 to DAFx-02 by Florian Keiler, 2002-07-08
-% - from DAFx-02 to DAFx-03 by Gianpaolo Evangelista
-% - from DAFx-05 to DAFx-06 by Vincent Verfaille, 2006-02-05
-% - from DAFx-06 to DAFx-07 by Vincent Verfaille, 2007-01-05
-%                          and Sylvain Marchand, 2007-01-31
-% - from DAFx-07 to DAFx-08 by Henri Penttinen, 2007-12-12
-%                          and Jyri Pakarinen 2008-01-28
-% - from DAFx-08 to DAFx-09 by Giorgio Prandi, Fabio Antonacci 2008-10-03
-% - from DAFx-09 to DAFx-10 by Hannes Pomberger 2010-02-01
-% - from DAFx-10 to DAFx-12 by Jez Wells 2011
-% - from DAFx-12 to DAFx-14 by Sascha Disch 2013
-% - from DAFx-15 to DAFx-16 by Pavel Rajmic 2015
-% - from DAFx-16 to DAFx-17 by Brian Hamilton 2016
-% - from DAFx-18 to DAFx-19 by Dave Moffat 2019
-%
-% Template with hyper-references (links) active after conversion to pdf
-% (with the distiller) or if compiled with pdflatex.
-%
-% 20060205: added package 'hypcap' to correct hyperlinks to figures and tables
-%                      use of \papertitle and \paperauthorA, etc for same title in PDF and Metadata
-%
-% 1) Please compile using latex or pdflatex.
-% 2) If using pdflatex, you need your figures in a file format other than eps! e.g. png or jpg is working
-% 3) Please use "paperftitle" and "pdfauthor" definitions below
 
 %------------------------------------------------------------------------------------------
 %  !  !  !  !  !  !  !  !  !  !  !  ! user defined variables  !  !  !  !  !  !  !  !  !  !  !  !  !  !
 % Please use these commands to define title and author(s) of the paper:
-\def\papertitle{Stable Structures for Nonlinear Biquad Filters}
+\def\papertitle{Stable Structures For Nonlinear Biquad Filters}
 \def\paperauthorA{Jatin Chowdhury}
 
 % Authors' affiliations have to be set below
 
 %------------------------------------------------------------------------------------------
 \documentclass[twoside,a4paper]{article}
-\usepackage{dafx_19}
+\usepackage{etoolbox}
+\usepackage{dafx_20}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{euscript}
 \usepackage[latin1]{inputenc}
@@ -52,8 +25,50 @@
 \usepackage{subfig} % or can use subcaption package
 \usepackage{xcolor}
 
+\input glyphtounicode
+\pdfgentounicode=1
+
 \setcounter{page}{1}
 \ninept
+
+% build the list of authors and set the flag \multipleauth to handle the et al. in the copyright note (in DAFx_20.sty)
+%==============================DO NOT MODIFY =======================================
+\newcounter{numauth}\setcounter{numauth}{1}
+\newcounter{listcnt}\setcounter{listcnt}{1}
+\newcommand\authcnt[1]{\ifdefined#1 \stepcounter{numauth} \fi}
+
+\newcommand\addauth[1]{
+\ifdefined#1 
+\stepcounter{listcnt}
+\ifnum \value{listcnt}<\value{numauth}
+\appto\authorslist{, #1}
+\else
+\appto\authorslist{~and~#1}
+\fi
+\fi}
+%======DO NOT MODIFY UNLESS YOUR PAPER HAS MORE THAN 10 AUTHORS========================
+%==we count the authors defined at the beginning of the file (paperauthorA is mandatory and already accounted for)
+\authcnt{\paperauthorB}
+\authcnt{\paperauthorC}
+\authcnt{\paperauthorD}
+\authcnt{\paperauthorE}
+\authcnt{\paperauthorF}
+\authcnt{\paperauthorG}
+\authcnt{\paperauthorH}
+\authcnt{\paperauthorI}
+\authcnt{\paperauthorJ}
+%==we create a list of authors for pdf tagging, for example: paperauthorA, paperauthorB, ... and paperauthorF (last author)
+\def\authorslist{\paperauthorA}
+\addauth{\paperauthorB}
+\addauth{\paperauthorC}
+\addauth{\paperauthorD}
+\addauth{\paperauthorE}
+\addauth{\paperauthorF}
+\addauth{\paperauthorG}
+\addauth{\paperauthorH}
+\addauth{\paperauthorI}
+\addauth{\paperauthorJ}
+%====================================================================================
 
 \usepackage{times}
 % Saves a lot of ouptut space in PDF... after conversion with the distiller
@@ -79,7 +94,7 @@
   ]{hyperref}
   \pdfcompresslevel=9
   \usepackage[pdftex]{graphicx}
-  \usepackage[figure,table]{hypcap}
+%   \usepackage[figure,table]{hypcap}
 \else % compiling with latex
   \usepackage[dvips]{epsfig,graphicx}
   \usepackage[dvips,
@@ -88,15 +103,16 @@
     pdfstartview=XYZ % start with zoom=100% instead of full screen
   ]{hyperref}
   % hyperrefs are active in the pdf file after conversion
-  \usepackage[figure,table]{hypcap}
+  % \usepackage[figure,table]{hypcap}
 \fi
+\usepackage[hypcap=true]{caption}
 
 % My packages
-\usepackage{cleveref}
 \usepackage{tikz}
 \usetikzlibrary{dsp,chains}
 \usepackage{tkz-euclide}
 \usetkzobj{all}
+\usepackage{cleveref}
 
 \usepackage{listings}
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -130,7 +146,7 @@
 \title{\papertitle}
 
 \affiliation{
-\paperauthorA \,}
+\paperauthorA \, }
 {\href{http://ccrma.stanford.edu}{Center for Computer Research in Music and Acoustics} \\ Stanford University \\ Palo Alto, CA \\ {\tt \href{mailto:jatin@ccrma.stanford.edu}{jatin@ccrma.stanford.edu}}}
 
 \begin{document}
