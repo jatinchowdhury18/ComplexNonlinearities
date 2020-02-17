@@ -22,6 +22,7 @@ env:
   - PLUGIN=Wavefolder
   - PLUGIN=NonlinearAllpass
   - PLUGIN=Subharmonics
+  - PLUGIN=GatedRecurrentDistortion
 
 stages:
   - name: addons

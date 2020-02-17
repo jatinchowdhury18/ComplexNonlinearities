@@ -63,6 +63,12 @@ Current nonlinearities include:
 
 <img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/Subharmonics/Pics/half_square.png" alt="Pic" width="500" height="350">
 
+10. Gated Recurrent Distortion
+[![Medium](https://img.shields.io/badge/Read%20on-Medium-blue)](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-10-gated-recurrent-distortion-6d60948323cf)
+[![Jupyter](https://img.shields.io/badge/Read%20as-Jupyter-orange)](https://ccrma.stanford.edu/~jatin/ComplexNonlinearities/gru.html)
+
+<img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/GatedRecurrentDistortion/Pics/wf.png" alt="Pic" width="500" height="350">
+
 ## Organization
 
 Each subfolder contains a specific nonlinearity, including Python simulations
