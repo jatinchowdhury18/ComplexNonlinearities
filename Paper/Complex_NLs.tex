@@ -629,6 +629,75 @@ including drum sets, bass guitars, keyboards/synthesizers, and more.
     \caption{\label{sub_arch}{\it Full architecture of a subharmonic generator effect.}}
 \end{figure}
 %
+\section{Gated Recurrent Distortion} \label{sec:GRU}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/gru_arch.png}
+    \caption{\label{gru-arch}{\it Signal processing architecture of a minimal
+    gated unit, modified for use as an audio distortion effect.}}
+\end{figure}
+%
+\begin{figure}[h]
+    \center
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/all_harm.png}
+    \caption{\label{gru-harm}{\it Harmonic response of a gated recurrent distortion
+    effect that generated both odd and even harmonics.}}
+\end{figure}
+%
+\begin{figure*}[h]
+    \center
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/wf.png}
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/wh.png}
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/uf.png}
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/uh.png}
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/bf.png}
+    \caption{\label{gru-params}{\it Dynamic response of a gated recurrent unit
+    distortion effect, varying each parameter individually.}}
+\end{figure*}
+%
+The field of machine learning, and particularly deep learning, has benefitted
+greatly from the clever use of nonlinear functions including the hyperbolic
+tangent, sigmoid, rectified linear unit (ReLU), and more. In recent years,
+a unit known as the Gated Recurrent Unit (GRU) has become popular for
+use in recurrent neural networks \cite{gru_original}. In this section
+we examine the use of a simplified form of the GRU, known as a ``minimal
+gated unit'', as a parameterizable distortion effect.
+\newline\newline
+The operation of the minimal gated unit, as introduced in
+\cite{minimal-gated-unit}, can be described by the following equations:
+%
+\begin{align}
+    f[n] = &\sigma (W_f x[n] + U_f y[n-1] + b_f) \\
+    y[n] = &f[n] y[n-1] + \\
+    &(1 - f[n]) \tanh (W_h x[n] + U_h f[n] y[n-1] + b_h)
+    \label{eq:minimal-gated-unit}
+\end{align}
+%
+where $x$ is the input, $y$ is the output, and $W_h,W_f,U_h,U_h,b_h,b_f$
+are all free parameters. $\sigma(x)$ denotes the sigmoid function:
+%
+\begin{equation}
+    \sigma(x) = \frac{1}{1 + e^{-x}}
+    \label{eq:sigmoid}
+\end{equation}
+%
+Typically, when used in a recurrent neural network, the elements of the
+above equations are vectors and matrices, and several of the multiplications
+are instead Hadamard products, however given the use of the minimal gated
+unit presented here, we can assume all elements to be scalars, and all
+products to be scalar products. We will also choose $b_h=0$ to avoid
+adding unwanted DC noise to our signal. The final architecture of the
+minimal gated unit presented here is shown in \cref{gru-arch}.
+\newline\newline
+Adjusting the parameters of the gated recurrent unit can lead to a versatile
+set of dynamic nonlinear behaviors. The dynamic response of the effect
+when varying each parameter individually is shown in \cref{gru-params}.
+Note the great variety of distortion curves that are possible using a
+gated recurrent architecture, from simple saturation to hysteresis-like
+behavior. The harmonic response of the gated recurrent distortion can be
+equally versatile, with an adjustable mix of odd and even harmonics.
+One example harmonic response is shown in \cref{gru-harm}.
 
 \section{Implementation and Presentation} \label{sec:pres}
 %
@@ -641,7 +710,7 @@ location where these readers would most easily find it. To that end, the
 results of this work have been published as a series of articles on the
 popular blog website Medium \footnote{\url{https://medium.com/@jatinchowdhury18}}.
 According to statistics on the site, the articles have been read approximately
-300 times as of this writing. Additionally, the structures developed
+400 times as of this writing. Additionally, the structures developed
 in this study have been implemented as a series of audio plugins using JUCE/C++.
 The plugins and their source code are freely available on GitHub
 \footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}}.
