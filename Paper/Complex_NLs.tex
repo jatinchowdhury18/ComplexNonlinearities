@@ -180,7 +180,7 @@ nonlinearities \cite{Yeh}, which are described by the following functions:
     \label{eq:tanh-clip}
 \end{equation}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../NonlinearBiquad/Pics/Sat-NLs.png}
     \caption{\label{Sats}{\it Saturating Nonlinearities}}
@@ -218,14 +218,14 @@ rectifier:
 %
 where $\alpha$ and $\beta$ are tunable parameters.
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../Exciter/Pics/rect_static.png}
     \caption{\label{Rects}{\it Rectifying Nonlinearities. For the diode nonlinearity,
     we use $\beta = 0.2$, $\alpha = 1.93$.}}
 \end{figure}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{Pics/dropout.png}
     \caption{\label{Drops}{\it Dropout nonlinearity with $a = 0.6$.}}
@@ -280,13 +280,13 @@ where
 The resulting static curve is essentially two cubic soft
 clipping functions stacked on top of each other (see \cref{DSC-stack}).
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../DoubleSoftClipper/Pics/Double.png}
     \caption{\label{DSC}{\it Double soft clipper.}}
 \end{figure}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../DoubleSoftClipper/Pics/stacked.png}
     \caption{\label{DSC-stack}{\it Stacked soft clippers.}}
@@ -332,22 +332,28 @@ output of the generator is very harmonically rich, with both even and odd
 harmonics, as seen in \cref{exc-harm}.
 \newline\newline
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../Exciter/Pics/Exciter_FullArch.png}
     \caption{\label{exc}{\it Exciter architecture.}}
 \end{figure}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../Exciter/Pics/Exciter_Arch.png}
     \caption{\label{gen}{\it Exciter generator architecture.}}
 \end{figure}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../Exciter/Pics/Waveform_Detected.png}
     \caption{\label{detect}{\it Exciter level detector.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Exciter/Pics/exciter_harm.png}
+    \caption{\label{exc-harm}{\it Exciter generator harmonic response.}}
 \end{figure}
 %
 \begin{figure*}[ht]
@@ -358,12 +364,6 @@ harmonics, as seen in \cref{exc-harm}.
     \caption{\label{hysteresis}{\it Hysteresis curves with variable saturation
     (left), drive (middle), and width (right).}}
 \end{figure*}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Exciter/Pics/exciter_harm.png}
-    \caption{\label{exc-harm}{\it Exciter generator harmonic response.}}
-\end{figure}
 %
 \section{Hysteresis} \label{sec:hysteresis}
 %
@@ -447,39 +447,56 @@ more in-depth analysis of these nonlinear filter structures, including the
 potential use of these structures for analog modelling, is given in
 \cite{NLBiquad}.
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../NonlinearBiquad/Pics/TDF-II-White.png}
     \caption{\label{tdf2}{\it Transposed direct form II filter structure.}}
 \end{figure}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../NonlinearBiquad/Pics/NL-TDF-II-White.png}
     \caption{\label{nlbq}{\it Transposed direct form II with nonlinear resonance.}}
 \end{figure}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../NonlinearFeedback/Pics/NL2-TDF-II-White.png}
     \caption{\label{nlfd}{\it Transposed direct form II with nonlinear feedback.}}
 \end{figure}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../NonlinearBiquad/Pics/NL-LPF.png}
     \caption{\label{nlbq-lpf}{\it Frequency response of nonlinear resonance filter at
     various operating points.}}
 \end{figure}
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../NonlinearFeedback/Pics/LPF-NL.png}
     \caption{\label{nlfd-lpf}{\it Frequency response of nonlinear feedback filter at
     various operating points.}}
 \end{figure}
 %
-
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/simple_fold.png}
+    \caption{\label{simple_fold}{\it The output of simple sine and triangle wavefolders.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/fb_arch.png}
+    \caption{\label{fb_wave}{\it Architecture for a saturating feedback wavefolder.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/sat_arch.png}
+    \caption{\label{sat_wave}{\it Architecture for a saturating wavefolder.}}
+\end{figure}
+%
 \section{Wavefolding} \label{sec:wavefold}
 %
 Wavefolding is a sonically interesting nonlinear effect, where
@@ -495,10 +512,16 @@ $f_{NL}(x) = \sin(x)$ (other waveforms could replace the $\sin$ wave
 used in this formula, e.g. a triangle wave). The output of a sine
 and triangle wavefolder are shown in \cref{simple_fold}.
 %
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
-    \includegraphics[width=3in]{../Wavefolder/Pics/simple_fold.png}
-    \caption{\label{simple_fold}{\it The output of simple sine and triangle wavefolders.}}
+    \includegraphics[width=3in]{../Wavefolder/Pics/sat_static.png}
+    \caption{\label{sat_static}{\it Static curve for a saturating wavefolder.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Wavefolder/Pics/sat_wave_large.png}
+    \caption{\label{sat_wave_large}{\it Comparison of wavefolder outputs for large input.}}
 \end{figure}
 %
 \subsubsection{Saturating Wavefolder}
@@ -517,24 +540,6 @@ saturating wavefolder does not. In this way, the saturating wavefolder
 exhibits behavior more similar to traditional analog wavefolders, and
 is sonically less ``harsh''.
 %
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Wavefolder/Pics/sat_arch.png}
-    \caption{\label{sat_wave}{\it Architecture for a saturating wavefolder.}}
-\end{figure}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Wavefolder/Pics/sat_static.png}
-    \caption{\label{sat_static}{\it Static curve for a saturating wavefolder.}}
-\end{figure}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Wavefolder/Pics/sat_wave_large.png}
-    \caption{\label{sat_wave_large}{\it Comparison of wavefolder outputs for large input.}}
-\end{figure}
-%
 \subsubsection{Saturating Feedback Wavefolder}
 %
 We can modify our wavefolder architecture further, by adding a
@@ -546,16 +551,40 @@ the dynamic curve of saturating feedback wavefolder (see \cref{fb_dyn}),
 but for a better understanding, we recommend listening to the audio
 examples presented in \S\ref{sec:pres}.
 %
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Wavefolder/Pics/fb_arch.png}
-    \caption{\label{fb_wave}{\it Architecture for a saturating feedback wavefolder.}}
-\end{figure}
-%
-\begin{figure}[h]
+\begin{figure}[!htb]
     \center
     \includegraphics[width=3in]{../Wavefolder/Pics/fb_dyn.png}
     \caption{\label{fb_dyn}{\it Dynamic curve response of saturating feedback wavefolder.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/rise_fall.png}
+    \caption{\label{square_full}{\it Output of switching detector for an input sine wave.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/half_square.png}
+    \caption{\label{square_half}{\it Output of half frequency square wave generator for an input sine wave.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/half_sine.png}
+    \caption{\label{sine_half}{\it Output of half frequency sine wave generator for an input sine wave.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/freq_compare.png}
+    \caption{\label{freq_compare}{\it Comparison of input and output sine waves.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../Subharmonics/Pics/full_arch.png}
+    \caption{\label{sub_arch}{\it Full architecture of a subharmonic generator effect.}}
 \end{figure}
 %
 \section{Subharmonics Generator} \label{sec:subharm}
@@ -599,62 +628,7 @@ signal above the desired subharmonic frequency. In practice,
 this effect can be used to add low frequency content to signals
 including drum sets, bass guitars, keyboards/synthesizers, and more.
 %
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Subharmonics/Pics/rise_fall.png}
-    \caption{\label{square_full}{\it Output of switching detector for an input sine wave.}}
-\end{figure}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Subharmonics/Pics/half_square.png}
-    \caption{\label{square_half}{\it Output of half frequency square wave generator for an input sine wave.}}
-\end{figure}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Subharmonics/Pics/half_sine.png}
-    \caption{\label{sine_half}{\it Output of half frequency sine wave generator for an input sine wave.}}
-\end{figure}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Subharmonics/Pics/freq_compare.png}
-    \caption{\label{freq_compare}{\it Comparison of input and output sine waves.}}
-\end{figure}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../Subharmonics/Pics/full_arch.png}
-    \caption{\label{sub_arch}{\it Full architecture of a subharmonic generator effect.}}
-\end{figure}
-%
 \section{Gated Recurrent Distortion} \label{sec:GRU}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/gru_arch.png}
-    \caption{\label{gru-arch}{\it Signal processing architecture of a minimal
-    gated unit, modified for use as an audio distortion effect.}}
-\end{figure}
-%
-\begin{figure}[h]
-    \center
-    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/all_harm.png}
-    \caption{\label{gru-harm}{\it Harmonic response of a gated recurrent distortion
-    effect that generated both odd and even harmonics.}}
-\end{figure}
-%
-\begin{figure*}[h]
-    \center
-    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/wf.png}
-    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/wh.png}
-    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/uf.png}
-    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/uh.png}
-    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/bf.png}
-    \caption{\label{gru-params}{\it Dynamic response of a gated recurrent unit
-    distortion effect, varying each parameter individually.}}
-\end{figure*}
 %
 The field of machine learning, and particularly deep learning, has benefitted
 greatly from the clever use of nonlinear functions including the hyperbolic
@@ -667,12 +641,14 @@ gated unit'', as a parameterizable distortion effect.
 The operation of the minimal gated unit, as introduced in
 \cite{minimal-gated-unit}, can be described by the following equations:
 %
-\begin{align}
-    f[n] = &\sigma (W_f x[n] + U_f y[n-1] + b_f) \\
-    y[n] = &f[n] y[n-1] + \\
-    &(1 - f[n]) \tanh (W_h x[n] + U_h f[n] y[n-1] + b_h)
+\begin{equation}
+    \begin{split}
+        \Gamma_f &= \sigma (W_f x[n] + U_f y[n-1] + b_f) \\
+        y[n] &= \Gamma_f y[n-1] \\
+             &+ (1 - \Gamma_f) \tanh (W_h x[n] + U_h \Gamma_f y[n-1] + b_h)
+    \end{split}
     \label{eq:minimal-gated-unit}
-\end{align}
+\end{equation}
 %
 where $x$ is the input, $y$ is the output, and $W_h,W_f,U_h,U_h,b_h,b_f$
 are all free parameters. $\sigma(x)$ denotes the sigmoid function:
@@ -698,6 +674,32 @@ gated recurrent architecture, from simple saturation to hysteresis-like
 behavior. The harmonic response of the gated recurrent distortion can be
 equally versatile, with an adjustable mix of odd and even harmonics.
 One example harmonic response is shown in \cref{gru-harm}.
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/gru_arch.png}
+    \caption{\label{gru-arch}{\it Signal processing architecture of a minimal
+    gated unit, modified for use as an audio distortion effect.}}
+\end{figure}
+%
+\begin{figure}[!htb]
+    \center
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/all_harm.png}
+    \caption{\label{gru-harm}{\it Harmonic response of a gated recurrent distortion
+    effect that generated both odd and even harmonics.}}
+\end{figure}
+%
+\begin{figure*}[h]
+    \center
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/wf.png}
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/wh.png}
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/uf.png}
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/uh.png}
+    \includegraphics[width=3in]{../GatedRecurrentDistortion/Pics/bf.png}
+    \caption{\label{gru-params}{\it Dynamic response of a gated recurrent unit
+    distortion effect, varying each parameter individually.}}
+\end{figure*}
+%
 
 \section{Implementation and Presentation} \label{sec:pres}
 %
