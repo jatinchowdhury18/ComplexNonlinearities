@@ -116,7 +116,7 @@
 \maketitle
 %
 \begin{abstract}
-In this writing, we present an ongoing study of new and interesting
+We present an ongoing study of new and interesting
 nonlinear structures for audio signal processing, intended to be
 used for audio effects and synthesis. We give a brief discussion of
 each structure, and present a series of open-source audio plugins that
@@ -207,10 +207,10 @@ are the full-wave rectifier and the half-wave rectifier:
     \label{eq:hwr}
 \end{equation}
 %
-The above rectifier equations have a downside in that they don't have
-continuous derivatives. As a substitute we present an alternate
+The above rectifier equations have a downside in that they do not have
+continuous derivatives. As a potential alternative, we present another
 half-wave rectifier equation loosely modelled from a Shockley diode
-rectifier:
+rectifier \cite{schockley}:
 \begin{equation}
     f_{\text{Diode}}(x) = \beta \left(e^{\alpha x} - 1 \right)
     \label{eq:diode}
@@ -317,16 +317,17 @@ generalized exciter model that can be implemented without knowledge of
 circuit theory, much in the way that \cite{giannoulis2012digital} describes
 a generalized model of a dynamic range compressor.
 \newline\newline
-Based loosly on the Aphex Aural Exciter, we propose the
+Based loosely on the Aphex Aural Exciter, we propose the
 exciter architecture shown in \cref{exc}. For the generator
 component, we propose the processing architecture shown in
 \cref{gen}.
 \newline\newline
 For the level detector component, we propose using a rectifying
-nonlinearity followed by a lowpass filter. \Cref{detect} shows the
+nonlinearity followed by a lowpass filter with a very low cutoff frequency
+(e.g., $f_c > 30 \text{ Hz}$). \Cref{detect} shows the
 output of a level detector with the rectifying nonlinearities described
-in \S\ref{sec:rect} and a first-order lowpass filter with a cutoff
-frequency of 10 Hz. For the nonlinearity component, any saturating
+in \S\ref{sec:rect} and a first-order lowpass filter with a $f_c = 10
+\text{ Hz}$. For the nonlinearity component, any saturating
 nonlinearity of the type described in \S\ref{sec:sat} will suffice. The
 output of the generator is very harmonically rich, with both even and odd
 harmonics, as seen in \cref{exc-harm}.
@@ -526,7 +527,7 @@ and triangle wavefolder are shown in \cref{simple_fold}.
 %
 \subsubsection{Saturating Wavefolder}
 %
-We can make a simple modification to the simple wavefolder, by summing
+We can improve upon the simple wavefolder by summing
 its output with the output of a saturating nonlinearity, with the gain
 of the wavefolder output smaller than the gain of the saturator output.
 This architecture (including a variable gain $G$ after the wavefolder) is
@@ -535,7 +536,7 @@ nonlinearity with $G=-0.2$ is shown in \cref{sat_static}. Finally, in
 \cref{sat_wave_large} we show the response of the simple sine wavefolder
 and the saturating wavefolder for a very large input signal. Note that
 while the simple wavefolder allows the signal to flip all the way from
-positive to negative within a half cycle of the dry signal, while the
+positive to negative within a half cycle of the dry signal, the
 saturating wavefolder does not. In this way, the saturating wavefolder
 exhibits behavior more similar to traditional analog wavefolders, and
 is sonically less ``harsh''.
@@ -547,9 +548,9 @@ feedback path with another saturating nonlinearity, as shown in
 \cref{fb_wave}. The resulting nonlinear function has an interesting
 textural characteristic, almost a sonic ``squishiness'' caused by the
 feeding back of the already folded wave. This behavior is hinted at by
-the dynamic curve of saturating feedback wavefolder (see \cref{fb_dyn}),
-but for a better understanding, we recommend listening to the audio
-examples presented in \S\ref{sec:pres}.
+the dynamic curve of the saturating feedback wavefolder
+(see \cref{fb_dyn}), but for a better understanding, we recommend
+listening to the audio examples presented in \S\ref{sec:pres}.
 %
 \begin{figure}[!htb]
     \center
@@ -624,19 +625,19 @@ to a dynamic range compressor) can create an interesting effect where the
 subharmonic outlasts the original signal, adding a ``boomy'' quality to
 the overall sound. The input lowpass filter is meant to limit any high
 frequency noise that might cause the switching detector to generate
-signal above the desired subharmonic frequency. In practice,
-this effect can be used to add low frequency content to signals
+signal above the desired subharmonic frequencies. In practice,
+this effect can be used to add low frequency content to musical signals
 including drum sets, bass guitars, keyboards/synthesizers, and more.
 %
 \section{Gated Recurrent Distortion} \label{sec:GRU}
 %
 The field of machine learning, and particularly deep learning, has benefitted
 greatly from the clever use of nonlinear functions including the hyperbolic
-tangent, sigmoid, rectified linear unit (ReLU), and more. In recent years,
-a unit known as the Gated Recurrent Unit (GRU) has become popular for
-use in recurrent neural networks \cite{gru_original}. In this section
-we examine the use of a simplified form of the GRU, known as a ``minimal
-gated unit'', as a parameterizable distortion effect.
+tangent, sigmoid function, rectified linear unit (ReLU), and more.
+In recent years, a unit known as the Gated Recurrent Unit (GRU) has become
+popular for use in recurrent neural networks \cite{gru_original}. In this
+section we examine the use of a simplified form of the GRU, known as a
+``minimal gated unit'', as a parameterizable distortion effect.
 \newline\newline
 The operation of the minimal gated unit, as introduced in
 \cite{minimal-gated-unit}, can be described by the following equations:
@@ -710,16 +711,15 @@ in mind, it was determined that the results of this work should be written
 and presented for a relatively non-technical reader, and published in a
 location where these readers would most easily find it. To that end, the
 results of this work have been published as a series of articles on the
-popular blog website Medium \footnote{\url{https://medium.com/@jatinchowdhury18}}.
+popular blog website Medium\footnote{\url{https://medium.com/@jatinchowdhury18}}.
 According to statistics on the site, the articles have been read approximately
 400 times as of this writing. Additionally, the structures developed
 in this study have been implemented as a series of audio plugins using JUCE/C++.
-The plugins and their source code are freely available on GitHub
-\footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}}.
+The plugins and their source code are freely available on
+GitHub\footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}}.
 Finally, video and audio demos of the plugins are published on YouTube, to
 demonstrate the sonic characteristics and practical usefulness of the
-effects created in this study
-\footnote{\url{https://www.youtube.com/playlist?list=PLrcXtWXbPsj1SS-3zfcaiRpuETqMYy6Hw}}.
+effects created in this study\footnote{\url{https://www.youtube.com/playlist?list=PLrcXtWXbPsj1SS-3zfcaiRpuETqMYy6Hw}}.
 
 \section{Conclusion} \label{sec:conclusion}
 %
