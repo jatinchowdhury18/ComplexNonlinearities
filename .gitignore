@@ -30,6 +30,11 @@ __pycache__
 *.blg
 *.out
 *.log
+*.nav
+*.run.xml
+*.snm
+*.toc
+*.vrb
 
 # SPICE
 SPICE

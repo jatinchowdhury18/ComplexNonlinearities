@@ -1,0 +1,52 @@
+\begin{frame}{Thanks}
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item Julius Smith
+        \item Dave Berners
+        \item Viraga Perera
+        \item GASP
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Motivation}
+    Flashback to 2016\dots
+
+    \vspace{6ex}
+
+    \begin{center}
+        Trying to make a distortion effect\dots
+    \end{center}
+\end{frame}
+
+\begin{frame}{Motivation}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            Static Nonlinearities
+            \begin{figure}
+                \includegraphics[height=2in]{Figures/yeh_NLs}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            Circuit Modelling
+            \begin{figure}
+                \includegraphics[width=2.5in]{Figures/yeh_pedal}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Motivation}
+    Solution: $\tanh$ approximation \footcite{Yeh}
+    \begin{equation}
+        f(x) = \frac{x}{(1 + |x|^n)^{1/n}}, \quad n=2.5
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Motivation}
+    Trying to fill the gap between:
+    \newline
+    \begin{itemize}
+        \item Simple static nonlinear systems
+        \item Physically modelled nonlinear systems
+    \end{itemize}
+\end{frame}

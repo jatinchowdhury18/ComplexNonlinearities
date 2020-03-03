@@ -1,0 +1,87 @@
+\begin{frame}
+    \begin{centering}
+        \vskip5ex plus 1filll
+        {\usebeamerfont{title page title}\usebeamercolor[fg]{title page} Double Soft Clipper\\[1.5ex]}
+        \vskip0pt plus 1filll
+    \end{centering}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper: Inspiration}
+    Measured speaker response
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Gain_Nonlinearity.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper}
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Pics/stacked.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper: Original Soft Clipper}
+    \begin{equation}
+        f_{SC}(x) = \begin{cases} 1 & x \geq 1 \\ \frac{3}{2} (x - x^3/3) & -1 < x < 1 \\ -1 & x \leq -1 \end{cases}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper}
+    \begin{equation}
+        f_{DSC}(x) = \begin{cases} 1 & u \geq 1 \\ \frac{3}{4} (u - u^3/3) + 0.5 & 0 < u < 1 \\ \frac{3}{4} (u - u^3/3) - 0.5 & -1 < u < 0 \\ -1 & u \leq -1 \end{cases}
+    \end{equation}
+    \vspace{2ex}
+    \begin{equation}
+        u(x) = \begin{cases} x - 0.5 & x > 0 \\ x + 0.5 & x < 0 \end{cases}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper}
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Pics/Double.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper: Parameters}
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Pics/VarUpperLim.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper: Parameters}
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Pics/VarSlope.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper: Parameters}
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Pics/VarLowSkew.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper: Parameters}
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Pics/VarWidth.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper: Weird}
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Pics/Weird.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Double Soft Clipper: Harmonic Response}
+    \begin{figure}
+        \centering
+        \includegraphics[height=2.5in]{../DoubleSoftClipper/Pics/Freq.png}
+    \end{figure}
+\end{frame}
