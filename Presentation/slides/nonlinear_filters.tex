@@ -112,6 +112,13 @@
     \end{figure}
 \end{frame}
 
+\begin{frame}{Nonlinear Biquad Stability}
+    Test case: sine, $f_{NL} = \sin (x)$ \rightarrow STABLE!
+    \begin{figure}
+        \includegraphics[height=2.5in]{Figures/nl_lpf_sine.png}
+    \end{figure}
+\end{frame}
+
 \begin{frame}{Lyapunov Stability\footcite{Lyapunov}}
     1. Form state space equation:
     \begin{equation}
@@ -186,6 +193,16 @@
     \begin{equation}
         |f'_{NL}(x)| \leq 1
     \end{equation}
+    \newline\newline
+    \small
+    Note: if the $f'_{NL}(x)$ does not exist, the filter is not guaranteed stable.
+\end{frame}
+
+\begin{frame}{Nonlinear Biquad Stability}
+    If derivative doesn't exist at every point: use BLAMP\footcite{BLAMP}!
+    \begin{figure}
+        \includegraphics[height=2.2in]{Figures/blamp.png}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Nonlinear Biquad Filter}

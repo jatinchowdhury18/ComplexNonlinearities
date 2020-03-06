@@ -69,7 +69,7 @@ def softClip (x):
 
 nlBQ = Biquad()
 nlBQ.setCoefs (b, a)
-nlBQ.saturator = lambda x : 0.43*np.abs(x) # np.tanh (x)
+nlBQ.saturator = lambda x : np.sin(x) # np.tanh (x)
 # nlBQ.bLambdas[0] = lambda x, b : np.tanh (x) * b
 # nlBQ.bLambdas[1] = lambda x, b : np.tanh (x) * b
 # nlBQ.bLambdas[2] = lambda x, b : np.tanh (x) * b
@@ -111,7 +111,7 @@ plotFilterResponse (nlBQ, fs)
 # plt.xlim (20, 20000)
 # plt.ylim(-30)
 
-plt.title ('Nonlinear Lowpass Sine Sweep (abs)')
+plt.title ('Nonlinear Lowpass Sine Sweep (sine)')
 plt.xlabel ('Time [Seconds]')
 plt.ylabel ('Magnitude')
 plt.legend (['Linear', 'Nonlinear'])
