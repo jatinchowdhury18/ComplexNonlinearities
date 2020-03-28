@@ -233,15 +233,15 @@ And the angular frequencies of the poles are equal to:
 \end{equation}
 %
 It is well known that a digital filter will be stable provided that
-the magnitudes of the poles are strictly less 1 \cite{JOSFilters}.
+the magnitudes of the poles are strictly less than 1 \cite{JOSFilters}.
 \newline
 %
 \subsubsection{State Space Formulation}
 
 Another reason TDF-II is useful for implementing biquad filters
 is that its behavior can easily be written in state space form.
-First we define two state variables, at the locations of the delay
-elements:
+First, two state variables are defined at the locations of the
+delay elements:
 %
 \begin{equation}
     \begin{split}
@@ -259,7 +259,7 @@ as
     \label{eq:state_output_lin}
 \end{equation}
 %
-Finally, we can write the filter equation in a state space form:
+Finally, the filter equation is written in a state space form:
 %
 \begin{equation}
     \begin{bmatrix} x_1[n+1] \\ x_2[n+1] \\ y[n+1] \end{bmatrix} =
@@ -322,9 +322,9 @@ function $f_{NL}(x) = \tanh(x)$ at $x_0=1$.
 %
 \subsubsection{Stability Constraints}
 
-In order to guarantee that the filters we construct in the next section
-will be stable, we propose the following constraint on the base
-nonlinearities used to construct nonlinear filters:
+In order to guarantee that the filter structures described in the
+next section will be stable, we propose the following constraint
+on the base nonlinearities used to construct nonlinear filters:
 %
 \begin{equation}
     \left| f'_{NL}(x) \right| \leq 1
@@ -413,7 +413,7 @@ nonlinearities.
 \end{equation}
 %
 Note that for saturating base nonlinearities, as the input $u$ grows large,
-the other terms will become negigible.
+the other terms will become negligible.
 \newline\newline
 Now we can replace the nonlinear elements with their linearized
 models, using the state variables to define the operating points.
@@ -540,7 +540,9 @@ The pole magnitude and angle with move as follows.
 Note that while the two gain elements ($g_1, g_2$) are approximately
 equal, the nonlinear pole will have the same angle as the
 corresponding linear pole. An example of this pole movement
-can be seen in \cref{pzPlots}.
+can be seen in \cref{pzPlots}: note that as the state variables
+grow large and the $g$ factors become smaller, the poles and zeros
+both approach zero.
 %
 
 \section{Nonlinear Filter Structure 2: Nonlinear Feedback Filter}
@@ -558,10 +560,10 @@ can be seen in \cref{pzPlots}.
 %
 We now propose a different structure for adding elements to a TDF-II
 Biquad filter, this time adding nonlinear elements to the feedback
-paths (see \cref{NL2-TDF-II}). Note that though the two structures are developed
-separately here, they could certainly be combined into a third structure,
-which will also be stable under the same conditions as the two original
-structures.
+paths (see \cref{NL2-TDF-II}). Note that although the two structures are
+developed separately here, they could certainly be combined into a third
+structure, which will also be stable under the same conditions as the two
+original structures.
 %
 \begin{figure}[ht]
     \center
@@ -664,7 +666,8 @@ Then the Jacobian matrix can be written as:
 %
 Again, assuming that the corresponding linear filter is stable, the
 nonlinear feedback filter will be stable provided the constraint
-from \cref{eq:NL_constraint} is satisfied.
+from \cref{eq:NL_constraint} is satisfied, that the absolute value
+of $f'_{NL}(x)$ is always less than or equal to 1.
 %
 \begin{figure*}[!ht]
     % \center
@@ -714,7 +717,9 @@ While adding nonlinear elements to the feedforward path can introduce
 a similar effect for the zeros, this would be
 functionally equivalent to processing the signal through a nonlinearity
 before passing it into the filter. Again, an example of this pole movement
-can be seen in \cref{pzPlots2}.
+can be seen in \cref{pzPlots2}: note that as the state variables grow
+large and the $g$ factors become smaller, the poles angles increase and
+the pole magnitude shrinks to zero, while the zeros remain unchanged.
 %
 
 \section{Example: Resonant Lowpass Filter}
@@ -833,11 +838,12 @@ a more sophisticated optimisation scheme.
 \section{Conclusion}
 
 In this paper, we have developed two structures for stable nonlinear biquad
-filters. We have introduced the new architecture as a modification of the
+filters: the ``nonlinear biquad filter'' and ``nonlinear feedback filter''
+We have introduced the new architectures as a modification of the
 Transposed Direct Form II filter structure, and shown
-how the changed architecture affects the pole locations depending on
+how the changed architectures affect the pole locations depending on
 the amplitude of the input signal. We have also derived constraints under
-which the structure is guaranteed stable.
+which the structures are guaranteed stable.
 \newline\newline
 As a case study, we have implemented
 a resonant lowpass filter using both nonlinear
@@ -857,19 +863,21 @@ nonlinear feedback filters, extending to several filter shapes, and
 several base nonlinearities.
 The source code for the plugin implementation is available on
 GitHub,\footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}}
-and video demonstrations are available on YouTube.\footnote{\url{https://youtu.be/BMzKdaZtmoU}}
-\footnote{\url{https://youtu.be/T0AsIX5oL9A}}
+and video demonstrations are available on
+YouTube.\footnote{\url{https://youtu.be/BMzKdaZtmoU}}$^{,}$\footnote{\url{https://youtu.be/T0AsIX5oL9A}}
 \newline\newline
 Future research concerning nonlinear filtering will center around making a
 more informed choice of base nonlinearities, focusing on both the desired
 harmonic response of the filter, as well as physically meaningful base
-nonlinearities for use in analog modelling.
+nonlinearities for use in analog modelling. Another possibility could be
+to use these filter structures for time-varying amplitude-dependent
+filters, e.g. the time-varying modal filters described in \cite{mark-nlmodal}.
 
 \section{Acknowledgments}
 
 The author would like to thank Kurt Werner for providing sound advice and
 guidance on this topic, Viraga Perera and Dave Berners for informative
-discussions, as well as the GASP working group at CCRMA.
+discussions, as well as the GASP working group.
 
 %\newpage
 \nocite{*}
