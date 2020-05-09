@@ -183,10 +183,13 @@ to enhance linear models of analog ladder filters. More relevant to
 our current topic is \cite{Rossum1992MakingDF}, in which the author
 suggests a method for altering a general digital feedback filter
 by saturating the feedback path, with the goal of achieving a more
-analog-like response. In this writing, we strive
-to develop more general nonlinear filter structures. While these structures
-may be used for analog modelling, they do not necessarily depend on analog
-modelling principles to be understood and implemented.
+analog-like response. Finally, in \cite{BiquadLimiter}, the author
+inserts dynamic range limiters into the biquad filter, with the
+intention of creating a hybrid limiter/filter effect. In this writing,
+we strive to develop more general nonlinear filter structures.
+While these structures may be used for analog modelling, they do
+not necessarily depend on analog modelling principles to be
+understood and implemented.
 
 \section{Structural Elements}
 \subsection{Linear Filter}
@@ -707,9 +710,13 @@ In this case the pole magnitude and angle will move as follows:
 Note that for saturating nonlinearities, the pole magnitude decays to
 zero more slowly than for the
 nonlinear biquad. More importantly, as the input gain increases,
-the pole angle increases as well. \cite{Vadim} describes this sort of
+the pole angle increases as well, creating a sonically interesting
+``sweeping'' sound. \cite{Vadim} describes this sort of
 pole movement as ``audio-rate modulation of the cutoff'' for the
 filter, which can be a useful way of thinking about this phenomenon.
+This pole movement is particularly noticeable in the biquad structure
+created in \cite{BiquadLimiter}, which can be seen as a special case
+of the nonlinear feedbaack filter described here.
 \newline\newline
 Finally, note that unlike the nonlinear biquad, the zeros of the
 filter are not affected by the nonlinear elements.
