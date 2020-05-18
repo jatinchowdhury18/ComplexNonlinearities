@@ -19,8 +19,8 @@ def L_d (x):
         return (1 / 3)
 
 # trapezoidal rule derivative
-def deriv (x_n, x_n1, xDeriv_n1, T):
-    return ((2 / T) * (x_n - x_n1)) - xDeriv_n1
+def deriv (x_n, x_n1, xDeriv_n1, T, dAlpha=1.0):
+    return (((1 + dAlpha) / T) * (x_n - x_n1)) - dAlpha * xDeriv_n1
 
 # dM/dt or "non-linear function"
 def f (M, H, H_d, M_s, a, alpha, k, c):
@@ -43,7 +43,7 @@ def f (M, H, H_d, M_s, a, alpha, k, c):
 def M_n (M_n1, k1, k2, k3, k4):
     return M_n1 + (k1 / 6) + (k2 / 3) + (k3 / 3) + (k4 / 6)
 
-def Hysteresis_Process (H_in, M_s, a, alpha, k, c, T):
+def Hysteresis_Process (H_in, M_s, a, alpha, k, c, T, dAlpha=1):
     M_out = np.zeros (len (H_in))
     M_n1 = 0
     H_n1 = 0
@@ -51,7 +51,7 @@ def Hysteresis_Process (H_in, M_s, a, alpha, k, c, T):
 
     n = 0
     for H in H_in:
-        H_d = deriv (H, H_n1, H_d_n1, T)
+        H_d = deriv (H, H_n1, H_d_n1, T, dAlpha=dAlpha)
 
         k1 = T * f (M_n1, H_n1, H_d_n1, M_s, a, alpha, k, c)
         k2 = T * f (M_n1 + k1/2, (H + H_n1) / 2, (H_d + H_d_n1) / 2, M_s, a, alpha, k, c)

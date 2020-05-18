@@ -12,15 +12,22 @@ def plotSineResponse (func, freq=100, seconds=1, fs=44100):
     y = func (x)
     plt.plot (x[1000:], y[1000:])
 
-def plotRisingSineResponse (func, freq=100, seconds=0.1, fs=44100):
+def plotRisingSineResponse (func, freq=100, seconds=1, fs=44100):
     N = fs * seconds
     n = np.arange (N)
-    x = np.sin (2 * np.pi * n * freq / fs) * (n/N)
+    x = 30*np.sin (2 * np.pi * n * freq / fs) * (n/N)
     y = func (x)
     plt.plot (x, y)
 
+# def plotStep (func, freq=100, seconds=0.1, fs=44100):
+#     N = fs * seconds
+#     n = np.arange (N)
+#     x = 10*np.sin (2 * np.pi * n * freq / fs) * (n/N)
+#     y = func (x)
+#     plt.plot (x, y)
+
 #%%
-def plotHysteresisRisingSine (drive, width, sat, fs=44100):
+def plotHysteresisRisingSine (drive, width, sat, fs=44100, dAlpha=1.0):
     gain = 1 # 1e4
     M_s = gain * (0.5 + 1.5*(1-sat)) # saturation
     a = M_s / (0.01 + 6*drive) #adjustable parameter
@@ -29,7 +36,8 @@ def plotHysteresisRisingSine (drive, width, sat, fs=44100):
     k = 30 * (1-0.5)**6 + 0.01 # Coercivity
     c = (1-width)**0.5 - 0.01 # Changes slope
     makeup = (1 + 0.6*width) / (0.5 + 1.5*(1-sat))
-    plotRisingSineResponse (lambda x : makeup * HP (gain*x, M_s, a, alpha, k, c, 1/fs), fs=fs)
+    # plotSineResponse (lambda x : makeup * HP (gain*x, M_s, a, alpha, k, c, 1/fs, dAlpha=dAlpha), fs=fs)
+    plotRisingSineResponse (lambda x : makeup * HP (gain*x, M_s, a, alpha, k, c, 1/fs, dAlpha=dAlpha), fs=fs)
 
 def plotHysteresisRisingSine_AA (drive, width, sat, fs=44100):
     gain = 1 # 1e4
@@ -43,11 +51,20 @@ def plotHysteresisRisingSine_AA (drive, width, sat, fs=44100):
     plotRisingSineResponse (lambda x : makeup * HP_AA (gain*x, M_s, a, alpha, k, c, 1/fs), fs=fs)
 
 #%%
-plt.figure()
-plotHysteresisRisingSine (1, 1, 0)
+DRIVE = 0.1
+WIDTH = 1.0
+SAT = 1.0
 
+# bilinear
 plt.figure()
-plotHysteresisRisingSine_AA (1, 1, 0)
+plotHysteresisRisingSine (DRIVE, WIDTH, SAT)
+
+# backwards euler
+# plt.figure()
+plotHysteresisRisingSine (DRIVE, WIDTH, SAT, dAlpha=0.0)
+
+# plt.figure()
+# plotHysteresisRisingSine_AA (1, 1, 0)
 
 #%%
 def L_I (x):
