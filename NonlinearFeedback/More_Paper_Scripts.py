@@ -10,7 +10,7 @@ from  matplotlib import patches
 def zplane (p, z):
     ax = plt.subplot(111)
     uc = patches.Circle((0,0), radius=1, fill=False,
-                        color='white', ls='dashed')
+                        color='black', ls='dashed')
     ax.add_patch(uc)
 
     ax.spines['left'].set_position('center')
@@ -33,9 +33,12 @@ def getZeros (b, a, g=1):
 fs = 44100
 b, a = adsp.design_LPF2 (1000, 10, fs)
 
-for g in [1, 0.8, 0.6, 0.4, 0.2]:
+labels = ['1', '08', '06', '04', '02']
+root = 'D:\\Documents\\CCRMA\\Research\\Complex_Nonlinearities\\NonlinearFeedback\\Pics\\'
+for idx, g in enumerate([1, 0.8, 0.6, 0.4, 0.2]):
     plt.figure()
     zplane (getPoles (b, a, g=g), getZeros (b, a, g=g))
     plt.title ('Poles/Zeros for g={}'.format (g))
+    plt.savefig(root + f'pz{labels[idx]}.png', bbox_inches = 'tight', pad_inches = 0)
 
 #%%

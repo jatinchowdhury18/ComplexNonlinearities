@@ -148,11 +148,14 @@ for g in [0.00001, 0.04, 0.2, 1.0]:
     adsp.plot_magnitude_response (h, [1], worN=freqs, fs=fs)
 
     if g < 0.0001: legend.append ('Linear')
-    else: legend.append ('Nonlinear (gain={})'.format (g))
+    else: legend.append ('Nonlinear (A={})'.format (g))
 
 plt.title ('Lowpass Filter with nonlinear feedback')
 plt.legend (legend)
+plt.grid()
 plt.ylim (-10)
+plt.xlim(20, 20000)
+plt.savefig('D:\\Documents\\CCRMA\\Research\\Complex_Nonlinearities\\NonlinearFeedback\\Pics\\LPF-NL.png')
 
 #%% [markdown]
 # From the above plot, it seems pretty obvious that as the gain of the input

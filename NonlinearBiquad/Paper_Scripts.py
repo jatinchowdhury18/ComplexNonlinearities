@@ -20,8 +20,11 @@ plt.plot (x, np.tanh (x))
 plt.plot (x, lin (x, 1))
 plt.plot (1, np.tanh (1), '-ro')
 plt.ylim (-1.5, 1.5)
+plt.xlim(-4.5, 4.5)
 plt.title (r'$\tanh$ Nonlinearity, Linearized at $x=1$')
 plt.legend ([r'$f_{NL}(x)$', r'$\bar{f}_{NL}(x), x_0 = 1$'])
+plt.grid()
+plt.savefig('Pics/tanh_linized.png')
 
 #%%
 def chirpLog (f0, f1, duration, fs):
@@ -88,7 +91,7 @@ def plotNonlinearFilterResponse (b, a, title, gains=[0.5, 0.25, 0.1, 0.05, 0.025
         nlBQ.setCoefs (b, a)
         nlBQ.saturator = lambda x : np.tanh (x)
         plotFilterResponse (nlBQ, fs, gain=gain)
-        legend.append ('Nonlinear (gain={})'.format (gain))
+        legend.append ('Nonlinear (A={})'.format (gain))
 
     normalBQ = Biquad()
     normalBQ.setCoefs (b, a)
@@ -107,17 +110,20 @@ fs = 44100
 b, a = filters.calcCoefsLPF2 (1000, 10, fs)
 plotNonlinearFilterResponse (b, a, 'Nonlinear Resonant Lowpass')
 plt.ylim (-15)
+plt.grid()
+plt.savefig('Pics/NL-LPF.png')
 
 #%%
-import audio_dspy as adsp
-
 r = 2
-adsp.plot_static_curve (lambda x : np.tanh (x), range=r)
-adsp.plot_static_curve (lambda x : 1.5*adsp.soft_clipper (x), range=r)
-adsp.plot_static_curve (lambda x : adsp.hard_clipper (x), range=r)
+adsp.plot_static_curve (lambda x : np.tanh (x), gain=r)
+adsp.plot_static_curve (lambda x : adsp.soft_clipper (x), gain=r)
+adsp.plot_static_curve (lambda x : adsp.hard_clipper (x), gain=r)
 
 plt.title ('Comparing Saturating Nonlinearities')
 plt.legend (['Tanh Clipper', 'Soft Clipper', 'Hard Clipper'])
+plt.xlim(-2, 2)
+plt.grid()
+plt.savefig('Pics/Sat-NLs.png')
 
 #%%
 from  matplotlib import patches
@@ -125,7 +131,7 @@ from  matplotlib import patches
 def zplane (p, z):
     ax = plt.subplot(111)
     uc = patches.Circle((0,0), radius=1, fill=False,
-                        color='white', ls='dashed')
+                        color='black', ls='dashed')
     ax.add_patch(uc)
 
     ax.spines['left'].set_position('center')
@@ -148,13 +154,15 @@ def getZeros (b, a, g=1):
 fs = 44100
 b, a = filters.calcCoefsLPF2 (1000, 10, fs)
 
-for g in [1, 0.8, 0.6, 0.4, 0.2]:
+labels = ['1', '08', '06', '04', '02']
+for idx, g in enumerate([1, 0.8, 0.6, 0.4, 0.2]):
     plt.figure()
     zplane (getPoles (b, a, g=g), getZeros (b, a, g=g))
     plt.title ('Poles/Zeros for g={}'.format (g))
+    plt.savefig(f'Pics/pz{labels[idx]}.png', bbox_inches = 'tight', pad_inches = 0)
 
 #%%
-def plotSquareResponse (biquad, freq, fs=44100, gain=1, plotInput=False, mult=1, color=''):
+def plotSquareResponse (biquad, freq, fs=44100, gain=1, plotInput=False, mult=1, color='', dashed=False):
     numCycles = 10
     x = np.zeros (int ((1/freq)*fs* numCycles))
     N = len (x)
@@ -176,8 +184,16 @@ def plotSquareResponse (biquad, freq, fs=44100, gain=1, plotInput=False, mult=1,
 
     t = np.arange (len(y))/fs * 1000
     if (plotInput): plt.plot (t, x/gain)
-    if color == '': plt.plot (t, y/gain*mult)
-    else: plt.plot (t, y/gain*mult, color=color)
+    if color == '':
+        if dashed:
+            plt.plot (t, y/gain*mult, '--')
+        else:
+            plt.plot (t, y/gain*mult)
+    else:
+        if dashed:
+            plt.plot (t, y/gain*mult, '--', color=color)
+        else:
+            plt.plot (t, y/gain*mult, color=color)
     plt.xlabel ('Time [ms]')
     return t, x/gain, y/gain
 
@@ -185,7 +201,7 @@ legend = []
 x = np.zeros(100); t = np.zeros(100)
 for g in [0.05, 0.2]:
     nlBQ = Biquad()
-    b, a = filters.calcCoefsLPF2 (250, 10, fs=44100)
+    b, a = filters.calcCoefsLPF2 (4000, 10, fs=44100)
     nlBQ.setCoefs (b, a)
     nlBQ.saturator = lambda x : np.tanh (x)
     t, x, y = plotSquareResponse (nlBQ, 250, gain=g)
@@ -194,7 +210,8 @@ for g in [0.05, 0.2]:
 plt.plot (t, x)
 plt.legend (legend)
 plt.title ('Filter Response with Varying Input Gain')
-
+plt.grid()
+plt.savefig('Pics/50-Hz_Response.png')
 
 #%%
 def plotFile (file):
@@ -216,7 +233,7 @@ def plotFile (file):
         t[n] = time - time0
         y[n] = data[n].split ('\t')[1]
 
-    plt.plot (t*1000, y)
+    plt.plot (t*1000, y, 'black')
     return t, y
 
 time, y = plotFile ('SPICE/Sallen-Key_LPF-250.txt')
@@ -250,7 +267,7 @@ def calc_error (x, y):
         sum += np.sqrt (abs (diff))
     return sum / len (x)
 
-def calc_min_gain (x, tolerance = 0.0001, max_iters=100):
+def calc_min_gain (x, tolerance = 0.0001, max_iters=500):
     gain = 1
     direction = 1
     last = 1000000000
@@ -266,7 +283,7 @@ def calc_min_gain (x, tolerance = 0.0001, max_iters=100):
         nlBQ = Biquad()
         b, a = filters.calcCoefsLPF2 (1000, 10, fs=44100)
         nlBQ.setCoefs (b, a)
-        nlBQ.saturator = lambda x : np.tanh (x)
+        nlBQ.saturator = adsp.hard_clipper
         _, _, ytest = plotSquareResponse (nlBQ, 250, gain=gain)
         error = calc_error (x, ytest)
 
@@ -275,7 +292,7 @@ def calc_min_gain (x, tolerance = 0.0001, max_iters=100):
         # adjust
         if (error > last): # went too far
             direction *= -1
-            step /= 1.2
+            step /= 1.1
         if (abs (error) < tolerance):
             break
         if (gain < 0):
@@ -290,16 +307,18 @@ print (optimal_gain)
 # optimal gain = 0.226
 
 #%%
-t, x, ytest = plotSquareResponse (nlBQ, 250, gain=0.00001, color='sienna')
+t, x, ytest = plotSquareResponse (nlBQ, 250, gain=0.00001, dashed=True, color='green')
 time, y = plotFile ('SPICE/Sallen-Key_LPF-250.txt')
 
 nlBQ = Biquad()
 b, a = filters.calcCoefsLPF2 (1000, 10, fs=44100)
 nlBQ.setCoefs (b, a)
-nlBQ.saturator = lambda x : np.tanh (x)
-t, x, ytest = plotSquareResponse (nlBQ, 250, gain=0.2825, mult=1.25)
+nlBQ.saturator = np.tanh
+t, x, ytest = plotSquareResponse (nlBQ, 250, gain=0.2825, mult=1.25, dashed=True, color="red")
 plt.legend (['Linear', 'LTSpice', 'NL Biquad'])
+plt.grid()
 plt.title ('Modelling an Analog Sallen-Key Filter')
+plt.savefig('Pics/SPICE-Compare.png')
 
 #%%
 import SchemDraw

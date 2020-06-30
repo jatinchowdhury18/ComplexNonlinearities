@@ -10,21 +10,26 @@
 @inproceedings{SKF,
     AUTHOR = {Muller, Remy and Helie, Thomas},
     TITLE = {A Minimal Passive Model of the Operational Amplifier: Application to 
-Sallen-Key Analog Filters},
+{S}allen-{K}ey Analog Filters},
+    month = {Sept.},
     year = {2019},
-    booktitle = {Proc. of the 22nd Int. Conference on Digital Audio Effects}
+    pages = {6},
+    booktitle = {Proc. of the 22nd Int. Conference on Digital Audio Effects},
+    address = {Birmingham, UK}
 }
 
 @inproceedings{BLAMP,
 author = {Esqueda, Fabian and Valimaki, Vesa and Bilbao, Stefan},
 year = {2016},
-month = {09},
-pages = {},
-title = {Rounding Corners with BLAMP}
+month = {Sept.},
+pages = {121-128},
+title = {Rounding Corners with {BLAMP}},
+booktitle = {Proc. of the 19th Int. Conference on Digital Audio Effects},
+address = {Brno, Czech Republic}
 }
 
 @misc{BiquadLimiter,
-  author = {Utokusa},
+  author = {Takuro Sato},
   title = {Biquad Limiter},
   year = {2019},
   publisher = {GitHub},
@@ -34,48 +39,125 @@ title = {Rounding Corners with BLAMP}
 
 @phdthesis{Germain,
     author = {Francois Germain},
-    title = {Non-oversampled physicalmodeling for virtual analog simulations},
+    title = {Non-oversampled physical modeling for virtual analog simulations},
     school = {Stanford University},
     year = {2019},
     url = {https://searchworks.stanford.edu/view/13250111}
 }
 
-@inbook{Lyapunov,
-author = {Chen, Guanrong},
-year = {2005},
-month = {04},
-pages = {},
-title = {Stability of Nonlinear Systems},
-isbn = {9780471654506},
-doi = {10.1002/0471654507.eme413}
+@phdthesis{Yeh,
+  author      = {David T. Yeh},
+  title       = {Digital Implementation of Musical Distortion Circuits by Analysis and Simulation},
+  school      = {Stanford University},
+  year        = {2009}
+}
+
+@inproceedings{lightweightVA,
+  author          = {Stephano D'Angelo},
+  title           = {Lightweight Virtual Analog Modeling},
+  booktitle       = {Proc. 22nd Colloquium on Music Informatics},
+  address         = {Udine, Italy},
+  year            = {2018},
+  month           = {Nov.},
+  pages           = {59-63},
+}
+
+@incollection{Lyapunov,
+    author = {Chen, Guanrong},
+    year = {2004},
+    month = {Dec.},
+    title = {Stability of Nonlinear Systems},
+    booktitle = {Encyclopedia of RF and Microwave Engineering},
+    publisher = {Wiley},
+    address = {New York},
+    pages = {4881-4896},
+    url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/047134608X.W2539},
+    isbn = {9780471654506},
+    doi = {10.1002/0471654507.eme413}
+}
+
+@inproceedings{HelieMoog,
+  author          = {Helie, Thomas},
+  title           = {Lyapunov Stability Analysis of the {M}oog Ladder Filter and Dissipativity Aspects of Numerical Solutions},
+  booktitle       = {Proc. of the 14th Int. Conference on Digital Audio Effects},
+  year            = {2011},
+  month           = {Sept.},
+  pages           = {45-52},
+  address         = {Paris, France},
 }
 
 @inbook{Vadim,
     AUTHOR = "Vadim Zavalishin",
     TITLE = "The Art of VA Filter Design",
     YEAR = 2018,
-    PAGES = "173-236"
+    PAGES = "173-236",
+    chapter = {6}
 }
 
 @inproceedings{Rossum1992MakingDF,
   title={Making Digital Filters Sound "Analog"},
   author={Dave Rossum},
   booktitle={ICMC},
-  year={1992}
+  year={1992},
+  pages={30-33}
+}
+
+@inproceedings{AnttiMoog,
+  author          = {Antti Huovilainen},
+  title           = {Nonlinear digital implementation of the {M}oog ladder filter},
+  booktitle       = {Proc. Int. Conf. on Digital Audio Effects},
+  year            = {2004},
+  month           = {Oct.},
+  address         = {Naples Italy},
+  pages           = {61-64},
+}
+
+@article{AnttiOsc,
+  author          = {Valimaki, Vesa and Huovilainen, Antti},
+  title           = {Oscillator and filter algorithms for virtual analog synthesis},
+  journal         = {Computer Music Journal},
+  year            = {2006},
+  volume          = {30},
+  number          = {2},
+  pages           = {19-31},
+}
+
+@incollection{dafxVA,
+  author         = {Valimaki, Vesa and Bilbao, Stephan and Smith, Julius O. and Abel, Jonathan S. and Pakarinen, Jussi and Berners, Dave},
+  editor         = {Zolzer, Udo},
+  title          = {Virtual analog effects},
+  booktitle      = {DAFX: Digital Audio Effects},
+  chapter        = {12},
+  pages          = {473-522},
+  publisher      = {Wiley},
+  edition        = {2nd},
+  year           = {2011}
+}
+
+@INPROCEEDINGS{wdfSallenKey,
+    author={Mattia {Verasani} and Alberto {Bernardini} and Augusto {Sarti}},
+    booktitle={2017 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+    title={Modeling {S}allen-{K}ey audio filters in the Wave Digital domain},
+    year={2017},
+    volume={},
+    number={},
+    pages={431-435},
 }
 
 @unpublished{BernersDAFX,
     title={Modeling Circuits with Nonlinearities in Discrete Time},
     author={Dave Berners},
+    moneth = {Oct.},
     year={2017},
     note={Tutorial Presentation, 20th Int. Conference on Digital Audio Effects},
-    url={\url{https://www.youtube.com/watch?v=7Npx0eaSxow}}
+    url={\url{https://www.youtube.com/watch?v=7Npx0eaSxow}},
+    address = {Edinburgh, UK}
 }
 
 @ARTICLE{LyapunovFixedPointFilters,
-author={K. {Erickson} and A. {Michel}},
+author={{Erickson}, Kelvin T. and {Michel}, Anthony N.},
 journal={IEEE Transactions on Circuits and Systems},
-title={Stability analysis of fixed- point digital filters using computer generated Lyapunov functions- Part I: Direct form and coupled form filters},
+title={Stability analysis of fixed-point digital filters using computer generated {L}yapunov functions - {P}art {I}: Direct form and coupled form filters},
 year={1985},
 volume={32},
 number={2},
@@ -83,15 +165,16 @@ pages={113-132},
 keywords={Digital filters;Lyapunov methods;Digital filters;Stability analysis;Limit-cycles;Lattices;Asymptotic stability;Lyapunov method;Power system interconnection;Kelvin;Algorithm design and analysis;Nonlinear systems},
 doi={10.1109/TCS.1985.1085676},
 ISSN={},
-month={February},
+month={Feb.},
 }
 
-@article{JOS-Waveguide,
+@misc{JOS-Waveguide,
 author = {Smith, Julius and Rocchesso, Davide},
 year = {2010},
-month = {03},
+month = {Apr.},
 pages = {},
-title = {Aspects of Digital Waveguide Networks for Acoustic Modeling Applications}
+title = {Aspects of Digital Waveguide Networks for Acoustic Modeling Applications},
+howpublished = {\url{https://ccrma.stanford.edu/~jos/wgj/}}
 }
 
 @article{mark-nlmodal,
