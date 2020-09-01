@@ -30,7 +30,6 @@ private:
     Path curvePath;
 
     HysteresisProcessor processor;
-    AudioProcessorValueTreeState& vts;
 
     void processBuffer();
     AudioBuffer<float> dryBuffer;

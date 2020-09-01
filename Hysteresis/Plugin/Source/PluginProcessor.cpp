@@ -24,11 +24,8 @@ HysteresisAudioProcessor::HysteresisAudioProcessor()
                        ),
 #endif
     vts (*this, nullptr, Identifier ("Parameters"), createParameterLayout()),
-    oversampling (2, 4, dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
+    processor (vts)
 {
-    widthParameter = vts.getRawParameterValue ("width");
-    driveParameter = vts.getRawParameterValue ("drivegain");
-    satParameter   = vts.getRawParameterValue ("sat");
 }
 
 HysteresisAudioProcessor::~HysteresisAudioProcessor()
@@ -39,9 +36,11 @@ AudioProcessorValueTreeState::ParameterLayout HysteresisAudioProcessor::createPa
 {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
 
-    params.push_back (std::make_unique<AudioParameterFloat> ("width", "Width",     0.0f, 1.0f, 0.5f));
-    params.push_back (std::make_unique<AudioParameterFloat> ("drivegain", "Drive", 0.0f, 1.0f, 0.5f));
-    params.push_back (std::make_unique<AudioParameterFloat> ("sat", "Saturation",  0.0f, 1.0f, 0.5f));
+    HysteresisProcessor::createParameterLayout (params);
+
+    // params.push_back (std::make_unique<AudioParameterFloat> ("width", "Width",     0.0f, 1.0f, 0.5f));
+    // params.push_back (std::make_unique<AudioParameterFloat> ("drivegain", "Drive", 0.0f, 1.0f, 0.5f));
+    // params.push_back (std::make_unique<AudioParameterFloat> ("sat", "Saturation",  0.0f, 1.0f, 0.5f));
 
     return { params.begin(), params.end() };
 }
@@ -111,14 +110,11 @@ void HysteresisAudioProcessor::changeProgramName (int /*index*/, const String& /
 //==============================================================================
 void HysteresisAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    oversampling.initProcessing (samplesPerBlock);
-    processor.prepareToPlay (sampleRate * oversampling.getOversamplingFactor(),
-                             samplesPerBlock * oversampling.getOversamplingFactor());
+    processor.prepareToPlay (sampleRate, samplesPerBlock);
 }
 
 void HysteresisAudioProcessor::releaseResources()
 {
-    oversampling.reset();
     processor.releaseResources();
 }
 
@@ -150,21 +146,7 @@ void HysteresisAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
 {
     ScopedNoDenormals noDenormals;
 
-    processor.setDrive (*driveParameter);
-    processor.setSaturation (*satParameter);
-    processor.setWidth (*widthParameter);
-
-    dsp::AudioBlock<float> block (buffer);
-    dsp::AudioBlock<float> osBlock (buffer);
-
-    osBlock = oversampling.processSamplesUp (block);
-
-    float* ptrArray[] = {osBlock.getChannelPointer (0), osBlock.getChannelPointer (1)};
-    AudioBuffer<float> osBuffer (ptrArray, 2, static_cast<int> (osBlock.getNumSamples()));
-
-    processor.processBlock (osBuffer, midiMessages);
-
-    oversampling.processSamplesDown (block);
+    processor.processBlock (buffer, midiMessages);
 }
 
 //==============================================================================

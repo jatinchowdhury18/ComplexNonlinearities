@@ -63,12 +63,6 @@ private:
     AudioProcessorValueTreeState vts;
     HysteresisProcessor processor;
 
-    float* widthParameter;
-    float* driveParameter;
-    float* satParameter;
-
-    dsp::Oversampling<float> oversampling;
-
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HysteresisAudioProcessor)
 };

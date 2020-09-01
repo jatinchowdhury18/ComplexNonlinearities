@@ -13,14 +13,14 @@
 
 namespace
 {
-    constexpr int size = 44100 / 8;
-    constexpr float fs = 44100.0f;
-    constexpr float freq = 100.0f;
+    constexpr int size = 16000 / 32;
+    constexpr float fs = 16000.0f;
+    constexpr float freq = 200.0f;
     constexpr float gain = 1.0f;
 }
 
 NonlinearityViewer::NonlinearityViewer (AudioProcessorValueTreeState& vts) :
-    vts (vts)
+    processor (vts)
 {
     dryBuffer.setSize (1, size);
     for (int n = 0; n < size; ++n)
@@ -37,10 +37,6 @@ NonlinearityViewer::~NonlinearityViewer()
 
 void NonlinearityViewer::processBuffer()
 {
-    processor.setDrive      (*vts.getRawParameterValue ("drivegain"));
-    processor.setWidth      (*vts.getRawParameterValue ("width"));
-    processor.setSaturation (*vts.getRawParameterValue ("sat"));
-
     MidiBuffer mBuffer;
     wetBuffer.makeCopyOf (dryBuffer);
 
@@ -62,6 +58,9 @@ void NonlinearityViewer::updateCurve()
 
         auto xDraw = (x + 1.0f) * (float) getWidth() / 2.0f;
         auto yDraw = (float) getHeight() * (0.5f - 0.4f * y);
+
+        if (std::isnan (xDraw) || std::isnan (yDraw))
+            return;
 
         if (! started)
         {

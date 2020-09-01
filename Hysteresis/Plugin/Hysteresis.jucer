@@ -3,7 +3,14 @@
 <JUCERPROJECT id="XBTlXS" name="Hysteresis" projectType="audioplug" jucerVersion="5.4.4"
               cppLanguageStandard="17" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3">
   <MAINGROUP id="d6mM01" name="Hysteresis">
+    <GROUP id="{F15D22C4-AA99-EB8D-EB0B-D071D7801E00}" name="shared_code">
+      <FILE id="HorR4S" name="KnobsComponent.cpp" compile="1" resource="0"
+            file="../../shared_code/KnobsComponent.cpp"/>
+      <FILE id="prED4p" name="KnobsComponent.h" compile="0" resource="0"
+            file="../../shared_code/KnobsComponent.h"/>
+    </GROUP>
     <GROUP id="{5590BBA0-A6E3-C0ED-BC50-DF214273925E}" name="Source">
+      <FILE id="equhop" name="DCFilters.h" compile="0" resource="0" file="Source/DCFilters.h"/>
       <FILE id="mrqjdt" name="HysteresisProcessing.cpp" compile="1" resource="0"
             file="Source/HysteresisProcessing.cpp"/>
       <FILE id="inzhec" name="HysteresisProcessing.h" compile="0" resource="0"
