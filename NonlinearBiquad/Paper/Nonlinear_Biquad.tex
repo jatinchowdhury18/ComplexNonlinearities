@@ -237,14 +237,14 @@ It is well known that a digital filter will be stable provided that
 the magnitudes of the poles are strictly less than 1 \cite{JOSFilters}.
 \newline
 %
-\subsubsection{State Space Formulation}
+\subsubsection{State-Space Formulation}
 
 Another reason TDF-II is useful for implementing biquad filters
-is that its behavior can easily be analyzed in state space form.
+is that its behavior can easily be analyzed in state-space form.
 The state-space formalism is commonly used for constructing nonlinear
 virtual analog systems; brief introductions can be found in
 \cite{lightweightVA,Yeh}. To write the TDF-II biquad filter in
-state space form, two state variables are defined at the locations
+state-space form, two state variables are defined at the locations
 of the delay elements.
 %
 \begin{equation}
@@ -263,7 +263,7 @@ as,
     \label{eq:state_output_lin}
 \end{equation}
 %
-finally, the filter equation is written in a state space form.
+finally, the filter equation is written in a state-space form.
 %
 \begin{equation}
     \begin{bmatrix} x_1[n+1] \\ x_2[n+1] \\ y[n+1] \end{bmatrix} =
@@ -370,7 +370,7 @@ to nonlinear digital waveguide networks \cite{JOS-Waveguide},
 simulations of the Moog ladder filter \cite{HelieMoog}, and
 direct form filters subject to fixed-point quantization
 \cite{LyapunovFixedPointFilters}. To demonstrate that a system is
-Lyapunov stable, we must form the discrete time state space
+Lyapunov stable, we must form the discrete-time state-space
 equation of the system
 %
 \begin{equation}
@@ -476,8 +476,8 @@ affect the pole locations, nor the filter stability.
 \subsection{Stability}
 %
 Recall that the linear biquad filter equation can be written
-in state space form as in \cref{eq:bq_lin_state_spaces}. By
-writing the nonlinear biquad \cref{eq:bq_NL}, in the state space
+in state-space form as in \cref{eq:bq_lin_state_spaces}. By
+writing the nonlinear biquad \cref{eq:bq_NL}, in the state-space
 form defined by \cref{eq:lyapunov_general}, we find
 %
 \begin{equation}
@@ -804,7 +804,7 @@ By tuning the input gain, we can attempt to match the response of an
 arbitrary analog filter, either by tuning the parameters by ear
 or using some form of numerical optimisation. Note that the choice
 of base nonlinearities used by the nonlinear biquad will also play a
-role in the accuracy of the model. For example, analog filter being
+role in the accuracy of the model. For example, if the analog filter being
 modelled displays asymmetric nonlinear properties, then in order
 to accurately model that filter, the nonlinear biquad must be constructed
 using asymmetric base nonlinearities.
@@ -860,9 +860,9 @@ which the structures are guaranteed stable.
 \newline\newline
 As a case study, we have implemented a resonant lowpass filter using
 both nonlinear structures, and shown that the poles respond to the input
-as expected. We then show how the nonlinear biquad structure can be used
-to model an analog filter, comparing with a Sallen-Key lowpass filter as
-an example. Note that while the nonlinear biquad structure
+as expected. We have also shown that the nonlinear biquad structure can
+be used to model analog filters, comparing with a Sallen-Key lowpass filter
+as an example. Note that while the nonlinear biquad structure
 can be used for analog modelling, both structures can also be
 used purely in the digital domain as a tool for constructing
 filters that sound more sonically interesting and harmonically
@@ -877,12 +877,17 @@ GitHub,\footnote{\url{https://github.com/jatinchowdhury18/ComplexNonlinearities}
 and video demonstrations are available on
 YouTube.\footnote{\url{https://youtu.be/BMzKdaZtmoU}}$^{,}$\footnote{\url{https://youtu.be/T0AsIX5oL9A}}
 \newline\newline
-Future research concerning nonlinear filtering will center around making a
-more informed choice of base nonlinearities, focusing on both the desired
-harmonic response of the filter, as well as physically meaningful base
-nonlinearities for use in analog modelling. Another possibility could be
-to use these filter structures for time-varying amplitude-dependent
-filters, e.g. the time-varying modal filters described in \cite{mark-nlmodal}.
+Future research on this topic will center around making better-informed
+choices of base nonlinearities, focusing on both the desired harmonic
+response of the filter, as well as physically meaningful base
+nonlinearities for use in analog modelling. Another possible area of
+inquiry involves using these filter structures to model the TR-808
+bass drum circuit, which contains a resonant filter that exhibits
+level-dependent cutoff-frequency modulation similar to the nonlinear
+feedback filter \cite{kurt-808}. Finally, the filter structures developed
+in this writing could be used to design time-varying amplitude-dependent
+filters, e.g. the time-varying modal filters described in
+\cite{mark-nlmodal}.
 
 \section{Acknowledgments}
 

@@ -1,3 +1,5 @@
+\ifdefined\DAFX
+\else
 \begin{frame}
     \begin{centering}
         \vskip5ex plus 1filll
@@ -5,6 +7,7 @@
         \vskip0pt plus 1filll
     \end{centering}
 \end{frame}
+\fi
 
 \begin{frame}{Biquad Filter}
     Transposed Direct Form II
@@ -39,7 +42,7 @@
 \begin{frame}{Nonlinear Biquad Filter}
     Saturating nonlinearities \rightarrow nonlinear resonance
     \begin{figure}
-        \includegraphics[height=2.5in]{../NonlinearBiquad/Pics/NL-LPF.png}
+        \includegraphics[height=2.5in]{../NonlinearBiquad/Pics/NL-LPF-Dark.png}
     \end{figure}
 \end{frame}
 
@@ -76,7 +79,7 @@
 \begin{frame}{Nonlinear Feedback Filter}
     Saturating nonlinearity \rightarrow cutoff frequency modulation
     \begin{figure}
-        \includegraphics[height=2.5in]{../NonlinearFeedback/Pics/LPF-NL.png}
+        \includegraphics[height=2.5in]{../NonlinearFeedback/Pics/LPF-NL-Dark.png}
     \end{figure}
 \end{frame}
 
@@ -159,7 +162,7 @@
     \vspace{3ex}
 
     Note that if $f'_{NL}$ does not exist at some point,
-    the system is NOT stable at that point.
+    the system is NOT guaranteed stable at that point.
 \end{frame}
 
 \begin{frame}{Nonlinear Feedback Stability}
@@ -208,20 +211,30 @@
 \begin{frame}{Nonlinear Biquad Filter}
     Can we use this for analog modelling?
     \begin{figure}
-        \includegraphics[height=2.5in]{../NonlinearBiquad/Pics/NL-LPF.png}
+        \includegraphics[height=2.5in]{../NonlinearBiquad/Pics/NL-LPF-Dark.png}
     \end{figure}
 \end{frame}
 
+\ifdefined\DAFX
+\else
 \begin{frame}{Nonlinear Biquad Filter}
     Parameters: nonlinearities, input gain
     \begin{figure}
         \includegraphics[height=2.5in]{../NonlinearBiquad/Pics/50-Hz_Response.png}
     \end{figure}
 \end{frame}
+\fi
 
 \begin{frame}{Nonlinear Biquad Filter}
     Modelling an overdriven Sallen-Key lowpass filter
     \begin{figure}
         \includegraphics[height=2.5in]{../NonlinearBiquad/Pics/Spice-Compare.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Nonlinear Biquad Filter}
+    TR-808 Kick Drum Circuit\footcite[]{kurt-808}
+    \begin{figure}
+        \includegraphics[height=2.3in]{../NonlinearBiquad/Pics/808_Circuit.png}
     \end{figure}
 \end{frame}
