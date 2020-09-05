@@ -29,7 +29,7 @@ Current nonlinearities include:
 4. Nonlinear Biquad
 [![Medium](https://img.shields.io/badge/Read%20on-Medium-blue)](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-4-nonlinear-biquad-filters-ae6b3f23cb0e)
 [![Jupyter](https://img.shields.io/badge/Read%20as-Jupyter-orange)](https://ccrma.stanford.edu/~jatin/ComplexNonlinearities/NLBiquad.html)
-[![Paper](https://img.shields.io/badge/Read-Paper-yellow)](https://ccrma.stanford.edu/~jatin/papers/Nonlinear_Biquad.pdf)
+[![Paper](https://img.shields.io/badge/Read-Paper-yellow)](https://dafx2020.mdw.ac.at/proceedings/papers/DAFx2020_paper_3.pdf)
 
 <img src="https://github.com/jatinchowdhury18/ComplexNonlinearities/blob/master/NonlinearBiquad/Pics/NL-LowShelf.png" alt="Pic" width="500" height="350">
 
