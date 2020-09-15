@@ -6,6 +6,12 @@ This repository contains recent research exploring purely digital complex nonlin
 Articles explaining the project in further detail can be found on [Medium](https://medium.com/@jatinchowdhury18/complex-nonlinearities-episode-0-why-4ad9b3eed60f). A technical project overview is available online
 [here](https://ccrma.stanford.edu/~jatin/papers/Complex_NLs.pdf).
 
+Each nonlinear effect is available as an audio plugins (VST/VST3/AU).
+Builds of each plugin are available for Mac and Windows in the [Bin/](./Bin/) directory.
+Linux users can find builds available on the
+[Open Build Service](https://build.opensuse.org/package/show/home:kill_it:JUCE/ComplexNonlinearities),
+courtesy of Konstantin Voinov.
+
 Current nonlinearities include:
 
 1. Double Soft Clipper
