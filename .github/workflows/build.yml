@@ -33,8 +33,6 @@ jobs:
     - name: Add msbuild to PATH
       if: runner.os == 'Windows'
       uses: microsoft/setup-msbuild@v1.0.2
-      with:
-        vs-version: '[15.7,15.8)'
 
     - name: Checkout code
       uses: actions/checkout@v2
@@ -44,7 +42,7 @@ jobs:
     - name: Download JUCE
       uses: actions/checkout@v2
       with:
-        repository: jatinchowdhury18/JUCE
+        repository: juce-framework/JUCE
         path: JUCE
 
     - name: Build Projucer (Windows)
@@ -88,6 +86,8 @@ jobs:
       if: runner.os == 'Linux'
       working-directory: ${{github.workspace}}/$PLUGIN/Plugin
       run: |
+        ls ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile
+        ls ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile/build
         $PROJUCER --set-global-search-path linux defaultJuceModulePath  ${{github.workspace}}/JUCE/modules
         $PROJUCER --set-global-search-path linux vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
         $PROJUCER --resave $PLUGIN.jucer
