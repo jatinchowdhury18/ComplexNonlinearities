@@ -60,6 +60,10 @@ jobs:
       working-directory: ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile
       run: make -j4
 
+    - name: Setup tmate session
+      if: runner.os == 'Windows' && ${{matrix.plugin}} == "CopyEQ"
+      uses: mxschmitt/action-tmate@v3
+
     - name: Configure Plugin (Windows)
       if: runner.os == 'Windows'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
@@ -96,21 +100,21 @@ jobs:
 
     - name: Build Plugin (Windows)
       if: runner.os == 'Windows'
-      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin/Builds/VisualStudio2017
       run: msbuild.exe -v:normal $PLUGIN.sln
       env:
         PLUGIN: ${{ matrix.plugin }}
 
     - name: Build Plugin (MacOS)
       if: runner.os == 'MacOS'
-      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin/Builds/MacOSX
       run: xcodebuild -project $PLUGIN.xcodeproj -jobs 4 | xcpretty
       env:
         PLUGIN: ${{ matrix.plugin }}
 
     - name: Build Plugin (Linux)
       if: runner.os == 'Linux'
-      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin/Builds/LinuxMakefile
       run: make -j4 CONFIG=Release
       env:
         PLUGIN: ${{ matrix.plugin }}
