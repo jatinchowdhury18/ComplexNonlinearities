@@ -63,10 +63,10 @@ private:
     AudioProcessorValueTreeState vts;
     ExciterProcessor exciter[2];
 
-    float* rectParameter;
-    float* freqParameter;
-    float* driveParameter;
-    float* satParameter;
+    std::atomic<float>* rectParameter;
+    std::atomic<float>* freqParameter;
+    std::atomic<float>* driveParameter;
+    std::atomic<float>* satParameter;
 
     dsp::Oversampling<float> oversampling;
 

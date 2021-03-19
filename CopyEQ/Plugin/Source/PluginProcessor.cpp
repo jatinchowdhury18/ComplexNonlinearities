@@ -145,7 +145,7 @@ void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
 {
     ScopedNoDenormals noDenormals;
 
-    if (*bypassParam)
+    if (bypassParam->load())
         return;
 
     auto mainInputOutput = getBusBuffer (buffer, true, 0);
@@ -157,13 +157,13 @@ void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     // set EQ params
     for (int ch = 0; ch < mainInputOutput.getNumChannels(); ++ch)
     {
-        eqs[ch]->setNabla (*nablaParam * *nablaParam * 0.1f);
-        eqs[ch]->setRho (0.9f * *rhoParam);
-        eqs[ch]->setFlip ((bool) *flipParam);
-        eqs[ch]->setSideCutoff (*lpfParam);
-        eqs[ch]->setStereoFactor (*stParam);
+        eqs[ch]->setNabla (nablaParam->load() * nablaParam->load() * 0.1f);
+        eqs[ch]->setRho (0.9f * rhoParam->load());
+        eqs[ch]->setFlip ((bool) flipParam->load());
+        eqs[ch]->setSideCutoff (lpfParam->load());
+        eqs[ch]->setStereoFactor (stParam->load());
     
-        if (*contParam || learn) // learning mode
+        if (contParam->load() || learn) // learning mode
             eqs[ch]->processBlockLearn (mainInputOutput.getWritePointer (ch), 
                 sidechainInput.getWritePointer (ch), buffer.getNumSamples());
         else
@@ -183,9 +183,9 @@ void CopyEqAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     }
 
     // apply dry/wet
-    mainInputOutput.applyGain (*dwParam);
+    mainInputOutput.applyGain (dwParam->load());
     for (int ch = 0; ch < mainInputOutput.getNumChannels(); ++ch)
-        mainInputOutput.addFrom (ch, 0, dryBuffer, ch, 0, buffer.getNumSamples(), 1.0f - *dwParam);
+        mainInputOutput.addFrom (ch, 0, dryBuffer, ch, 0, buffer.getNumSamples(), 1.0f - dwParam->load());
 }
 
 //==============================================================================

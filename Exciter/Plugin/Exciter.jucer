@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="pF7dfz" name="Exciter" projectType="audioplug" jucerVersion="5.4.4"
-              cppLanguageStandard="17" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3">
+              cppLanguageStandard="17" pluginFormats="buildAU,buildStandalone,buildVST3">
   <MAINGROUP id="NGhBHt" name="Exciter">
     <GROUP id="{27A5A0DE-F50C-B21B-5F0D-FB5A9EAA1F30}" name="Source">
       <FILE id="WeYOP1" name="ExciterProcessor.cpp" compile="1" resource="0"

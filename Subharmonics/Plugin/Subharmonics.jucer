@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="wCv6OV" name="Subharmonics" projectType="audioplug" jucerVersion="5.4.4"
-              pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" cppLanguageStandard="17"
+              pluginFormats="buildAU,buildStandalone,buildVST3" cppLanguageStandard="17"
               headerPath="../../../../shared_code&#10;../../../../NonlinearBiquad/Plugin/Source">
   <MAINGROUP id="EJS18r" name="Subharmonics">
     <GROUP id="{7F081B54-2B77-ADA2-040F-0C1DEFB4D69C}" name="shared_code">

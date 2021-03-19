@@ -37,11 +37,7 @@ AudioProcessorValueTreeState::ParameterLayout HysteresisAudioProcessor::createPa
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
 
     HysteresisProcessor::createParameterLayout (params);
-
-    // params.push_back (std::make_unique<AudioParameterFloat> ("width", "Width",     0.0f, 1.0f, 0.5f));
-    // params.push_back (std::make_unique<AudioParameterFloat> ("drivegain", "Drive", 0.0f, 1.0f, 0.5f));
-    // params.push_back (std::make_unique<AudioParameterFloat> ("sat", "Saturation",  0.0f, 1.0f, 0.5f));
-
+    
     return { params.begin(), params.end() };
 }
 

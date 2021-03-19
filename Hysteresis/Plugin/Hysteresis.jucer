@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="XBTlXS" name="Hysteresis" projectType="audioplug" jucerVersion="5.4.4"
-              cppLanguageStandard="17" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3">
+              cppLanguageStandard="17" pluginFormats="buildAU,buildStandalone,buildVST3">
   <MAINGROUP id="d6mM01" name="Hysteresis">
     <GROUP id="{F15D22C4-AA99-EB8D-EB0B-D071D7801E00}" name="shared_code">
       <FILE id="HorR4S" name="KnobsComponent.cpp" compile="1" resource="0"

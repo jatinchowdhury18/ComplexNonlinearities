@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="J0VQfU" name="NonlinearBiquad" projectType="audioplug" jucerVersion="5.4.4"
-              cppLanguageStandard="17" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3">
+              cppLanguageStandard="17" pluginFormats="buildAU,buildStandalone,buildVST3">
   <MAINGROUP id="KhgJEr" name="NonlinearBiquad">
     <GROUP id="{B1955946-BC85-E672-F42E-C77DB4D9F713}" name="Source">
       <FILE id="aycAYM" name="Viewer.cpp" compile="1" resource="0" file="Source/Viewer.cpp"/>

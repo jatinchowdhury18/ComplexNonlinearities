@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="o2aYfz" name="DoubleSoftClipper" projectType="audioplug"
-              jucerVersion="5.4.4" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3"
+              jucerVersion="5.4.4" pluginFormats="buildAU,buildStandalone,buildVST3"
               cppLanguageStandard="17">
   <MAINGROUP id="aqCT61" name="DoubleSoftClipper">
     <GROUP id="{6FEB05DB-80E0-8708-8B5B-43E7672D21A0}" name="Source">

@@ -151,7 +151,7 @@ void GatedRecurrentDistortionAudioProcessor::updateParams()
 {
     for (int ch = 0; ch < 2; ++ch)
     {
-        gru[ch].setParams (*Wf, *Wh, *Uf, *Uh, *bf);
+        gru[ch].setParams (Wf->load(), Wh->load(), Uf->load(), Uh->load(), bf->load());
     }
 }
 

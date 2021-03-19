@@ -75,12 +75,12 @@ private:
     Gain mainGain[2];
     Gain sideGain[2];
 
-    float* preCutoffParam;
-    float* postCutoffParam;
-    float* mainGainParam;
-    float* sideGainParam;
-    float* attackParam;
-    float* releaseParam;
+    std::atomic<float>* preCutoffParam;
+    std::atomic<float>* postCutoffParam;
+    std::atomic<float>* mainGainParam;
+    std::atomic<float>* sideGainParam;
+    std::atomic<float>* attackParam;
+    std::atomic<float>* releaseParam;
 
     const float butterQs[3] = { 0.51763809f, 0.70710678f, 1.93185165f };
 

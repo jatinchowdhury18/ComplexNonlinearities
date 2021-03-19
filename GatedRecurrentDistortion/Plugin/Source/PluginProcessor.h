@@ -63,11 +63,11 @@ private:
     static AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     AudioProcessorValueTreeState vts;
 
-    float* Wf = nullptr;
-    float* Wh = nullptr;
-    float* Uf = nullptr;
-    float* Uh = nullptr;
-    float* bf = nullptr;
+    std::atomic<float>* Wf = nullptr;
+    std::atomic<float>* Wh = nullptr;
+    std::atomic<float>* Uf = nullptr;
+    std::atomic<float>* Uh = nullptr;
+    std::atomic<float>* bf = nullptr;
 
     Gru gru[2];
 

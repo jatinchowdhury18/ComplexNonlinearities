@@ -63,12 +63,12 @@ public:
 private:
     AudioProcessorValueTreeState vts;
 
-    float*  eqShapeParameter;
-    float*  eqFreqParameter;
-    float*  eqQParameter;
-    float*  eqGainParameter;
-    float*  driveParameter;
-    float*  satParameter;
+    std::atomic<float>*  eqShapeParameter;
+    std::atomic<float>*  eqFreqParameter;
+    std::atomic<float>*  eqQParameter;
+    std::atomic<float>*  eqGainParameter;
+    std::atomic<float>*  driveParameter;
+    std::atomic<float>*  satParameter;
 
     Gain inGain[2];
     EQFilter filter[2];

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="Gu3kJH" name="NonlinearFeedback" projectType="audioplug"
-              jucerVersion="5.4.4" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3"
+              jucerVersion="5.4.4" pluginFormats="buildAU,buildStandalone,buildVST3"
               cppLanguageStandard="17" headerPath="../../../../NonlinearBiquad/Plugin/Source/">
   <MAINGROUP id="WKKP45" name="NonlinearFeedback">
     <GROUP id="{DB7EF7B8-DE9E-A80E-7446-81EED7A78C3A}" name="NLBiquad">

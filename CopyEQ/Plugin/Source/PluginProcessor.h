@@ -78,14 +78,14 @@ public:
 private:
     AudioProcessorValueTreeState vts;
 
-    float* contParam;
-    float* nablaParam;
-    float* rhoParam;
-    float* flipParam;
-    float* bypassParam;
-    float* dwParam;
-    float* lpfParam;
-    float* stParam;
+    std::atomic<float>* contParam;
+    std::atomic<float>* nablaParam;
+    std::atomic<float>* rhoParam;
+    std::atomic<float>* flipParam;
+    std::atomic<float>* bypassParam;
+    std::atomic<float>* dwParam;
+    std::atomic<float>* lpfParam;
+    std::atomic<float>* stParam;
 
     bool learn = false;
     float lengthLearnSeconds = 1.0f;

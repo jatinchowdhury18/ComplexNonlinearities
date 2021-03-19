@@ -100,7 +100,10 @@ jobs:
     - name: Build Plugin (Windows)
       if: runner.os == 'Windows'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin/Builds/VisualStudio2017
-      run: msbuild.exe -v:normal $PLUGIN.sln
+      shell: bash
+      run: |
+        ls
+        msbuild.exe -v:normal $PLUGIN.sln
       env:
         PLUGIN: ${{ matrix.plugin }}
 

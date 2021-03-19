@@ -68,10 +68,10 @@ private:
     const static int maxOrder = 10;
     AudioProcessorValueTreeState vts;
 
-    float* gainParam;
-    float* orderParam;
-    float* satParam;
-    float* freqParam;
+    std::atomic<float>* gainParam;
+    std::atomic<float>* orderParam;
+    std::atomic<float>* satParam;
+    std::atomic<float>* freqParam;
 
     SatFunc saturator;
     std::unique_ptr<AllpassLadder> allpass[2][10];

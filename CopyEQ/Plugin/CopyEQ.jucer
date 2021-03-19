@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="Aixg1z" name="CopyEQ" projectType="audioplug" jucerVersion="5.4.4"
-              pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" cppLanguageStandard="17">
+              pluginFormats="buildAU,buildStandalone,buildVST3" cppLanguageStandard="17">
   <MAINGROUP id="KIlksY" name="CopyEQ">
     <GROUP id="{03F12A9B-9B0C-6EE3-A765-848EEB764AF2}" name="Source">
       <FILE id="TcsQKA" name="Spline.cpp" compile="1" resource="0" file="Source/Spline.cpp"/>

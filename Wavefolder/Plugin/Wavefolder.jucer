@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="cvEDsh" name="Wavefolder" projectType="audioplug" jucerVersion="5.4.4"
               cppLanguageStandard="17" headerPath="../../../../NonlinearBiquad/Plugin/Source/"
-              pluginFormats="buildAU,buildStandalone,buildVST,buildVST3">
+              pluginFormats="buildAU,buildStandalone,buildVST3">
   <MAINGROUP id="ou3tkC" name="Wavefolder">
     <GROUP id="{07C48ACF-4658-FDBE-B256-A776CE2DADCB}" name="Source">
       <FILE id="ecDfaw" name="NonlinearityViewer.cpp" compile="1" resource="0"
