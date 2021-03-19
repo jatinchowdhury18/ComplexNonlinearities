@@ -137,7 +137,6 @@ jobs:
         curl -L "https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_macOS.zip" -o pluginval.zip
         unzip pluginval
         pluginval.app/Contents/MacOS/pluginval --strictness-level 8 --validate-in-process --validate "$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst3" || exit 1
-        pluginval.app/Contents/MacOS/pluginval --strictness-level 8 --validate-in-process --validate "$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.component" || exit 1
       env:
         PLUGIN: ${{ matrix.plugin }}
 
