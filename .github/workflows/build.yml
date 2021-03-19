@@ -58,14 +58,14 @@ jobs:
     - name: Build Projucer (Linux)
       if: runner.os == 'Linux'
       working-directory: ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile
-      run: make
+      run: make -j4
 
     - name: Configure Plugin (Windows)
       if: runner.os == 'Windows'
-      working-directory: ${{github.workspace}}/$PLUGIN/Plugin
+      working-directory: ${{github.workspace}}/${{ matrix.plugin }}/Plugin
       run: |
-        $PROJUCER --set-global-search-path windows defaultJuceModulePath  ${{github.workspace}}/JUCE/modules
-        $PROJUCER --set-global-search-path windows vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
+        $PROJUCER --set-global-search-path windows defaultJuceModulePath  ${{github.workspace}}\JUCE\modules
+        $PROJUCER --set-global-search-path windows vstLegacyPath ${{github.workspace}}\JUCE\VST2_SDK
         $PROJUCER --resave $PLUGIN.jucer
       env:
           PLUGIN: ${{ matrix.plugin }}
@@ -73,8 +73,10 @@ jobs:
 
     - name: Configure Plugin (MacOS)
       if: runner.os == 'MacOS'
-      working-directory: ${{github.workspace}}/$PLUGIN/Plugin
+      working-directory: ${{github.workspace}}/${{ matrix.plugin }}/Plugin
       run: |
+        ls ${{github.workspace}}/JUCE/extras/Projucer/Builds/MacOSX
+        ls ${{github.workspace}}/JUCE/extras/Projucer/Builds/MacOSX/build/Debug
         $PROJUCER --set-global-search-path osx defaultJuceModulePath  ${{github.workspace}}/JUCE/modules
         $PROJUCER --set-global-search-path osx vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
         $PROJUCER --resave $PLUGIN.jucer
@@ -84,7 +86,7 @@ jobs:
 
     - name: Configure Plugin (Linux)
       if: runner.os == 'Linux'
-      working-directory: ${{github.workspace}}/$PLUGIN/Plugin
+      working-directory: ${{github.workspace}}/${{ matrix.plugin }}/Plugin
       run: |
         ls ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile
         ls ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile/build
@@ -112,7 +114,7 @@ jobs:
     - name: Build Plugin (Linux)
       if: runner.os == 'Linux'
       working-directory: ${{github.workspace}}/$PLUGIN/Plugin
-      run: make CONFIG=Release
+      run: make -j4 CONFIG=Release
       env:
           PLUGIN: ${{ matrix.plugin }}
 
