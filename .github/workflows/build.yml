@@ -110,7 +110,7 @@ jobs:
     - name: Build Plugin (MacOS)
       if: runner.os == 'MacOS'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin/Builds/MacOSX
-      run: xcodebuild -project $PLUGIN.xcodeproj -jobs 4 | xcpretty
+      run: xcodebuild -project $PLUGIN.xcodeproj -configuration Release -jobs 4 | xcpretty
       env:
         PLUGIN: ${{ matrix.plugin }}
 
@@ -141,11 +141,11 @@ jobs:
       env:
         PLUGIN: ${{ matrix.plugin }}
 
-    - name: Validate Plugin (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        curl -L "https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_Linux.zip" -o pluginval.zip
-        unzip pluginval
-        ./pluginval --strictness-level 8 --validate-in-process --validate "$PLUGIN/Plugin/Builds/LinuxMakefile/build/$PLUGIN.so" || exit 1
-      env:
-        PLUGIN: ${{ matrix.plugin }}
+    # - name: Validate Plugin (Linux)
+    #   if: runner.os == 'Linux'
+    #   run: |
+    #     curl -L "https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_Linux.zip" -o pluginval.zip
+    #     unzip pluginval
+    #     ./pluginval --strictness-level 8 --validate-in-process --validate "$PLUGIN/Plugin/Builds/LinuxMakefile/build/$PLUGIN.so" || exit 1
+    #   env:
+    #     PLUGIN: ${{ matrix.plugin }}

@@ -35,14 +35,14 @@ NonlinearityViewer::~NonlinearityViewer()
 
 void NonlinearityViewer::updateCurve()
 {
-    auto drive = *vts.getRawParameterValue ("drivegain");
-    processor.setDrive (drive / 100.0f);
-    processor.setControlGain (ExciterProcessor::getControlGainFromDrive (drive / 100.0f));
-    processor.setDetectorFreq (*vts.getRawParameterValue ("freq"));
+    auto drive = vts.getRawParameterValue ("drivegain");
+    processor.setDrive (drive->load() / 100.0f);
+    processor.setControlGain (ExciterProcessor::getControlGainFromDrive (drive->load() / 100.0f));
+    processor.setDetectorFreq (vts.getRawParameterValue ("freq")->load());
     
-    auto rectType = static_cast<RectifierType> ((int) *vts.getRawParameterValue ("rect"));
+    auto rectType = static_cast<RectifierType> ((int) vts.getRawParameterValue ("rect")->load());
     processor.setRectifierType (rectType);
-    processor.setSaturator (static_cast<SaturatorType> ((int) *vts.getRawParameterValue ("sat")));
+    processor.setSaturator (static_cast<SaturatorType> ((int) vts.getRawParameterValue ("sat")->load()));
 
     auto yFactor = 0.9f;
     if (rectType == FWR)
