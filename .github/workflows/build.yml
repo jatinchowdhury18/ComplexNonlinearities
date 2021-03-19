@@ -34,9 +34,6 @@ jobs:
       if: runner.os == 'Windows'
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Get number of CPU cores
-      uses: SimenB/github-actions-cpu-cores@v1
-
     - name: Checkout code
       uses: actions/checkout@v2
       with:
@@ -56,20 +53,20 @@ jobs:
     - name: Build Projucer (MacOS)
       if: runner.os == 'MacOS'
       working-directory: ${{github.workspace}}/JUCE/extras/Projucer/Builds/MacOSX
-      run: xcodebuild -project Projucer.xcodeproj -jobs ${{ steps.cpu-cores.outputs.count }} | xcpretty
+      run: xcodebuild -project Projucer.xcodeproj -jobs 4 | xcpretty
 
     - name: Build Projucer (Linux)
       if: runner.os == 'Linux'
       working-directory: ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile
-      run: make -j${{ steps.cpu-cores.outputs.count }}
+      run: make -j4
 
     - name: Configure Plugin (Windows)
       if: runner.os == 'Windows'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
       shell: bash
       run: |
-        $PROJUCER --set-global-search-path windows defaultJuceModulePath  ${{github.workspace}}\JUCE\modules
-        $PROJUCER --set-global-search-path windows vstLegacyPath ${{github.workspace}}\JUCE\VST2_SDK
+        $PROJUCER --set-global-search-path windows defaultJuceModulePath ${{github.workspace}}/JUCE/modules
+        $PROJUCER --set-global-search-path windows vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
         $PROJUCER --resave $PLUGIN.jucer
       env:
         PLUGIN: ${{ matrix.plugin }}
@@ -79,7 +76,7 @@ jobs:
       if: runner.os == 'MacOS'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
       run: |
-        $PROJUCER --set-global-search-path osx defaultJuceModulePath  ${{github.workspace}}/JUCE/modules
+        $PROJUCER --set-global-search-path osx defaultJuceModulePath ${{github.workspace}}/JUCE/modules
         $PROJUCER --set-global-search-path osx vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
         $PROJUCER --resave $PLUGIN.jucer
       env:
@@ -90,7 +87,7 @@ jobs:
       if: runner.os == 'Linux'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
       run: |
-        $PROJUCER --set-global-search-path linux defaultJuceModulePath  ${{github.workspace}}/JUCE/modules
+        $PROJUCER --set-global-search-path linux defaultJuceModulePath ${{github.workspace}}/JUCE/modules
         $PROJUCER --set-global-search-path linux vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
         $PROJUCER --resave $PLUGIN.jucer
       env:
@@ -107,14 +104,14 @@ jobs:
     - name: Build Plugin (MacOS)
       if: runner.os == 'MacOS'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
-      run: xcodebuild -project $PLUGIN.xcodeproj -jobs ${{ steps.cpu-cores.outputs.count }} | xcpretty
+      run: xcodebuild -project $PLUGIN.xcodeproj -jobs 4 | xcpretty
       env:
         PLUGIN: ${{ matrix.plugin }}
 
     - name: Build Plugin (Linux)
       if: runner.os == 'Linux'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
-      run: make -j${{ steps.cpu-cores.outputs.count }} CONFIG=Release
+      run: make -j4 CONFIG=Release
       env:
         PLUGIN: ${{ matrix.plugin }}
 
