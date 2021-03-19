@@ -167,12 +167,12 @@ void WavefolderAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
 
     for (int ch = 0; ch < osBuffer.getNumChannels(); ++ch)
     {
-        wfProc[ch].setFreq (*freqParam);
-        wfProc[ch].setDepth (*depthParam);
-        wfProc[ch].setFF (*ffParam);
-        wfProc[ch].setFB (*fbParam);
-        wfProc[ch].setSatType (static_cast<SatType> ((int) *satParam));
-        wfProc[ch].setWaveType (static_cast<WaveType> ((int) *waveParam));
+        wfProc[ch].setFreq (freqParam->load());
+        wfProc[ch].setDepth (depthParam->load());
+        wfProc[ch].setFF (ffParam->load());
+        wfProc[ch].setFB (fbParam->load());
+        wfProc[ch].setSatType (static_cast<SatType> ((int) satParam->load()));
+        wfProc[ch].setWaveType (static_cast<WaveType> ((int) waveParam->load()));
 
         wfProc[ch].processBlock (osBuffer.getWritePointer (ch), osBuffer.getNumSamples());
     }

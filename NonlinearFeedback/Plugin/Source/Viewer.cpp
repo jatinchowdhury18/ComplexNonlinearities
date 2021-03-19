@@ -61,18 +61,18 @@ void Viewer::timerCallback()
 void Viewer::processBuffer()
 {
     processor.setEqShape (EqShape::lowPass);
-    processor.setFrequency (*eqFreqParameter);
-    processor.setQ (*eqQParameter);
-    processor.setSaturator (static_cast<SatType> ((int) *satParameter));
+    processor.setFrequency (eqFreqParameter->load());
+    processor.setQ (eqQParameter->load());
+    processor.setSaturator (static_cast<SatType> ((int) satParameter->load()));
 
     wetBuffer.clear();
     wetBuffer.makeCopyOf (dryBuffer);
-    wetBuffer.applyGain (Decibels::decibelsToGain (*driveParameter));
+    wetBuffer.applyGain (Decibels::decibelsToGain (driveParameter->load()));
 
     processor.reset ((double) fs);
     processor.processBlock (wetBuffer.getWritePointer (0), size);
 
-    wetBuffer.applyGain (Decibels::decibelsToGain (-1.0f * *driveParameter));
+    wetBuffer.applyGain (Decibels::decibelsToGain (-1.0f * driveParameter->load()));
 
     for (int n = 0; n < size; ++n)
     {

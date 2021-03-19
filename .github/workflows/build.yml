@@ -1,0 +1,150 @@
+name: Build
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+  workflow_dispatch:
+  
+jobs:
+  build:
+    if: contains(toJson(github.event.commits), '***NO_CI***') == false && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
+    name: Build ${{ matrix.plugin }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false # show all errors for each platform
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        plugin: [CopyEQ, DoubleSoftClipper, Exciter, Hysteresis, NonlinearBiquad, NonlinearFeedback, Wavefolder, NonlinearAllpass, Subharmonics, GatedRecurrentDistortion]
+
+    steps:
+    - name: Install Linux Deps
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt install libasound2-dev libcurl4-openssl-dev libx11-dev libxinerama-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev libjack-jackd2-dev
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
+
+    - name: Add msbuild to PATH
+      if: runner.os == 'Windows'
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Download JUCE
+      uses: actions/checkout@v2
+      with:
+        repository: juce-framework/JUCE
+        path: JUCE
+
+    - name: Build Projucer (Windows)
+      if: runner.os == 'Windows'
+      working-directory: ${{github.workspace}}/JUCE/extras/Projucer/Builds/VisualStudio2017
+      run: msbuild.exe Projucer.sln
+
+    - name: Build Projucer (MacOS)
+      if: runner.os == 'MacOS'
+      working-directory: ${{github.workspace}}/JUCE/extras/Projucer/Builds/MacOSX
+      run: xcodebuild -project Projucer.xcodeproj -jobs 4 | xcpretty
+
+    - name: Build Projucer (Linux)
+      if: runner.os == 'Linux'
+      working-directory: ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile
+      run: make -j4
+
+    # - name: Setup tmate session
+    #   if: runner.os == 'Windows' && ${{matrix.plugin}} == "CopyEQ"
+    #   uses: mxschmitt/action-tmate@v3
+
+    - name: Configure Plugin (Windows)
+      if: runner.os == 'Windows'
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
+      shell: bash
+      run: |
+        $PROJUCER --set-global-search-path windows defaultJuceModulePath ../../JUCE/modules
+        $PROJUCER --resave $PLUGIN.jucer
+      env:
+        PLUGIN: ${{ matrix.plugin }}
+        PROJUCER: ${{github.workspace}}/JUCE/extras/Projucer/Builds/VisualStudio2017/x64/Debug/App/Projucer.exe
+
+    - name: Configure Plugin (MacOS)
+      if: runner.os == 'MacOS'
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
+      run: |
+        $PROJUCER --set-global-search-path osx defaultJuceModulePath ${{github.workspace}}/JUCE/modules
+        $PROJUCER --set-global-search-path osx vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
+        $PROJUCER --resave $PLUGIN.jucer
+      env:
+        PLUGIN: ${{ matrix.plugin }}
+        PROJUCER: ${{github.workspace}}/JUCE/extras/Projucer/Builds/MacOSX/build/Debug/Projucer.app/Contents/MacOS/Projucer
+
+    - name: Configure Plugin (Linux)
+      if: runner.os == 'Linux'
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
+      run: |
+        $PROJUCER --set-global-search-path linux defaultJuceModulePath ${{github.workspace}}/JUCE/modules
+        $PROJUCER --set-global-search-path linux vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
+        $PROJUCER --resave $PLUGIN.jucer
+      env:
+        PLUGIN: ${{ matrix.plugin }}
+        PROJUCER: ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile/build/Projucer
+
+    - name: Build Plugin (Windows)
+      if: runner.os == 'Windows'
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin/Builds/VisualStudio2017
+      shell: bash
+      run: |
+        ls
+        msbuild.exe -v:normal $PLUGIN.sln
+      env:
+        PLUGIN: ${{ matrix.plugin }}
+
+    - name: Build Plugin (MacOS)
+      if: runner.os == 'MacOS'
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin/Builds/MacOSX
+      run: xcodebuild -project $PLUGIN.xcodeproj -configuration Release -jobs 4 | xcpretty
+      env:
+        PLUGIN: ${{ matrix.plugin }}
+
+    - name: Build Plugin (Linux)
+      if: runner.os == 'Linux'
+      working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin/Builds/LinuxMakefile
+      run: make -j4 CONFIG=Release
+      env:
+        PLUGIN: ${{ matrix.plugin }}
+
+    - name: Validate Plugin (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_Windows.zip -OutFile pluginval.zip"
+        powershell -Command "Expand-Archive pluginval.zip -DestinationPath ."
+        ./pluginval.exe --strictness-level 8 --validate-in-process --validate "$PLUGIN/Plugin/Builds/VisualStudio2017/x64/Debug/VST3/$PLUGIN.vst3"
+      env:
+        PLUGIN: ${{ matrix.plugin }}
+
+    - name: Validate Plugin (MacOS)
+      if: runner.os == 'MacOS'
+      run: |
+        curl -L "https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_macOS.zip" -o pluginval.zip
+        unzip pluginval
+        pluginval.app/Contents/MacOS/pluginval --strictness-level 8 --validate-in-process --validate "$PLUGIN/Plugin/Builds/MacOSX/build/Release/$PLUGIN.vst3" || exit 1
+      env:
+        PLUGIN: ${{ matrix.plugin }}
+
+    # - name: Validate Plugin (Linux)
+    #   if: runner.os == 'Linux'
+    #   run: |
+    #     curl -L "https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_Linux.zip" -o pluginval.zip
+    #     unzip pluginval
+    #     ./pluginval --strictness-level 8 --validate-in-process --validate "$PLUGIN/Plugin/Builds/LinuxMakefile/build/$PLUGIN.so" || exit 1
+    #   env:
+    #     PLUGIN: ${{ matrix.plugin }}

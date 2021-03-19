@@ -142,7 +142,7 @@ void NonlienarAllpassAudioProcessor::prepareToPlay (double sampleRate, int sampl
     dsp::ProcessSpec spec { sampleRate, (uint32) samplesPerBlock, 2 };
     filter.reset();
     filter.prepare (spec);
-    filter.state->setCutOffFrequency (sampleRate, *freqParam);
+    filter.state->setCutOffFrequency (sampleRate, freqParam->load());
 
     dcBlocker.reset();
     dcBlocker.prepare (spec);
@@ -183,7 +183,7 @@ void NonlienarAllpassAudioProcessor::processBlock (AudioBuffer<float>& buffer, M
 {
     ScopedNoDenormals noDenormals;
 
-    saturator = Saturators::getSaturator (static_cast<SatType> ((int) *satParam));
+    saturator = Saturators::getSaturator (static_cast<SatType> ((int) satParam->load()));
 
     dsp::AudioBlock<float> block (buffer);
     dsp::AudioBlock<float> osBlock (buffer);
@@ -195,20 +195,21 @@ void NonlienarAllpassAudioProcessor::processBlock (AudioBuffer<float>& buffer, M
 
     for (int ch = 0; ch < osBuffer.getNumChannels(); ++ch)
     {
-        auto thisAPF = allpass[ch][(int) *orderParam].get();
+        auto thisAPF = allpass[ch][(int) orderParam->load()].get();
 
         auto* x = osBuffer.getWritePointer (ch);
 
+        auto curGainParam = gainParam->load();
         for (int n = 0; n < osBuffer.getNumSamples(); ++n)
         {
-            thisAPF->setCoefs (MathConstants<float>::pi * saturator (*gainParam * x[n]));
+            thisAPF->setCoefs (MathConstants<float>::pi * saturator (curGainParam * x[n]));
             x[n] = thisAPF->process (x[n]);
         }
     }
 
     oversampling.processSamplesDown (block);
 
-    filter.state->setCutOffFrequency (getSampleRate(), *freqParam);
+    filter.state->setCutOffFrequency (getSampleRate(), freqParam->load());
     dsp::ProcessContextReplacing<float> context (block);
     filter.process (context);
 

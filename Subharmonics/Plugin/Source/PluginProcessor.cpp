@@ -184,17 +184,17 @@ void SubharmonicsAudioProcessor::updateParams()
 {
     for (int ch = 0; ch < 2; ++ch)
     {
-        mainGain[ch].setGain (Decibels::decibelsToGain (*mainGainParam));
-        sideGain[ch].setGain (Decibels::decibelsToGain (*sideGainParam));
+        mainGain[ch].setGain (Decibels::decibelsToGain (mainGainParam->load()));
+        sideGain[ch].setGain (Decibels::decibelsToGain (sideGainParam->load()));
 
-        sub[ch].setDetector (*attackParam, *releaseParam);
+        sub[ch].setDetector (attackParam->load(), releaseParam->load());
 
-        preEQ[ch].setFrequency (*preCutoffParam);
+        preEQ[ch].setFrequency (preCutoffParam->load());
         preEQ[ch].setQ (0.7071f);
 
         for (int i = 0; i < 3; ++i)
         {
-            postEQ[i][ch].setFrequency (*postCutoffParam);
+            postEQ[i][ch].setFrequency (postCutoffParam->load());
             postEQ[i][ch].setQ (butterQs[i]);
         }
     }

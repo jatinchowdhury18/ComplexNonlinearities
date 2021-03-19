@@ -62,12 +62,12 @@ public:
 private:
     AudioProcessorValueTreeState vts;
 
-    float* freqParam;
-    float* depthParam;
-    float* ffParam;
-    float* fbParam;
-    float* satParam;
-    float* waveParam;
+    std::atomic<float>* freqParam;
+    std::atomic<float>* depthParam;
+    std::atomic<float>* ffParam;
+    std::atomic<float>* fbParam;
+    std::atomic<float>* satParam;
+    std::atomic<float>* waveParam;
 
     WavefolderProcessor wfProc[2];
 

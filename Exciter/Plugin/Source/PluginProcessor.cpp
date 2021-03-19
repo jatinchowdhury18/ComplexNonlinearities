@@ -117,11 +117,11 @@ void ExciterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 
     for (int ch = 0; ch < 2; ++ch)
     {
-        exciter[ch].setDrive (*driveParameter / 100.0f);
-        exciter[ch].setControlGain (ExciterProcessor::getControlGainFromDrive (*driveParameter / 100.0f));
-        exciter[ch].setDetectorFreq (*freqParameter);
-        exciter[ch].setRectifierType (static_cast<RectifierType> ((int) *rectParameter));
-        exciter[ch].setSaturator (static_cast<SaturatorType> ((int) *satParameter));
+        exciter[ch].setDrive (driveParameter->load() / 100.0f);
+        exciter[ch].setControlGain (ExciterProcessor::getControlGainFromDrive (driveParameter->load() / 100.0f));
+        exciter[ch].setDetectorFreq (freqParameter->load());
+        exciter[ch].setRectifierType (static_cast<RectifierType> ((int) rectParameter->load()));
+        exciter[ch].setSaturator (static_cast<SaturatorType> ((int) satParameter->load()));
         exciter[ch].reset (oversampling.getOversamplingFactor() * (float) sampleRate);
     }
 }
@@ -168,11 +168,11 @@ void ExciterAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
 
     for (int ch = 0; ch < osBuffer.getNumChannels(); ++ch)
     {
-        exciter[ch].setDrive (*driveParameter / 100.0f);
-        exciter[ch].setControlGain (ExciterProcessor::getControlGainFromDrive (*driveParameter / 100.0f));
-        exciter[ch].setDetectorFreq (*freqParameter);
-        exciter[ch].setRectifierType (static_cast<RectifierType> ((int) *rectParameter));
-        exciter[ch].setSaturator (static_cast<SaturatorType> ((int) *satParameter));
+        exciter[ch].setDrive (driveParameter->load() / 100.0f);
+        exciter[ch].setControlGain (ExciterProcessor::getControlGainFromDrive (driveParameter->load() / 100.0f));
+        exciter[ch].setDetectorFreq (freqParameter->load());
+        exciter[ch].setRectifierType (static_cast<RectifierType> ((int) rectParameter->load()));
+        exciter[ch].setSaturator (static_cast<SaturatorType> ((int) satParameter->load()));
         exciter[ch].processBlock (osBuffer.getWritePointer (ch), osBuffer.getNumSamples());
     }
 

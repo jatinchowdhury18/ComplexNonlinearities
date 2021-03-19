@@ -63,11 +63,11 @@ public:
 private:
     AudioProcessorValueTreeState vts;
 
-    float* shapeParameter;
-    float* freqParameter;
-    float* qParameter;
-    float* driveParameter;
-    float* satParameter;
+    std::atomic<float>* shapeParameter;
+    std::atomic<float>* freqParameter;
+    std::atomic<float>* qParameter;
+    std::atomic<float>* driveParameter;
+    std::atomic<float>* satParameter;
 
     Gain inGain[2];
     Gain outGain[2];

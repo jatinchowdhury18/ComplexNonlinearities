@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="biiWmW" name="GatedRecurrentDistortion" projectType="audioplug"
               jucerVersion="5.4.4" companyName="chowdsp" cppLanguageStandard="17"
-              pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" headerPath="../../../../shared_code">
+              pluginFormats="buildAU,buildStandalone,buildVST3" headerPath="../../../../shared_code">
   <MAINGROUP id="qn0AEj" name="GatedRecurrentDistortion">
     <GROUP id="{28085D97-2040-F649-5FAB-2BF7205A3C30}" name="shared_code">
       <FILE id="zQd9Gy" name="KnobsComponent.cpp" compile="1" resource="0"

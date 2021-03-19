@@ -169,7 +169,7 @@ void NonlinearBiquadAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mi
 
     for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
     {
-        inGain[ch].setGain (Decibels::decibelsToGain (*driveParameter));
+        inGain[ch].setGain (Decibels::decibelsToGain (driveParameter->load()));
         inGain[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
     }
 
@@ -183,11 +183,11 @@ void NonlinearBiquadAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mi
 
     for (int ch = 0; ch < osBuffer.getNumChannels(); ++ch)
     {
-        filter[ch].setEqShape (static_cast<EqShape> ((int) *eqShapeParameter));
-        filter[ch].setFrequency (*eqFreqParameter);
-        filter[ch].setQ (*eqQParameter);
-        filter[ch].setGain (Decibels::decibelsToGain (*eqGainParameter));
-        filter[ch].setSaturator (static_cast<SatType> ((int) *satParameter));
+        filter[ch].setEqShape (static_cast<EqShape> ((int) eqShapeParameter->load()));
+        filter[ch].setFrequency (eqFreqParameter->load());
+        filter[ch].setQ (eqQParameter->load());
+        filter[ch].setGain (Decibels::decibelsToGain (eqGainParameter->load()));
+        filter[ch].setSaturator (static_cast<SatType> ((int) satParameter->load()));
 
         filter[ch].processBlock (osBuffer.getWritePointer (ch), osBuffer.getNumSamples());
     }

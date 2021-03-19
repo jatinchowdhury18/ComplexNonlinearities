@@ -156,12 +156,12 @@ void DoubleSoftClipperAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     // update params
     for (int ch = 0; ch < 3; ++ch)
     {
-        dsc[ch].setUpperLim (*upperLim);
-        dsc[ch].setLowerLim (*lowerLim);
-        dsc[ch].setSlope (*slope);
-        dsc[ch].setWidth (*width);
-        dsc[ch].setUpperSkew (*upperSkew);
-        dsc[ch].setLowerSkew (*lowerSkew);
+        dsc[ch].setUpperLim (upperLim->load());
+        dsc[ch].setLowerLim (lowerLim->load());
+        dsc[ch].setSlope (slope->load());
+        dsc[ch].setWidth (width->load());
+        dsc[ch].setUpperSkew (upperSkew->load());
+        dsc[ch].setLowerSkew (lowerSkew->load());
     }
 
     dsp::AudioBlock<float> block (buffer);
@@ -206,12 +206,12 @@ void DoubleSoftClipperAudioProcessor::setStateInformation (const void* data, int
             vts.replaceState (ValueTree::fromXml (*xmlState));
 
     // Update params for visualizer
-    dsc[2].setUpperLim (*upperLim);
-    dsc[2].setLowerLim (*lowerLim);
-    dsc[2].setSlope (*slope);
-    dsc[2].setWidth (*width);
-    dsc[2].setUpperSkew (*upperSkew);
-    dsc[2].setLowerSkew (*lowerSkew);
+    dsc[2].setUpperLim (upperLim->load());
+    dsc[2].setLowerLim (lowerLim->load());
+    dsc[2].setSlope (slope->load());
+    dsc[2].setWidth (width->load());
+    dsc[2].setUpperSkew (upperSkew->load());
+    dsc[2].setLowerSkew (lowerSkew->load());
 }
 
 //==============================================================================

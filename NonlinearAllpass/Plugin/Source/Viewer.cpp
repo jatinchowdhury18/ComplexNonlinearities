@@ -53,10 +53,10 @@ void Viewer::updateCurve()
     auto* procCast = dynamic_cast<NonlienarAllpassAudioProcessor*> (proc.get());
 
     // set params
-    *procCast->gainParam = *vts.getRawParameterValue ("gain_");
-    *procCast->orderParam = *vts.getRawParameterValue ("order");
-    *procCast->satParam = *vts.getRawParameterValue ("sat");
-    *procCast->freqParam = *vts.getRawParameterValue ("freq_Hz");
+    procCast->gainParam = vts.getRawParameterValue ("gain_");
+    procCast->orderParam = vts.getRawParameterValue ("order");
+    procCast->satParam = vts.getRawParameterValue ("sat");
+    procCast->freqParam = vts.getRawParameterValue ("freq_Hz");
 
     // process
     wetBuffer.makeCopyOf (dryBuffer);

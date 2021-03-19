@@ -64,12 +64,12 @@ public:
 private:
     AudioProcessorValueTreeState vts;
 
-    float* upperLim;
-    float* lowerLim;
-    float* slope;
-    float* width;
-    float* upperSkew;
-    float* lowerSkew;
+    std::atomic<float>* upperLim;
+    std::atomic<float>* lowerLim;
+    std::atomic<float>* slope;
+    std::atomic<float>* width;
+    std::atomic<float>* upperSkew;
+    std::atomic<float>* lowerSkew;
 
     DoubleSoftClipper dsc[3];
 

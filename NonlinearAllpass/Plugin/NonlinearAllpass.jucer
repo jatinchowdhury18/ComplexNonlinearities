@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="bjTnr6" name="NonlinearAllpass" projectType="audioplug" jucerVersion="5.4.4"
-              pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" cppLanguageStandard="17"
+              pluginFormats="buildAU,buildStandalone,buildVST3" cppLanguageStandard="17"
               headerPath="../../../../shared_code">
   <MAINGROUP id="twW5Jy" name="NonlinearAllpass">
     <GROUP id="{DBA0CA5A-248D-0032-0623-44BC204A00DD}" name="shared_code">

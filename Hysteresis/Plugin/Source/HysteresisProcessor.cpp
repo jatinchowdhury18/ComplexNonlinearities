@@ -75,7 +75,7 @@ void HysteresisProcessor::setSaturation (float newSaturation)
 
 void HysteresisProcessor::setOversampling()
 {
-    curOS = (int) *osParam;
+    curOS = (int) osParam->load();
     if (curOS != prevOS)
     {
         overSamplingFactor = 1 << curOS;
@@ -136,10 +136,10 @@ float HysteresisProcessor::getLatencySamples() const noexcept
 
 void HysteresisProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midi*/)
 {
-    setSolver ((int) *modeParam);
-    setDrive (*driveParam);
-    setSaturation (*satParam);
-    setWidth (1.0f - *widthParam);
+    setSolver ((int) modeParam->load());
+    setDrive (driveParam->load());
+    setSaturation (satParam->load());
+    setWidth (1.0f - widthParam->load());
     setOversampling();
 
     bool needsSmoothing = drive[0].isSmoothing() || width[0].isSmoothing() || sat[0].isSmoothing();

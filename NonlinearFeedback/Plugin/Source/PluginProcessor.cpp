@@ -168,7 +168,7 @@ void NonlinearFeedbackAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 
     for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
     {
-        inGain[ch].setGain (Decibels::decibelsToGain (*driveParameter));
+        inGain[ch].setGain (Decibels::decibelsToGain (driveParameter->load()));
         inGain[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
     }
 
@@ -183,9 +183,9 @@ void NonlinearFeedbackAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     for (int ch = 0; ch < osBuffer.getNumChannels(); ++ch)
     {
         filter[ch].setEqShape (EqShape::lowPass);
-        filter[ch].setFrequency (*freqParameter);
-        filter[ch].setQ (*qParameter);
-        filter[ch].setSaturator (static_cast<SatType> ((int) *satParameter));
+        filter[ch].setFrequency (freqParameter->load());
+        filter[ch].setQ (qParameter->load());
+        filter[ch].setSaturator (static_cast<SatType> ((int) satParameter->load()));
         filter[ch].processBlock (osBuffer.getWritePointer (ch), osBuffer.getNumSamples());
     }
 
@@ -193,7 +193,7 @@ void NonlinearFeedbackAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 
     for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
     {
-        outGain[ch].setGain (Decibels::decibelsToGain (-1.0f * *driveParameter));
+        outGain[ch].setGain (Decibels::decibelsToGain (-1.0f * driveParameter->load()));
         outGain[ch].processBlock (buffer.getWritePointer (ch), buffer.getNumSamples());
     }
 }
