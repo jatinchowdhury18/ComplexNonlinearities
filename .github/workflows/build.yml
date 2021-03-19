@@ -60,17 +60,16 @@ jobs:
       working-directory: ${{github.workspace}}/JUCE/extras/Projucer/Builds/LinuxMakefile
       run: make -j4
 
-    - name: Setup tmate session
-      if: runner.os == 'Windows' && ${{matrix.plugin}} == "CopyEQ"
-      uses: mxschmitt/action-tmate@v3
+    # - name: Setup tmate session
+    #   if: runner.os == 'Windows' && ${{matrix.plugin}} == "CopyEQ"
+    #   uses: mxschmitt/action-tmate@v3
 
     - name: Configure Plugin (Windows)
       if: runner.os == 'Windows'
       working-directory: ${{github.workspace}}/${{matrix.plugin}}/Plugin
       shell: bash
       run: |
-        $PROJUCER --set-global-search-path windows defaultJuceModulePath ${{github.workspace}}/JUCE/modules
-        $PROJUCER --set-global-search-path windows vstLegacyPath ${{github.workspace}}/JUCE/VST2_SDK
+        $PROJUCER --set-global-search-path windows defaultJuceModulePath ../../JUCE/modules
         $PROJUCER --resave $PLUGIN.jucer
       env:
         PLUGIN: ${{ matrix.plugin }}
